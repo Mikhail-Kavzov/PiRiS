@@ -1,5 +1,7 @@
 using PiRiS.Api.Extensions;
 using PiRiS.Data.Extensions;
+using PiRiS.Business.Extensions;
+using PiRiS.Business.Mapper.Config;
 
 internal class Program
 {
@@ -13,7 +15,11 @@ internal class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
         builder.Services.AddEntityFramework(builder.Configuration);
+
+        builder.Services.AddBusinessDependencies();
+        builder.Services.AddBusinessMappings();
 
         var app = builder.Build();
 

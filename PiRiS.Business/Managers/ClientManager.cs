@@ -12,7 +12,7 @@ namespace PiRiS.Business.Managers;
 
 public class ClientManager : BaseManager, IClientManager
 {
-    public ClientManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger logger)
+    public ClientManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger<ClientManager> logger)
         : base(mapper, unitOfWork, logger)
     {
     }
@@ -30,7 +30,17 @@ public class ClientManager : BaseManager, IClientManager
             throw new NotFoundException($"Client with id {clientId} not found");
         }
         UnitOfWork.ClientRepository.Delete(client);
-        await UnitOfWork.ClientRepository.SaveChangesAsync();
+
+        try
+        {
+            await UnitOfWork.ClientRepository.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex.ToString());
+            throw new ServiceException($"Incorrect data while inserting");
+        }
+       
     }
 
     public async Task<ClientDto> GetClientAsync(int clientId)
@@ -92,6 +102,14 @@ public class ClientManager : BaseManager, IClientManager
         var updatedClient = Mapper.Map<Client>(clientDto);
 
         UnitOfWork.ClientRepository.Update(updatedClient);
-        await UnitOfWork.ClientRepository.SaveChangesAsync();
+        try
+        {
+            await UnitOfWork.ClientRepository.SaveChangesAsync();
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex.ToString());
+            throw new ServiceException($"Incorrect data while updating");
+        }
     }
 }
