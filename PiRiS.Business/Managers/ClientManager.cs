@@ -17,9 +17,41 @@ public class ClientManager : BaseManager, IClientManager
     {
     }
 
-    public Task CreateClientAsync(ClientDto clientDto)
+    public async Task CreateClientAsync(ClientDto clientDto)
     {
-        throw new NotImplementedException();
+        await CheckClientConstrains(clientDto);
+
+        var client = Mapper.Map<Client>(clientDto);
+        UnitOfWork.ClientRepository.Create(client);
+
+        await UnitOfWork.ClientRepository.SaveChangesAsync();
+    }
+
+    private async Task CheckClientConstrains(ClientDto clientDto)
+    {
+        var hasIdNumber = await UnitOfWork.ClientRepository
+           .ExistsAsync(x => x.IdentificationNumber == clientDto.IdentificationNumber);
+
+        if (hasIdNumber)
+        {
+            throw new ServiceException($"Client with identification number {clientDto.IdentificationNumber} already exists");
+        }
+
+        var hasPassport = await UnitOfWork.ClientRepository
+            .ExistsAsync(x => x.PassportSeries == clientDto.PassportSeries && x.PassportNumber == clientDto.PassportNumber);
+
+        if (hasPassport)
+        {
+            throw new ServiceException($"Client with passport {clientDto.PassportSeries} {clientDto.PassportNumber} already exists");
+        }
+
+        var hasClientNames = await UnitOfWork.ClientRepository
+            .ExistsAsync(x=> x.Surname == clientDto.Surname && x.FirstName == clientDto.FirstName && x.LastName == x.LastName);
+
+        if (hasClientNames)
+        {
+            throw new ServiceException($"Client with such Surname, Firstname, Lastname already exists");
+        }
     }
 
     public async Task DeleteClientAsync(int clientId)
@@ -31,16 +63,8 @@ public class ClientManager : BaseManager, IClientManager
         }
         UnitOfWork.ClientRepository.Delete(client);
 
-        try
-        {
-            await UnitOfWork.ClientRepository.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex.ToString());
-            throw new ServiceException($"Incorrect data while inserting");
-        }
-       
+        await UnitOfWork.ClientRepository.SaveChangesAsync();
+
     }
 
     public async Task<ClientDto> GetClientAsync(int clientId)
@@ -53,7 +77,7 @@ public class ClientManager : BaseManager, IClientManager
         return Mapper.Map<ClientDto>(client);
     }
 
-    public async Task<IEnumerable<ClientDto>> GetClientsAsync(ClientPaginationDto paginationDto)
+    public async Task<IEnumerable<ClientViewDto>> GetClientsAsync(ClientPaginationDto paginationDto)
     {
         Expression<Func<Client, bool>> predicate = null;
 
@@ -81,7 +105,7 @@ public class ClientManager : BaseManager, IClientManager
 
         var clients = await UnitOfWork.ClientRepository
             .GetListAsync(paginationDto.Skip, paginationDto.Take, predicate, sort, isAscending);
-        return Mapper.Map<List<ClientDto>>(clients);
+        return Mapper.Map<List<ClientViewDto>>(clients);
     }
 
     public async Task UpdateClientAsync(ClientDto clientDto)
@@ -99,17 +123,33 @@ public class ClientManager : BaseManager, IClientManager
             throw new NotFoundException($"Client with id {clientId} not found");
         }
 
+        await CheckClientConstrains(clientDto);
+
         var updatedClient = Mapper.Map<Client>(clientDto);
 
         UnitOfWork.ClientRepository.Update(updatedClient);
-        try
+
+        await UnitOfWork.ClientRepository.SaveChangesAsync();
+    }
+
+    public async Task<ClientAdditionalsDto> GetAdditionalsAsync()
+    {
+        var disabilityTask = UnitOfWork.DisabilityRepository.GetAllAsync();
+        var cityTask = UnitOfWork.CityRepository.GetAllAsync();
+        var citizenshipTask = UnitOfWork.CitizenshipRepository.GetAllAsync();
+        var familyStatusTask = UnitOfWork.FamilyStatusRepository.GetAllAsync();
+
+        var disabilities = await disabilityTask;
+        var cities = await cityTask;
+        var citizenships = await citizenshipTask;
+        var familyStatuses = await familyStatusTask;
+
+        return new ClientAdditionalsDto
         {
-            await UnitOfWork.ClientRepository.SaveChangesAsync();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogError(ex.ToString());
-            throw new ServiceException($"Incorrect data while updating");
-        }
+            Disabilities = Mapper.Map<List<DisabilityDto>>(disabilities),
+            Cities = Mapper.Map<List<CityDto>>(cities),
+            FamilyStatuses = Mapper.Map<List<FamilyStatusDto>>(familyStatuses),
+            Citizenships = Mapper.Map<List<CitizenshipDto>>(citizenships),
+        };
     }
 }

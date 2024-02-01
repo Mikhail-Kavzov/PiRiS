@@ -6,7 +6,7 @@ public class ClientDto
 {
     public int? ClientId { get; set; }
 
-    [RegularExpression("^[A-z,А-я,ё,Ё]{1,30}$",ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
+    [RegularExpression("^[A-z,А-я,ё,Ё]{1,30}$", ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
     public string Surname { get; set; }
 
     [RegularExpression("^[A-z,А-я,ё,Ё]{1,30}$", ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
@@ -18,7 +18,7 @@ public class ClientDto
     [Required(ErrorMessage = $"{nameof(DateOfBirth)} is required")]
     public DateTime DateOfBirth { get; set; }
 
-    [StringLength(2,MinimumLength =2, ErrorMessage = $"{nameof(PassportSeries)} should be 2 symbols")]
+    [StringLength(2, MinimumLength = 2, ErrorMessage = $"{nameof(PassportSeries)} should be 2 symbols")]
     public string PassportSeries { get; set; }
 
     [StringLength(7, MinimumLength = 7, ErrorMessage = $"{nameof(PassportSeries)} should be 7 symbols")]

@@ -22,6 +22,16 @@ public class ClientRepository : BaseRepository, IClientRepository
         _context.Clients.Remove(entity);
     }
 
+    public async Task<bool> ExistsAsync(Expression<Func<Client, bool>> predicate)
+    {
+        return await _context.Clients.AnyAsync(predicate);
+    }
+
+    public Task<IEnumerable<Client>> GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<Client?> GetEntityAsync(int id, bool trackChanges = true)
     {
         IQueryable<Client> query = _context.Clients;
@@ -50,7 +60,9 @@ public class ClientRepository : BaseRepository, IClientRepository
         {
             query = isAscending ? query.OrderBy(sort) : query.OrderByDescending(sort);
         }
-        return await query.Skip(skip).Take(take).ToListAsync();
+        return await query.Skip(skip).Take(take).Include(x=> x.Disability)
+            .Include(x=>x.Citizenship).Include(x=>x.City)
+            .Include(x=>x.FamilyStatus).ToListAsync();
     }
 
     public void Update(Client entity)

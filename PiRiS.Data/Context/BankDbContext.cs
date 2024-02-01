@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PiRiS.Data.Context.Config;
 using PiRiS.Data.Models;
 
 namespace PiRiS.Data.Context;
@@ -19,5 +20,13 @@ public class BankDbContext : DbContext
     public DbSet<City> Cities { get; set; } = null!;
 
     public DbSet<Disability> Disabilities { get; set; } = null!;
-    
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.ApplyConfiguration(new ClientConfig());
+    }
+
 }

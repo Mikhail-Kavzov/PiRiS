@@ -19,6 +19,10 @@ public static class ServiceExtensions
         });
 
         services.AddScoped<IClientRepository, ClientRepository>();
+        services.AddScoped<IDisabilityRepository, DisabilityRepository>();
+        services.AddScoped<ICitizenshipRepository, CitizenshipRepository>();
+        services.AddScoped<ICityRepository, CityRepository>();
+        services.AddScoped<IFamilyStatusRepository, FamilyStatusRepository>();
 
         services.AddScoped<IUnitOfWork, UoW>();
     }

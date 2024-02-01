@@ -41,5 +41,19 @@ namespace PiRiS.Api.Controllers
             return Ok();
         }
 
+        [HttpGet("Additionals")]
+        public async Task<ActionResult<ClientAdditionalsDto>> GetAdditionalsAsync()
+        {
+            var clientAdditionals = await _clientManager.GetAdditionalsAsync();
+            return Ok(clientAdditionals);
+        }
+
+        [HttpGet("List")]
+        public async Task<ActionResult<List<ClientViewDto>>> GetClientsAsync(ClientPaginationDto clientPaginationDto)
+        {
+            var clients = await _clientManager.GetClientsAsync(clientPaginationDto);
+            return Ok(clients);
+        }
+
     }
 }
