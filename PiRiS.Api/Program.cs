@@ -2,6 +2,7 @@ using PiRiS.Api.Extensions;
 using PiRiS.Data.Extensions;
 using PiRiS.Business.Extensions;
 using PiRiS.Business.Mapper.Config;
+using Microsoft.AspNetCore.Builder;
 
 internal class Program
 {
@@ -12,6 +13,7 @@ internal class Program
         // Add services to the container.
 
         builder.Services.AddControllers();
+        builder.Services.AddOpenApiDocument();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -27,6 +29,11 @@ internal class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
+
+            // Add OpenAPI 3.0 document serving middleware
+            // Available at: http://localhost:<port>/swagger/v1/swagger.json
+            app.UseOpenApi();
+
             app.UseSwaggerUI();
         }
 

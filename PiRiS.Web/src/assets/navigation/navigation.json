@@ -1,0 +1,66 @@
+{
+    "compact": [
+        {
+            "id": "explorer",
+            "title": "Explorer",
+            "type": "basic",
+            "icon": "mat_outline:format_list_bulleted",
+            "link": "/explorer"
+        },
+        {
+            "id": "about",
+            "title": "About",
+            "type": "basic",
+            "icon": "mat_outline:info",
+            "link": "/"
+        }
+    ],
+    "default": [
+        {
+            "id": "explorer",
+            "title": "Explorer",
+            "type": "basic",
+            "icon": "mat_outline:format_list_bulleted",
+            "link": "/explorer"
+        },
+        {
+            "id": "about",
+            "title": "About",
+            "type": "basic",
+            "icon": "mat_outline:info",
+            "link": "/"
+        }
+    ],
+    "futuristic": [
+        {
+            "id": "explorer",
+            "title": "Explorer",
+            "type": "basic",
+            "icon": "mat_outline:format_list_bulleted",
+            "link": "/explorer"
+        },
+        {
+            "id": "about",
+            "title": "About",
+            "type": "basic",
+            "icon": "mat_outline:info",
+            "link": "/"
+        }
+    ],
+    "horizontal": [
+        {
+            "id": "explorer",
+            "title": "Explorer",
+            "type": "basic",
+            "icon": "mat_outline:format_list_bulleted",
+            "link": "/explorer"
+        },
+        {
+            "id": "about",
+            "title": "About",
+            "type": "basic",
+            "icon": "mat_outline:info",
+            "link": "/"
+        }
+    ]
+}

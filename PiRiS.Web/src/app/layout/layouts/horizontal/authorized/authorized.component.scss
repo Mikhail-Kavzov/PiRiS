@@ -1,0 +1,52 @@
+.beta-wrapper {
+    border: 1px solid #EE4545;
+    border-radius: 5px;
+}
+
+.beta-text {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 15px;
+    text-align: center;
+    color: #EE4545;
+}
+
+.link-main {
+    cursor: pointer;
+}
+
+.sign-in-btn {
+    background: #20293A;
+    border-radius: 99px;
+}
+
+.navigation-btn {
+    border-radius: 99px;
+    min-height: 30px;
+
+    span {
+        color: #677489;
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    &:hover {
+        background-color: white !important;
+    }
+}
+
+.all-rights-text {
+    font-family: 'Inter';
+    line-height: 20px;
+    color: #677489;
+}
+
+.footer-links {
+    /* Footer Right */
+    font-family: 'Inter';
+    line-height: 30px;
+    color: steelblue;
+}
+

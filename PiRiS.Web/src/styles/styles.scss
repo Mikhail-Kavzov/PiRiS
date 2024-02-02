@@ -1,0 +1,86 @@
+.mat-mdc-snack-bar-container {
+    &.error-dialog {
+      --mdc-snackbar-container-color: #B71C1C !important;
+      --mat-mdc-snack-bar-button-color: white !important;
+      --mdc-snackbar-supporting-text-color: white !important;
+    }
+
+    .mdc-snackbar__surface {
+        min-width: 300px !important;
+    }
+}
+
+.mat-mdc-snack-bar-label {
+    max-width: 344px;
+    word-break: break-word;
+}
+
+.mat-loading .mdc-button__label {
+    display: none;
+}
+
+.mat-loading .mat-progress-spinner {
+    position: absolute;
+    top: calc(50% - 10px);
+    left: calc(50% - 10px);
+}
+
+.mat-form-field-flex {
+    min-height: 40px !important;
+}
+
+:not(.os-mac) {
+
+    ::-webkit-scrollbar {
+        width: 14px;
+        height: 14px;
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    ::-webkit-scrollbar:hover {
+        width: 14px;
+        height: 14px;
+        background-color: rgba(0, 0, 0, 0.06);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border: 2px solid transparent;
+        border-radius: 20px;
+        box-shadow: inset 0 0 0 20px rgba(0, 0, 0, 0.24);
+    }
+
+    ::-webkit-scrollbar-thumb:active {
+        border-radius: 20px;
+        box-shadow: inset 0 0 0 20px rgba(0, 0, 0, 0.37);
+    }
+    
+    @media only screen and (min-width: 960px) {
+
+        ::-webkit-scrollbar {
+            width: 10px !important;
+            height: 10px !important;
+        }
+    
+        ::-webkit-scrollbar:hover {
+            width: 10px !important;
+            height: 10px !important;
+        }
+    }
+    
+    &.dark {
+        ::-webkit-scrollbar-thumb {
+            box-shadow: inset 0 0 0 20px rgba(255, 255, 255, 0.24);
+        }
+
+        ::-webkit-scrollbar-thumb:active {
+            box-shadow: inset 0 0 0 20px rgba(255, 255, 255, 0.37);
+        }
+    }
+}
+.mat-mdc-form-field-infix{
+    min-height: 36px !important;
+}
+.link-color {
+    color: #3b82f6;
+}
+
