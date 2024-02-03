@@ -62,7 +62,7 @@ namespace PiRiS.Api.Middlewares
 
             var actionContext = new ActionContext(context, routeData, _emptyActionDescriptor);
 
-            var result = new ObjectResult(context.Response)
+            var result = new ObjectResult(null)
             {
                 StatusCode =  context.Response.StatusCode,
             };

@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PiRiS.Data", "PiRiS.Data\Pi
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "PiRiS.Web", "PiRiS.Web\PiRiS.Web.esproj", "{E2FB6C47-1917-4353-B07E-F8AEE7EAA7EF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PiRiS.Common", "PiRiS.Common\PiRiS.Common.csproj", "{93D028E1-05D1-4D67-957C-E2D35121BE8F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{E2FB6C47-1917-4353-B07E-F8AEE7EAA7EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2FB6C47-1917-4353-B07E-F8AEE7EAA7EF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E2FB6C47-1917-4353-B07E-F8AEE7EAA7EF}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{93D028E1-05D1-4D67-957C-E2D35121BE8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93D028E1-05D1-4D67-957C-E2D35121BE8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93D028E1-05D1-4D67-957C-E2D35121BE8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93D028E1-05D1-4D67-957C-E2D35121BE8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

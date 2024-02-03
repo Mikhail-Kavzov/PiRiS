@@ -6,6 +6,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { ClientViewDto, } from '../../../../../api/api.client';
 import { Pagination } from '../../../../../types/pagination.types';
 import { ClientService } from '../client.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'client-list',
@@ -34,18 +35,16 @@ export class ClientListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _clientService: ClientService
+        private _clientService: ClientService,
+        private _router: Router,
+
     ) {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void {
+
+        this.sortByControl.setValue('0');
+        this.sortDirectionControl.setValue('0');
 
         this._clientService.pagination$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -73,6 +72,7 @@ export class ClientListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.closeDetails();
                     let sortDirection = this.sortDirectionControl.value;
                     let sortField = this.sortByControl.value;
+                    query = query ?? '';
 
                     return this._clientService.getClients(0, this._paginator.pageSize, query, sortDirection, sortField);
                 })
@@ -85,7 +85,7 @@ export class ClientListComponent implements OnInit, AfterViewInit, OnDestroy {
                 switchMap((sortField) => {
                     this.closeDetails();
 
-                    let search = this.searchInputControl.value;
+                    let search = this.searchInputControl.value ?? '';
                     let sortDirection = this.sortDirectionControl.value;
 
                     return this._clientService.getClients(0, this._paginator.pageSize, search, sortDirection, sortField);
@@ -99,13 +99,19 @@ export class ClientListComponent implements OnInit, AfterViewInit, OnDestroy {
                 switchMap((sortDirection) => {
                     this.closeDetails();
 
-                    let search = this.searchInputControl.value;
+                    let search = this.searchInputControl.value ?? '';
                     let sortField = this.sortByControl.value;
 
                     return this._clientService.getClients(0, this._paginator.pageSize, search, sortDirection, sortField);
                 })
             )
             .subscribe();
+    }
+
+    updateClient() {
+        if (this.selectedClient) {
+            this._router.navigateByUrl(`client/update?clientId=${this.selectedClient.clientId}`);
+        }
     }
 
     ngAfterViewInit(): void {

@@ -54,6 +54,33 @@ public class ClientManager : BaseManager, IClientManager
         }
     }
 
+    private async Task CheckClientConstrainsOnUpdate(ClientDto clientDto)
+    {
+        var hasIdNumber = await UnitOfWork.ClientRepository
+           .ExistsAsync(x => x.IdentificationNumber == clientDto.IdentificationNumber && clientDto.ClientId !=x.ClientId);
+
+        if (hasIdNumber)
+        {
+            throw new ServiceException($"Client with identification number {clientDto.IdentificationNumber} already exists");
+        }
+
+        var hasPassport = await UnitOfWork.ClientRepository
+            .ExistsAsync(x => x.PassportSeries == clientDto.PassportSeries && x.PassportNumber == clientDto.PassportNumber && clientDto.ClientId != x.ClientId);
+
+        if (hasPassport)
+        {
+            throw new ServiceException($"Client with passport {clientDto.PassportSeries} {clientDto.PassportNumber} already exists");
+        }
+
+        var hasClientNames = await UnitOfWork.ClientRepository
+            .ExistsAsync(x => x.Surname == clientDto.Surname && x.FirstName == clientDto.FirstName && x.LastName == x.LastName && clientDto.ClientId != x.ClientId);
+
+        if (hasClientNames)
+        {
+            throw new ServiceException($"Client with such Surname, Firstname, Lastname already exists");
+        }
+    }
+
     public async Task DeleteClientAsync(int clientId)
     {
         var client = await UnitOfWork.ClientRepository.GetEntityAsync(clientId);
@@ -130,7 +157,7 @@ public class ClientManager : BaseManager, IClientManager
             throw new NotFoundException($"Client with id {clientId} not found");
         }
 
-        await CheckClientConstrains(clientDto);
+        await CheckClientConstrainsOnUpdate(clientDto);
 
         var updatedClient = Mapper.Map<Client>(clientDto);
 

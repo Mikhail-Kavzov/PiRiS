@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PiRiS.Common\PiRiS.Common.csproj" />
     <ProjectReference Include="..\PiRiS.Data\PiRiS.Data.csproj" />
   </ItemGroup>
 

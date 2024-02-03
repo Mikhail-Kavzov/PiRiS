@@ -13,8 +13,13 @@ export class ClientService {
 
     private _clients: BehaviorSubject<ClientViewDto[] | null> = new BehaviorSubject(null);
     private _pagination: BehaviorSubject<Pagination | null> = new BehaviorSubject(null);
+    private _client: BehaviorSubject<ClientDto | null> = new BehaviorSubject(null);
 
     constructor(private _apiService: ApiService) {
+    }
+
+    get client$() {
+        return this._client.asObservable();
     }
 
     get pagination$() {
@@ -29,6 +34,17 @@ export class ClientService {
         return this._clientAdditionals.asObservable();
     }
 
+    getClient(id: number) {
+        return this._apiService.apiClient.client(id).pipe(
+            tap((client: ClientDto) => {
+                this._client.next(client);
+            }),
+            catchError((error) => {
+                this._client.next(null);
+                return throwError(new Error(error));
+            })
+        )
+    }
 
     getClients(page: number = 0, take: number = 0, surname: string = '',
         sortDirection: SortDirection = SortDirection.ascending, sortField: ClientSortField.surname) {
@@ -56,6 +72,10 @@ export class ClientService {
                 this._clientAdditionals.next(null);
                 return throwError(new Error(error));
             }));
+    }
+
+    updateClient(clientDto: ClientDto) {
+        return this._apiService.apiClient.update(clientDto);
     }
 
     createClient(clientDto: ClientDto) {

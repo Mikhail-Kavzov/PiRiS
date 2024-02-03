@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PiRiS.Common.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace PiRiS.Business.Dto;
 
@@ -6,22 +7,27 @@ public class ClientDto
 {
     public int? ClientId { get; set; }
 
-    [RegularExpression("^[A-z,А-я,ё,Ё]{1,30}$", ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
+    [Required]
+    [RegularExpression(Patterns.ClientName, ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
     public string Surname { get; set; }
 
-    [RegularExpression("^[A-z,А-я,ё,Ё]{1,30}$", ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
+    [Required]
+    [RegularExpression(Patterns.ClientName, ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
     public string FirstName { get; set; }
 
-    [RegularExpression("^[A-z,А-я,ё,Ё]{1,30}$", ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
+    [Required]
+    [RegularExpression(Patterns.ClientName, ErrorMessage = "Only latin or cyrillic letters up to 30 symbols")]
     public string LastName { get; set; }
 
     [Required(ErrorMessage = $"{nameof(DateOfBirth)} is required")]
     public DateTime DateOfBirth { get; set; }
 
-    [StringLength(2, MinimumLength = 2, ErrorMessage = $"{nameof(PassportSeries)} should be 2 symbols")]
+    [Required]
+    [RegularExpression(Patterns.PassportSeries, ErrorMessage = "Enter valid passport series")]
     public string PassportSeries { get; set; }
 
-    [StringLength(7, MinimumLength = 7, ErrorMessage = $"{nameof(PassportSeries)} should be 7 symbols")]
+    [Required]
+    [RegularExpression(Patterns.PassportNumber, ErrorMessage = "Enter valid passport number")]
     public string PassportNumber { get; set; }
 
     [Required(ErrorMessage = $"{nameof(IssuedBy)} is required")]
@@ -31,7 +37,8 @@ public class ClientDto
     [Required(ErrorMessage = $"{nameof(DateOfIssue)} is required")]
     public DateTime DateOfIssue { get; set; }
 
-    [RegularExpression("^[A-Z,0-9]{14}$", ErrorMessage = "Only latin letters or figures. Length 14 symbols")]
+    [Required]
+    [RegularExpression(Patterns.IdentificationNumber, ErrorMessage = "Only latin letters or figures. Length 14 symbols")]
     public string IdentificationNumber { get; set; }
 
     [Required(ErrorMessage = $"{nameof(PlaceOfBirth)} is required")]
@@ -45,15 +52,15 @@ public class ClientDto
     [Required(ErrorMessage = $"{nameof(CityId)} is required")]
     public int CityId { get; set; }
 
-    [Phone]
-    [MaxLength(15, ErrorMessage = $"{nameof(HomePhone)} shoudn't be more than 15 symbols")]
+    [RegularExpression(Patterns.Phone, ErrorMessage = "Enter valid home phone number")]
+    [MaxLength(13, ErrorMessage = $"{nameof(HomePhone)} shoudn't be more than 13 symbols")]
     public string HomePhone { get; set; }
 
-    [Phone]
-    [MaxLength(15, ErrorMessage = $"{nameof(HomePhone)} shoudn't be more than 15 symbols")]
+    [RegularExpression(Patterns.Phone, ErrorMessage = "Enter valid mobile phone number")]
+    [MaxLength(13, ErrorMessage = $"{nameof(MobilePhone)} shoudn't be more than 13 symbols")]
     public string MobilePhone { get; set; }
 
-    [EmailAddress]
+    [RegularExpression(Patterns.Email, ErrorMessage = "Enter valid email address")]
     [MaxLength(50, ErrorMessage = $"{nameof(Email)} shoudn't be more than 50 symbols")]
     public string Email { get; set; }
 
@@ -78,6 +85,6 @@ public class ClientDto
 
     public bool IsPensioner { get; set; }
 
-    [Range(0, double.MaxValue)]
+    [Range(0, double.MaxValue, ErrorMessage = "Month income should be >=0")]
     public decimal? MonthIncome { get; set; }
 }

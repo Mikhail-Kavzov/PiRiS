@@ -1,23 +1,24 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseValidators } from '@fuse/validators';
 import { Subject, takeUntil } from 'rxjs';
 import { CitizenshipDto, CityDto, ClientAdditionalsDto, ClientDto, DisabilityDto, FamilyStatusDto } from '../../../../../api/api.client';
 import { Patterns } from '../../../../core/enums/patterns.enum';
 import { ClientService } from '../client.service';
 
 @Component({
-    selector: 'client-create',
-    templateUrl: './client-create.component.html',
+    selector: 'client-update',
+    templateUrl: './client-update.component.html',
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
-export class ClientCreateComponent implements OnInit, OnDestroy {
+export class ClientUpdateComponent implements OnInit, OnDestroy {
     clientForm: FormGroup;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+
+    updatedClient: ClientDto;
 
     disabilities: DisabilityDto[];
     cities: CityDto[];
@@ -32,26 +33,36 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
     ) {
     }
 
+
+
     ngOnInit(): void {
 
+        this._clientService.client$.pipe(
+            takeUntil(this._unsubscribeAll)
+        ).subscribe(
+            (client: ClientDto) => {
+                this.updatedClient = client;
+            }
+        );
+
         this.clientForm = this._formBuilder.group({
-            surname: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
-            firstName: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
-            lastName: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
-            passportSeries: ['',Validators.required, Validators.pattern(Patterns.PassportSeries)],
-            passportNumber: ['',Validators.required, Validators.pattern(Patterns.PassportNumber)],
-            issuedBy: ['',Validators.required],
-            identificationNumber: ['',Validators.required, Validators.pattern(Patterns.IdentificationNumber)],
-            placeOfBirth: ['',Validators.required],
-            locationAddress: ['',Validators.required],
-            cityId: [1,Validators.required],
-            registrationAddress: ['',Validators.required],
-            citizenshipId: [1,Validators.required],
-            disabilityId: [1,Validators.required],
-            familyStatusId: [1,Validators.required],
-            email: ['',Validators.email],
+            surname: ['', Validators.required, Validators.pattern(Patterns.ClientNames)],
+            firstName: ['', Validators.required, Validators.pattern(Patterns.ClientNames)],
+            lastName: ['', Validators.required, Validators.pattern(Patterns.ClientNames)],
+            passportSeries: ['', Validators.required, Validators.pattern(Patterns.PassportSeries)],
+            passportNumber: ['', Validators.required, Validators.pattern(Patterns.PassportNumber)],
+            issuedBy: ['', Validators.required],
+            identificationNumber: ['', Validators.required, Validators.pattern(Patterns.IdentificationNumber)],
+            placeOfBirth: ['', Validators.required],
+            locationAddress: ['', Validators.required],
+            cityId: ['', Validators.required],
+            registrationAddress: ['', Validators.required],
+            citizenshipId: ['', Validators.required],
+            disabilityId: ['', Validators.required],
+            familyStatusId: ['', Validators.required],
+            email: ['', Validators.email],
             homePhone: ['', Validators.pattern(Patterns.Phone)],
-            mobilePhone: ['',Validators.pattern(Patterns.Phone)],
+            mobilePhone: ['', Validators.pattern(Patterns.Phone)],
             company: [''],
             jobTitle: [''],
             isPensioner: [false],
@@ -78,13 +89,14 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    create() {
+    update() {
         if (this.clientForm.invalid) {
             return;
         }
 
         let client = new ClientDto();
 
+        client.clientId = this.updatedClient.clientId;
         client.passportNumber = this.clientForm.get('passportNumber').value;
         client.citizenshipId = this.clientForm.get('citizenshipId').value;
         client.passportSeries = this.clientForm.get('passportSeries').value;
@@ -109,7 +121,7 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
         client.lastName = this.clientForm.get('lastName').value;
         client.jobTitle = this.clientForm.get('jobTitle').value;
 
-        this._clientService.createClient(client)
+        this._clientService.updateClient(client)
             .subscribe(
                 () => {
                     this._router.navigateByUrl('/client/list');

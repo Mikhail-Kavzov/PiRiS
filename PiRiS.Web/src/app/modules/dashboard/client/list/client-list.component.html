@@ -3,11 +3,11 @@
     <!-- Header -->
     <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
         <!-- Title -->
-        <div class="text-4xl font-extrabold tracking-tight">Clients</div>
+        <div class="text-4xl text-center font-extrabold tracking-tight">Client List</div>
         <!-- Actions -->
         <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
             <!--Sort Field-->
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full mr-4">
                 <mat-label>Sort By</mat-label>
                 <mat-select [formControl]="sortByControl">
                     <mat-option value="0" selected>Surname</mat-option>
@@ -15,11 +15,11 @@
             </mat-form-field>
 
             <!--Sort Direction-->
-            <mat-form-field class="w-full">
+            <mat-form-field class="w-full mr-4">
                 <mat-label>Sort Direction</mat-label>
                 <mat-select [formControl]="sortDirectionControl">
-                    <mat-option value="0" selected>Ascending</mat-option>
-                    <mat-option value="1">Descending</mat-option>
+                    <mat-option value="0" >Asc</mat-option>
+                    <mat-option value="1">Desc</mat-option>
                 </mat-select>
             </mat-form-field>
             <!-- Search -->
@@ -32,7 +32,7 @@
                        [formControl]="searchInputControl"
                        [autocomplete]="'off'"
                        [placeholder]="'Search By Surname'"
-                       maxlength="50">
+                       maxlength="30">
             </mat-form-field>
         </div>
     </div>
@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="hidden md:block truncate">
-                                {{client.dateOfBirth}}
+                                {{client.dateOfBirth | date: 'dd/MM/yyyy'}}
                             </div>
 
                             <div class="truncate">
@@ -115,98 +115,90 @@
                 <div class="shadow-lg overflow-hidden">
                     <div class="flex border-b">
 
-                        <div class="flex flex-col sm:flex-row p-8">
+                        <div class="flex flex-col sm:flex-row p-8 w-full">
                             <div class="flex flex-auto flex-wrap">
                                 <div class="flex flex-col w-full lg:w-2/4 sm:pl-8">
                                     <div class="client-select-element">
-                                        <span class="mr-4">Passport Series</span>
+                                        <span class="mr-4">Passport Series:</span>
                                         <p>{{selectedClient.passportSeries}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Passport Number</span>
+                                        <span class="mr-4">Passport Number:</span>
                                         <p>{{selectedClient.passportNumber}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Issued By</span>
+                                        <span class="mr-4">Issued By:</span>
                                         <p>{{selectedClient.issuedBy}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Date Of Issue</span>
-                                        <p>{{selectedClient.dateOfIssue}}</p>
+                                        <span class="mr-4">Date Of Issue:</span>
+                                        <p>{{selectedClient.dateOfIssue | date: 'dd/MM/yyyy'}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Place Of Birth</span>
+                                        <span class="mr-4">Place Of Birth:</span>
                                         <p>{{selectedClient.placeOfBirth}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Location Address</span>
+                                        <span class="mr-4">Location Address:</span>
                                         <p>{{selectedClient.locationAddress}}</p>
                                     </div>
                                     <div class="client-select-element" *ngIf="selectedClient.homePhone">
-                                        <span class="mr-4">Home Phone</span>
+                                        <span class="mr-4">Home Phone:</span>
                                         <p>{{selectedClient.homePhone}}</p>
                                     </div>
                                     <div class="client-select-element" *ngIf="selectedClient.mobilePhone">
-                                        <span class="mr-4">Mobile Phone</span>
+                                        <span class="mr-4">Mobile Phone:</span>
                                         <p>{{selectedClient.mobilePhone}}</p>
                                     </div>
                                 </div>
                                 <div class="flex flex-col w-full lg:w-2/4 sm:pl-8">
                                     <div class="client-select-element">
-                                        <span class="mr-4">Citizenship</span>
+                                        <span class="mr-4">Citizenship:</span>
                                         <p>{{selectedClient.citizenshipName}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Disability</span>
+                                        <span class="mr-4">Disability:</span>
                                         <p>{{selectedClient.disabilityStatus}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Family Status</span>
+                                        <span class="mr-4">Family Status:</span>
                                         <p>{{selectedClient.familyStatus}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Pensioner</span>
+                                        <span class="mr-4">Pensioner:</span>
                                         <p>{{selectedClient.isPensioner}}</p>
                                     </div>
                                     <div class="client-select-element">
-                                        <span class="mr-4">Registration Address</span>
+                                        <span class="mr-4">Registration Address:</span>
                                         <p>{{selectedClient.registrationAddress}}</p>
                                     </div>
                                     <div class="client-select-element" *ngIf="selectedClient.monthIncome">
-                                        <span class="mr-4">Month Income</span>
-                                        <p>{{selectedClient.monthIncome}}</p>
+                                        <span class="mr-4">Month Income:</span>
+                                        <p>{{selectedClient.monthIncome}}$</p>
                                     </div>
                                     <div class="client-select-element" *ngIf="selectedClient.email">
-                                        <span class="mr-4">Email</span>
+                                        <span class="mr-4">Email:</span>
                                         <p>{{selectedClient.email}}</p>
                                     </div>
                                     <div class="client-select-element" *ngIf="selectedClient.company">
-                                        <span class="mr-4">Company</span>
+                                        <span class="mr-4">Company:</span>
                                         <p>{{selectedClient.company}}</p>
                                     </div>
                                     <div class="client-select-element" *ngIf="selectedClient.jobTitle">
-                                        <span class="mr-4">Job</span>
+                                        <span class="mr-4">Job:</span>
                                         <p>{{selectedClient.jobTitle}}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between w-full border-t px-8 py-4">
+                        <div class="flex items-center justify-end border-t px-8 py-4">
                             <div class="flex items-center">
-                                <div class="flex items-center mr-4"
-                                     *ngIf="flashMessage">
-                                    <ng-container *ngIf="flashMessage === 'success'">
-                                        <mat-icon class="text-green-500"
-                                                  [svgIcon]="'heroicons_outline:check'"></mat-icon>
-                                        <span class="ml-2">Client Deleted</span>
-                                    </ng-container>
-                                    <ng-container *ngIf="flashMessage === 'error'">
-                                        <mat-icon class="text-red-500"
-                                                  [svgIcon]="'heroicons_outline:x'"></mat-icon>
-                                        <span class="ml-2">An error occurred, try again!</span>
-                                    </ng-container>
-                                </div>
+                                <button mat-flat-button class="mr-4"
+                                        [color]="'primary'"
+                                        (click)="updateClient()">
+                                    Update
+                                </button>
                                 <button mat-flat-button
                                         [color]="'primary'"
                                         (click)="deleteClient()">

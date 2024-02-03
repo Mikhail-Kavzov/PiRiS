@@ -5,7 +5,7 @@
             <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
 
                 <!-- Title -->
-                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Create Client</div>
+                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Update Client</div>
 
                 <!-- Form -->
                 <form class="mt-4"
@@ -15,6 +15,7 @@
                     <mat-form-field class="w-full">
                         <mat-label>Surname</mat-label>
                         <input id="surname"
+                               [(ngModel)]="updatedClient.surname"
                                matInput
                                [formControlName]="'surname'" maxlength="30">
                         <mat-error *ngIf="clientForm.get('surname').hasError('required')">
@@ -30,6 +31,7 @@
                         <mat-label>Firstname</mat-label>
                         <input id="firstName"
                                matInput
+                               [(ngModel)]="updatedClient.firstName"
                                [formControlName]="'firstName'" maxlength="30">
                         <mat-error *ngIf="clientForm.get('firstName').hasError('required')">
                             Firstname is required
@@ -44,6 +46,7 @@
                         <mat-label>Lastname</mat-label>
                         <input id="lastName"
                                matInput
+                               [(ngModel)]="updatedClient.lastName"
                                [formControlName]="'lastName'" maxlength="30">
                         <mat-error *ngIf="clientForm.get('lastName').hasError('required')">
                             Lastname is required
@@ -56,7 +59,7 @@
                     <!-- DateOfBirth field -->
                     <mat-form-field class="w-full">
                         <mat-label>Date Of Birth</mat-label>
-                        <input matInput [matDatepicker]="dateOfBirthDatePicker" name="dateOfBirth" formControlName="dateOfBirth">
+                        <input matInput [(ngModel)]="updatedClient.dateOfBirth" [matDatepicker]="dateOfBirthDatePicker" name="dateOfBirth" formControlName="dateOfBirth">
                         <mat-datepicker-toggle matIconSuffix [for]="dateOfBirthDatePicker"></mat-datepicker-toggle>
                         <mat-datepicker #dateOfBirthDatePicker></mat-datepicker>
                         <mat-error *ngIf="clientForm.get('dateOfBirth').hasError('required')">
@@ -69,6 +72,7 @@
                         <mat-label>Passport Series</mat-label>
                         <input id="passportSeries"
                                matInput
+                               [(ngModel)]="updatedClient.passportSeries"
                                [formControlName]="'passportSeries'" maxlength="2">
                         <mat-error *ngIf="clientForm.get('passportSeries').hasError('required')">
                             Passport series is required
@@ -83,6 +87,7 @@
                         <mat-label>Passport Number</mat-label>
                         <input id="passportNumber"
                                matInput
+                               [(ngModel)]="updatedClient.passportNumber"
                                [formControlName]="'passportNumber'" maxlength="7">
                         <mat-error *ngIf="clientForm.get('passportNumber').hasError('required')">
                             Passport number is required
@@ -97,6 +102,7 @@
                         <mat-label>Identification Number</mat-label>
                         <input id="identificationNumber"
                                matInput
+                               [(ngModel)]="updatedClient.identificationNumber"
                                [formControlName]="'identificationNumber'" maxlength="14">
                         <mat-error *ngIf="clientForm.get('identificationNumber').hasError('required')">
                             Identification number is required
@@ -111,6 +117,7 @@
                         <mat-label>Issued By</mat-label>
                         <input id="issuedBy"
                                matInput
+                               [(ngModel)]="updatedClient.issuedBy"
                                [formControlName]="'issuedBy'" maxlength="100">
                         <mat-error *ngIf="clientForm.get('issuedBy').hasError('required')">
                             Issued by is required
@@ -120,7 +127,7 @@
                     <!-- DateOfIssue field -->
                     <mat-form-field class="w-full">
                         <mat-label>Date Of Issue</mat-label>
-                        <input matInput [matDatepicker]="dateOfIssueDatePicker" name="dateOfIssue" formControlName="dateOfIssue">
+                        <input matInput [(ngModel)]="updatedClient.dateOfIssue" [matDatepicker]="dateOfIssueDatePicker" name="dateOfIssue" formControlName="dateOfIssue">
                         <mat-datepicker-toggle matIconSuffix [for]="dateOfIssueDatePicker"></mat-datepicker-toggle>
                         <mat-datepicker #dateOfIssueDatePicker></mat-datepicker>
                         <mat-error *ngIf="clientForm.get('dateOfIssue').hasError('required')">
@@ -133,6 +140,7 @@
                         <mat-label>Location Address</mat-label>
                         <input id="locationAddress"
                                matInput
+                               [(ngModel)]="updatedClient.locationAddress"
                                [formControlName]="'locationAddress'" maxlength="100">
                         <mat-error *ngIf="clientForm.get('locationAddress').hasError('required')">
                             Location address is required
@@ -144,6 +152,7 @@
                         <mat-label>Registration Address</mat-label>
                         <input id="registrationAddress"
                                matInput
+                               [(ngModel)]="updatedClient.registrationAddress"
                                [formControlName]="'registrationAddress'" maxlength="100">
                         <mat-error *ngIf="clientForm.get('registrationAddress').hasError('required')">
                             Registration address is required
@@ -155,6 +164,7 @@
                         <mat-label>Place Of Birth</mat-label>
                         <input id="placeOfBirth"
                                matInput
+                               [(ngModel)]="updatedClient.placeOfBirth"
                                [formControlName]="'placeOfBirth'" maxlength="100">
                         <mat-error *ngIf="clientForm.get('placeOfBirth').hasError('required')">
                             Place of birth is required
@@ -166,6 +176,7 @@
                         <mat-label>Home Phone</mat-label>
                         <input id="homePhone"
                                matInput
+                               [(ngModel)]="updatedClient.homePhone"
                                [formControlName]="'homePhone'" maxlength="13">
                         <mat-error *ngIf="clientForm.get('homePhone').hasError('pattern')">
                            Enter valid phone number
@@ -177,6 +188,7 @@
                         <mat-label>Mobile Phone</mat-label>
                         <input id="mobilePhone"
                                matInput
+                               [(ngModel)]="updatedClient.mobilePhone"
                                [formControlName]="'mobilePhone'" maxlength="13">
                         <mat-error *ngIf="clientForm.get('mobilePhone').hasError('pattern')">
                             Enter valid phone number
@@ -188,6 +200,7 @@
                         <mat-label>Email</mat-label>
                         <input id="email"
                                matInput
+                               [(ngModel)]="updatedClient.email"
                                [formControlName]="'email'" maxlength="50">
                         <mat-error *ngIf="clientForm.get('email').hasError('email')">
                             Specify correct email address
@@ -199,6 +212,7 @@
                         <mat-label>Company</mat-label>
                         <input id="company"
                                matInput
+                               [(ngModel)]="updatedClient.company"
                                [formControlName]="'company'" maxlength="50">
                     </mat-form-field>
 
@@ -207,23 +221,25 @@
                         <mat-label>Job Title</mat-label>
                         <input id="jobTitle"
                                matInput
+                               [(ngModel)]="updatedClient.jobTitle"
                                [formControlName]="'jobTitle'" maxlength="50">
                     </mat-form-field>
 
                     <mat-checkbox class="mr-4 w-full" [color]="'primary'"
-                                  
+                                  [(ngModel)]="updatedClient.isPensioner"
                                   [formControlName]="'isPensioner'">
                         <span>Pensioner</span>
                     </mat-checkbox>
 
                     <mat-form-field class="w-full">
                         <mat-label>Month Income</mat-label>
-                        <input id="monthIncome" [formControlName]="'monthIncome'" matInput type="number" />
+
+                        <input id="monthIncome" [(ngModel)]="updatedClient.monthIncome" [formControlName]="'monthIncome'" matInput type="number" />
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
                         <mat-label>City</mat-label>
-                        <mat-select formControlName="cityId">
+                        <mat-select formControlName="cityId" [(ngModel)]="updatedClient.cityId">
                             <ng-container *ngFor="let city of cities">
                                 <mat-option [value]="city.cityId">{{city.name}}</mat-option>
                             </ng-container>
@@ -232,27 +248,27 @@
 
                     <mat-form-field class="w-full">
                         <mat-label>Family Status</mat-label>
-                        <mat-select formControlName="familyStatusId">
+                        <mat-select formControlName="familyStatusId" [(ngModel)]="updatedClient.familyStatusId">
                             <ng-container *ngFor="let familyStatus of familyStatuses">
-                                <mat-option [value]="familyStatus.familyStatusId" selected>{{familyStatus.statusName}}</mat-option>
+                                <mat-option [value]="familyStatus.familyStatusId">{{familyStatus.statusName}}</mat-option>
                             </ng-container>
                         </mat-select>
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
                         <mat-label>Citizenship</mat-label>
-                        <mat-select formControlName="citizenshipId">
+                        <mat-select formControlName="citizenshipId" [(ngModel)]="updatedClient.citizenshipId">
                             <ng-container *ngFor="let citizenship of citizenships">
-                                <mat-option [value]="citizenship.citizenshipId" selected>{{citizenship.citizenshipName}}</mat-option>
+                                <mat-option [value]="citizenship.citizenshipId">{{citizenship.citizenshipName}}</mat-option>
                             </ng-container>
                         </mat-select>
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
                         <mat-label>Disability</mat-label>
-                        <mat-select formControlName="disabilityId">
+                        <mat-select formControlName="disabilityId" [(ngModel)]="updatedClient.disabilityId">
                             <ng-container *ngFor="let disability of disabilities">
-                                <mat-option [value]="disability.disabilityId" selected>{{disability.disabilityStatus}}</mat-option>
+                                <mat-option [value]="disability.disabilityId">{{disability.disabilityStatus}}</mat-option>
                             </ng-container>
                         </mat-select>
                     </mat-form-field>
@@ -262,9 +278,9 @@
                             mat-flat-button
                             [color]="'primary'"
                             [disabled]="clientForm.invalid"
-                            (click)="create()">
+                            (click)="update()">
                         <span *ngIf="!clientForm.disabled">
-                            Create Client
+                            Update Client
                         </span>
                         <mat-progress-spinner *ngIf="clientForm.disabled"
                                               [diameter]="24"
