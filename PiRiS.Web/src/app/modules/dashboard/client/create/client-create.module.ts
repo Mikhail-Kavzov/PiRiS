@@ -10,6 +10,7 @@ import { FuseCardModule } from '@fuse/components/card';
 import { SharedModule } from 'app/shared/shared.module';
 import { ClientCreateComponent } from './client-create.component';
 import { clientCreateRoutes } from './client-create.routing';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
     declarations: [
@@ -24,6 +25,7 @@ import { clientCreateRoutes } from './client-create.routing';
         MatInputModule,
         MatProgressSpinnerModule,
         FuseCardModule,
+        MatSelectModule,
         SharedModule,
     ]
 })

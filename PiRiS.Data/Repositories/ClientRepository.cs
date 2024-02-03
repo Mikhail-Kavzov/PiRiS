@@ -12,6 +12,16 @@ public class ClientRepository : BaseRepository, IClientRepository
     {
     }
 
+    public async Task<int> CountAsync(Expression<Func<Client, bool>>? predicate = null)
+    {
+        IQueryable<Client> query = _context.Clients;
+        if(predicate != null)
+        {
+            query = query.Where(predicate);
+        }
+        return await query.CountAsync();
+    }
+
     public void Create(Client entity)
     {
        _context.Clients.Add(entity);

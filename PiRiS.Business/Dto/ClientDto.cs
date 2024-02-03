@@ -31,7 +31,7 @@ public class ClientDto
     [Required(ErrorMessage = $"{nameof(DateOfIssue)} is required")]
     public DateTime DateOfIssue { get; set; }
 
-    [RegularExpression("^[A-Z0-9]{14}$", ErrorMessage = "Only latin letters or figures. Length 14 symbols")]
+    [RegularExpression("^[A-Z,0-9]{14}$", ErrorMessage = "Only latin letters or figures. Length 14 symbols")]
     public string IdentificationNumber { get; set; }
 
     [Required(ErrorMessage = $"{nameof(PlaceOfBirth)} is required")]

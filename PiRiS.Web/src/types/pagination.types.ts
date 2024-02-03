@@ -1,5 +1,4 @@
-export class TokenPagination
-{
+export class Pagination {
     length: number;
     size: number;
     page: number;

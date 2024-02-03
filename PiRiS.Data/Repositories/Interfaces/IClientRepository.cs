@@ -5,7 +5,7 @@ namespace PiRiS.Data.Repositories.Interfaces;
 
 public interface IClientRepository : IRepository, IUpdateRepository<Client>,
     IDeleteRepository<Client>, IGetRepository<Client, int>, 
-    ICreateRepository<Client>, IListRepository<Client>, IExistsRepository<Client>
+    ICreateRepository<Client>, IListRepository<Client>, IExistsRepository<Client>, ICountRepository<Client>
 {
 
 }

@@ -77,7 +77,7 @@ public class ClientManager : BaseManager, IClientManager
         return Mapper.Map<ClientDto>(client);
     }
 
-    public async Task<IEnumerable<ClientViewDto>> GetClientsAsync(ClientPaginationDto paginationDto)
+    public async Task<PaginationList<ClientViewDto>> GetClientsAsync(ClientPaginationDto paginationDto)
     {
         Expression<Func<Client, bool>> predicate = null;
 
@@ -105,7 +105,14 @@ public class ClientManager : BaseManager, IClientManager
 
         var clients = await UnitOfWork.ClientRepository
             .GetListAsync(paginationDto.Skip, paginationDto.Take, predicate, sort, isAscending);
-        return Mapper.Map<List<ClientViewDto>>(clients);
+        var totalCount = await UnitOfWork.ClientRepository.CountAsync(predicate);
+
+       var clientsDto = Mapper.Map<List<ClientViewDto>>(clients);
+        return new PaginationList<ClientViewDto>
+        {
+            Items = clientsDto,
+            TotalCount = totalCount
+        };
     }
 
     public async Task UpdateClientAsync(ClientDto clientDto)

@@ -7,7 +7,7 @@ public interface IClientManager : IBaseManager
     Task DeleteClientAsync(int clientId);
     Task CreateClientAsync(ClientDto clientDto);
     Task UpdateClientAsync(ClientDto clientDto);
-    Task<IEnumerable<ClientViewDto>> GetClientsAsync(ClientPaginationDto clientPaginationDto);
+    Task<PaginationList<ClientViewDto>> GetClientsAsync(ClientPaginationDto clientPaginationDto);
     Task<ClientDto> GetClientAsync(int clientId);
 
     Task<ClientAdditionalsDto> GetAdditionalsAsync();

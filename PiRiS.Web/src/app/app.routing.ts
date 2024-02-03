@@ -1,10 +1,5 @@
 import { Route } from '@angular/router';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
-import { NoAuthOnlyGuard } from 'app/core/auth/guards/noneonly.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
-import { InitialDataResolver } from 'app/app.resolvers';
-import { ROLES } from 'app/core/enums/roles.enum';
-import { RoleGuard } from 'app/core/auth/guards/role.guard';
 
 // @formatter:off
 /* eslint-disable max-len */

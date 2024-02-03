@@ -15,15 +15,15 @@ import { RouterModule } from '@angular/router';
 import { FuseAlertModule } from '@fuse/components/alert';
 import { FuseCardModule } from '@fuse/components/card';
 import { SharedModule } from 'app/shared/shared.module';
-import { TokenCorrelationComponent } from './token-correlation.component';
-import { tokenCorrelationRoutes } from './token-correlation.routing';
+import { ClientListComponent } from './client-list.component';
+import { clientListRoutes } from './client-list.routing';
 
 @NgModule({
     declarations: [
-        TokenCorrelationComponent
+        ClientListComponent
     ],
     imports     : [
-        RouterModule.forChild(tokenCorrelationRoutes),
+        RouterModule.forChild(clientListRoutes),
         MatButtonModule,
         MatFormFieldModule,
         MatIconModule,
@@ -41,6 +41,6 @@ import { tokenCorrelationRoutes } from './token-correlation.routing';
         MatCheckboxModule,
     ]
 })
-export class TokenCorrelationModule
+export class ClientListModule
 {
 }

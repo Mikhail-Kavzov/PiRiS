@@ -68,15 +68,15 @@ export class ApiClient {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } }
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return _observableOf<void>(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+                return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -122,18 +122,18 @@ export class ApiClient {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } }
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 let result200: any = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = ClientDto.fromJS(resultData200);
                 return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ClientDto>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -178,15 +178,15 @@ export class ApiClient {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } }
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return _observableOf<void>(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+                return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -231,15 +231,15 @@ export class ApiClient {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } }
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-                return _observableOf<void>(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+                return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -280,25 +280,25 @@ export class ApiClient {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } }
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 let result200: any = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
                 result200 = ClientAdditionalsDto.fromJS(resultData200);
                 return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ClientAdditionalsDto>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @param body (optional) 
      * @return Success
      */
-    list(body: ClientPaginationDto | undefined): Observable<ClientViewDto[]> {
+    list(body: ClientPaginationDto | undefined): Observable<ClientViewDtoPaginationList> {
         let url_ = this.baseUrl + "/api/Client/List";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -322,14 +322,14 @@ export class ApiClient {
                 try {
                     return this.processList(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ClientViewDto[]>;
+                    return _observableThrow(e) as any as Observable<ClientViewDtoPaginationList>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ClientViewDto[]>;
+                return _observableThrow(response_) as any as Observable<ClientViewDtoPaginationList>;
         }));
     }
 
-    protected processList(response: HttpResponseBase): Observable<ClientViewDto[]> {
+    protected processList(response: HttpResponseBase): Observable<ClientViewDtoPaginationList> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -337,25 +337,18 @@ export class ApiClient {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } }
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 let result200: any = null;
                 let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                if (Array.isArray(resultData200)) {
-                    result200 = [] as any;
-                    for (let item of resultData200)
-                        result200!.push(ClientViewDto.fromJS(item));
-                }
-                else {
-                    result200 = <any>null;
-                }
+                result200 = ClientViewDtoPaginationList.fromJS(resultData200);
                 return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
                 return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ClientViewDto[]>(null as ClientViewDto[]);
+        return _observableOf(null as any);
     }
 }
 
@@ -700,7 +693,7 @@ export interface IClientPaginationDto {
 }
 
 export enum ClientSortField {
-    _0 = 0,
+    surname = 0,
 }
 
 export class ClientViewDto implements IClientViewDto {
@@ -831,6 +824,54 @@ export interface IClientViewDto {
     monthIncome?: number | undefined;
 }
 
+export class ClientViewDtoPaginationList implements IClientViewDtoPaginationList {
+    items?: ClientViewDto[] | undefined;
+    totalCount?: number;
+
+    constructor(data?: IClientViewDtoPaginationList) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(ClientViewDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): ClientViewDtoPaginationList {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClientViewDtoPaginationList();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data;
+    }
+}
+
+export interface IClientViewDtoPaginationList {
+    items?: ClientViewDto[] | undefined;
+    totalCount?: number;
+}
+
 export class DisabilityDto implements IDisabilityDto {
     disabilityId?: number;
     disabilityStatus?: string | undefined;
@@ -912,12 +953,12 @@ export interface IFamilyStatusDto {
 }
 
 export enum SortDirection {
-    _0 = 0,
-    _1 = 1,
+    ascending = 0,
+    descending = 1,
 }
 
 export class ApiException extends Error {
-    message: string;
+    override message: string;
     status: number;
     response: string;
     headers: { [key: string]: any; };

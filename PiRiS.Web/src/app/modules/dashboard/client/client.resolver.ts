@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
+import { ClientAdditionalsDto } from '../../../../api/api.client';
 import { ClientService } from './client.service';
 
 @Injectable({
@@ -24,7 +25,7 @@ export class ClientResolver implements Resolve<any>
      * @param route
      * @param state
      */
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<TokenCorrelationDto[]> {
-        return this._clientService.getTokens();
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<ClientAdditionalsDto> {
+        return this._clientService.getAdditionals();
     }
 }
