@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, catchError, map, Observable, of, switchMap, take, tap, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { ApiService } from 'api/api.service';
 import { ClientAdditionalsDto, ClientDto, ClientPaginationDto, ClientSortField, ClientViewDto, SortDirection } from '../../../../api/api.client';
 import { Pagination } from '../../../../types/pagination.types';
@@ -31,7 +31,7 @@ export class ClientService {
 
 
     getClients(page: number = 0, take: number = 0, surname: string = '',
-        sortDirection: SortDirection = SortDirection.ascending, sortField: ClientSortField.surname){
+        sortDirection: SortDirection = SortDirection.ascending, sortField: ClientSortField.surname) {
         return this._apiService.apiClient.list(new ClientPaginationDto({
             skip: page * take,
             take: take,
@@ -56,7 +56,6 @@ export class ClientService {
         return this._apiService.apiClient.additionals().pipe(
             tap((result) => {
                 this._clientAdditionals.next(result);
-
             }),
             catchError((error) => {
 
@@ -66,13 +65,11 @@ export class ClientService {
     }
 
     createClient(clientDto: ClientDto) {
-        return this._apiService.apiClient.create(clientDto);     
+        return this._apiService.apiClient.create(clientDto);
     }
 
     deleteClient(id: number) {
-        return this._apiService.apiClient.delete(id).pipe(
-            catchError((error) => throwError(new Error(error))
-            ));
+        return this._apiService.apiClient.delete(id);
     }
 
 }

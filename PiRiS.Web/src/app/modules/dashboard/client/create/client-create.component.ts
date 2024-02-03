@@ -62,14 +62,14 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
 
         this._clientService.additionals$.pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
-            (result: ClientAdditionalsDto) => {
-                this.disabilities = result.disabilities;
-                this.citizenships = result.citizenships;
-                this.cities = result.cities;
-                this.familyStatuses = result.familyStatuses;
-            }
+                (result: ClientAdditionalsDto) => {
+                    this.disabilities = result.disabilities;
+                    this.citizenships = result.citizenships;
+                    this.cities = result.cities;
+                    this.familyStatuses = result.familyStatuses;
+                }
 
-        )
+            )
 
     }
     ngOnDestroy(): void {
@@ -84,7 +84,7 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
 
         this.clientForm.disable();
 
-       
+
         let client = new ClientDto();
 
         client.passportNumber = this.clientForm.get('passportNumber').value;

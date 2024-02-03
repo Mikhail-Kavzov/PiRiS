@@ -1,9 +1,9 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
-import { catchError, debounceTime, map, Observable, Subject, switchMap, takeUntil, tap, throwError } from 'rxjs';
+import { debounceTime, Subject, switchMap, takeUntil } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
-import { ClientSortField, ClientViewDto, SortDirection } from '../../../../../api/api.client';
+import { ClientViewDto, } from '../../../../../api/api.client';
 import { Pagination } from '../../../../../types/pagination.types';
 import { ClientService } from '../client.service';
 
@@ -133,7 +133,7 @@ export class ClientListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     toggleDetails(client: ClientViewDto): void {
- 
+
         if (this.selectedClient && this.selectedClient.clientId === client.clientId) {
             // Close the details
             this.closeDetails();

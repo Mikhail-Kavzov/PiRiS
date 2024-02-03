@@ -4,7 +4,7 @@ import { ClientListResolver } from './client-list.resolver';
 
 export const clientListRoutes: Route[] = [
     {
-        path     : '',
+        path: '',
         component: ClientListComponent,
         resolve: {
             pageData: ClientListResolver

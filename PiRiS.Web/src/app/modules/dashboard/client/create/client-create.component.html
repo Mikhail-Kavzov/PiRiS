@@ -241,7 +241,7 @@
 
                     <mat-form-field class="w-full">
                         <mat-label>Disability</mat-label>
-                        <mat-select formControlName="disabilityId"  *ngFor="let disability of disabilities">
+                        <mat-select formControlName="disabilityId" *ngFor="let disability of disabilities">
                             <mat-option [value]="disability.disabilityId" selected>{{disability.disabilityStatus}}</mat-option>
                         </mat-select>
                     </mat-form-field>

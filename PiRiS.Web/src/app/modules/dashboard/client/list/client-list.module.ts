@@ -22,7 +22,7 @@ import { clientListRoutes } from './client-list.routing';
     declarations: [
         ClientListComponent
     ],
-    imports     : [
+    imports: [
         RouterModule.forChild(clientListRoutes),
         MatButtonModule,
         MatFormFieldModule,
@@ -41,6 +41,5 @@ import { clientListRoutes } from './client-list.routing';
         MatCheckboxModule,
     ]
 })
-export class ClientListModule
-{
+export class ClientListModule {
 }
