@@ -190,22 +190,22 @@ export class ApiClient {
     }
 
     /**
-     * @param body (optional) 
+     * @param clientId (optional) 
      * @return Success
      */
-    delete(body: number | undefined): Observable<void> {
-        let url_ = this.baseUrl + "/api/Client/Delete";
+    delete(clientId: number | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/Client/Delete?";
+        if (clientId === null)
+            throw new Error("The parameter 'clientId' cannot be null.");
+        else if (clientId !== undefined)
+            url_ += "clientId=" + encodeURIComponent("" + clientId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_: any = {
-            body: content_,
             observe: "response",
             responseType: "blob",
             withCredentials: true,
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
             })
         };
 
@@ -295,22 +295,42 @@ export class ApiClient {
     }
 
     /**
-     * @param body (optional) 
+     * @param skip (optional) 
+     * @param take (optional) 
+     * @param surname (optional) 
+     * @param sortField (optional) 
+     * @param sortDirection (optional) 
      * @return Success
      */
-    list(body: ClientPaginationDto | undefined): Observable<ClientViewDtoPaginationList> {
-        let url_ = this.baseUrl + "/api/Client/List";
+    list(skip: number | undefined, take: number | undefined, surname: string | undefined, sortField: ClientSortField | undefined, sortDirection: SortDirection | undefined): Observable<ClientViewDtoPaginationList> {
+        let url_ = this.baseUrl + "/api/Client/List?";
+        if (skip === null)
+            throw new Error("The parameter 'skip' cannot be null.");
+        else if (skip !== undefined)
+            url_ += "Skip=" + encodeURIComponent("" + skip) + "&";
+        if (take === null)
+            throw new Error("The parameter 'take' cannot be null.");
+        else if (take !== undefined)
+            url_ += "Take=" + encodeURIComponent("" + take) + "&";
+        if (surname === null)
+            throw new Error("The parameter 'surname' cannot be null.");
+        else if (surname !== undefined)
+            url_ += "Surname=" + encodeURIComponent("" + surname) + "&";
+        if (sortField === null)
+            throw new Error("The parameter 'sortField' cannot be null.");
+        else if (sortField !== undefined)
+            url_ += "SortField=" + encodeURIComponent("" + sortField) + "&";
+        if (sortDirection === null)
+            throw new Error("The parameter 'sortDirection' cannot be null.");
+        else if (sortDirection !== undefined)
+            url_ += "SortDirection=" + encodeURIComponent("" + sortDirection) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
-
         let options_: any = {
-            body: content_,
             observe: "response",
             responseType: "blob",
             withCredentials: true,
             headers: new HttpHeaders({
-                "Content-Type": "application/json",
                 "Accept": "text/plain"
             })
         };
@@ -638,58 +658,6 @@ export interface IClientDto {
     familyStatusId: number;
     isPensioner?: boolean;
     monthIncome?: number | undefined;
-}
-
-export class ClientPaginationDto implements IClientPaginationDto {
-    skip?: number;
-    take?: number;
-    surname?: string | undefined;
-    sortField?: ClientSortField;
-    sortDirection?: SortDirection;
-
-    constructor(data?: IClientPaginationDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.skip = _data["skip"];
-            this.take = _data["take"];
-            this.surname = _data["surname"];
-            this.sortField = _data["sortField"];
-            this.sortDirection = _data["sortDirection"];
-        }
-    }
-
-    static fromJS(data: any): ClientPaginationDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ClientPaginationDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["skip"] = this.skip;
-        data["take"] = this.take;
-        data["surname"] = this.surname;
-        data["sortField"] = this.sortField;
-        data["sortDirection"] = this.sortDirection;
-        return data;
-    }
-}
-
-export interface IClientPaginationDto {
-    skip?: number;
-    take?: number;
-    surname?: string | undefined;
-    sortField?: ClientSortField;
-    sortDirection?: SortDirection;
 }
 
 export enum ClientSortField {

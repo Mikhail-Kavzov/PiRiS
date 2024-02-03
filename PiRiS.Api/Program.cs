@@ -2,7 +2,6 @@ using PiRiS.Api.Extensions;
 using PiRiS.Data.Extensions;
 using PiRiS.Business.Extensions;
 using PiRiS.Business.Mapper.Config;
-using Microsoft.AspNetCore.Builder;
 
 internal class Program
 {
@@ -22,6 +21,7 @@ internal class Program
 
         builder.Services.AddBusinessDependencies();
         builder.Services.AddBusinessMappings();
+        builder.Services.AddCors(builder.Configuration);
 
         var app = builder.Build();
 
@@ -37,8 +37,8 @@ internal class Program
             app.UseSwaggerUI();
         }
 
-        app.UseHttpsRedirection();
-
+        //app.UseHttpsRedirection();
+        app.UseCors("BankPolicy");
         app.UseAuthorization();
         app.UseErrorHandling();
 

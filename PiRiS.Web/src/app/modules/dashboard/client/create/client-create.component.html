@@ -1,11 +1,11 @@
 <div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
-    <div class="flex md:w-full md:max-w-6xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
+    <div class="flex md:max-w-6xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
 
         <div class="w-full sm:w-auto py-4 px-4 sm:p-10 sm:rounded-2xl sm:shadow sm:bg-card">
             <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
 
                 <!-- Title -->
-                <div class="mt-4 text-4xl font-extrabold tracking-tight leading-tight">Sign Up</div>
+                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Create Client</div>
 
                 <!-- Form -->
                 <form class="mt-4"
@@ -208,41 +208,49 @@
                     </mat-form-field>
 
                     <mat-checkbox class="mr-4 w-full" [color]="'primary'"
-                                  checked="false"
+                                  
                                   [formControlName]="'isPensioner'">
                         <span>Pensioner</span>
                     </mat-checkbox>
 
                     <mat-form-field class="w-full">
                         <mat-label>Month Income</mat-label>
-                        <input id="monthIncome" matInput type="number" />
+                        <input id="monthIncome" [formControlName]="'isPensioner'" matInput type="number" />
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
                         <mat-label>City</mat-label>
-                        <mat-select formControlName="cityId" *ngFor="let city of cities">
-                            <mat-option [value]="city.cityId" selected>{{city.name}}</mat-option>
+                        <mat-select formControlName="cityId">
+                            <ng-container *ngFor="let city of cities">
+                                <mat-option [value]="city.cityId" selected>{{city.name}}</mat-option>
+                            </ng-container>
                         </mat-select>
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
                         <mat-label>Family Status</mat-label>
-                        <mat-select formControlName="familyStatusId" *ngFor="let familyStatus of familyStatuses">
-                            <mat-option [value]="familyStatus.familyStatusId" selected>{{familyStatus.statusName}}</mat-option>
+                        <mat-select formControlName="familyStatusId">
+                            <ng-container *ngFor="let familyStatus of familyStatuses">
+                                <mat-option [value]="familyStatus.familyStatusId" selected>{{familyStatus.statusName}}</mat-option>
+                            </ng-container>
                         </mat-select>
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
                         <mat-label>Citizenship</mat-label>
-                        <mat-select formControlName="citizenshipId" *ngFor="let citizenship of citizenships">
-                            <mat-option [value]="citizenship.citizenshipId" selected>{{citizenship.citizenshipName}}</mat-option>
+                        <mat-select formControlName="citizenshipId">
+                            <ng-container *ngFor="let citizenship of citizenships">
+                                <mat-option [value]="citizenship.citizenshipId" selected>{{citizenship.citizenshipName}}</mat-option>
+                            </ng-container>
                         </mat-select>
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
                         <mat-label>Disability</mat-label>
-                        <mat-select formControlName="disabilityId" *ngFor="let disability of disabilities">
-                            <mat-option [value]="disability.disabilityId" selected>{{disability.disabilityStatus}}</mat-option>
+                        <mat-select formControlName="disabilityId">
+                            <ng-container *ngFor="let disability of disabilities">
+                                <mat-option [value]="disability.disabilityId" selected>{{disability.disabilityStatus}}</mat-option>
+                            </ng-container>
                         </mat-select>
                     </mat-form-field>
 

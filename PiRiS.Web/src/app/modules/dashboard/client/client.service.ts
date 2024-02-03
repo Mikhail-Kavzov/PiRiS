@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { ApiService } from 'api/api.service';
-import { ClientAdditionalsDto, ClientDto, ClientPaginationDto, ClientSortField, ClientViewDto, SortDirection } from '../../../../api/api.client';
+import { ClientAdditionalsDto, ClientDto, ClientSortField, ClientViewDto, SortDirection } from '../../../../api/api.client';
 import { Pagination } from '../../../../types/pagination.types';
 
 @Injectable({
@@ -32,13 +32,7 @@ export class ClientService {
 
     getClients(page: number = 0, take: number = 0, surname: string = '',
         sortDirection: SortDirection = SortDirection.ascending, sortField: ClientSortField.surname) {
-        return this._apiService.apiClient.list(new ClientPaginationDto({
-            skip: page * take,
-            take: take,
-            surname: surname,
-            sortDirection: sortDirection,
-            sortField: sortField
-        })).pipe(
+        return this._apiService.apiClient.list(page* take, take, surname, sortField, sortDirection).pipe(
             tap((result) => {
                 this._clients.next(result.items);
                 this._pagination.next(new Pagination(page, take, result.totalCount));

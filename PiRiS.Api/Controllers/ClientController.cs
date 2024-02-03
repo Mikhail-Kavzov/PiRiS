@@ -35,7 +35,7 @@ namespace PiRiS.Api.Controllers
         }
 
         [HttpDelete("Delete")]
-        public async Task<ActionResult> DeleteClientAsync([FromBody] int clientId)
+        public async Task<ActionResult> DeleteClientAsync([FromQuery] int clientId)
         {
             await _clientManager.DeleteClientAsync(clientId);
             return Ok();
@@ -49,7 +49,7 @@ namespace PiRiS.Api.Controllers
         }
 
         [HttpGet("List")]
-        public async Task<ActionResult<PaginationList<ClientViewDto>>> GetClientsAsync(ClientPaginationDto clientPaginationDto)
+        public async Task<ActionResult<PaginationList<ClientViewDto>>> GetClientsAsync( [FromQuery] ClientPaginationDto clientPaginationDto)
         {
             var clients = await _clientManager.GetClientsAsync(clientPaginationDto);
             return Ok(clients);

@@ -40,23 +40,29 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
 
         this.clientForm = this._formBuilder.group({
-            surname: [Validators.required, Validators.pattern(Patterns.ClientNames)],
-            firstName: [Validators.required, Validators.pattern(Patterns.ClientNames)],
-            lastName: [Validators.required, Validators.pattern(Patterns.ClientNames)],
-            dateOfBirth: [Validators.required],
-            passportSeries: [Validators.required, Validators.minLength(2)],
-            passportNumber: [Validators.required, Validators.minLength(7)],
-            issuedBy: [Validators.required],
-            dateOfIssue: [Validators.required],
-            identificationNumber: [Validators.required, Validators.pattern(Patterns.IdentificationNumber)],
-            placeOfBirth: [Validators.required],
-            locationAddress: [Validators.required],
-            cityId: [Validators.required],
-            registrationAddress: [Validators.required],
-            citizenshipId: [Validators.required],
-            disabilityId: [Validators.required],
-            familyStatusId: [Validators.required],
-            email: [Validators.email]
+            surname: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
+            firstName: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
+            lastName: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
+            dateOfBirth: ['',Validators.required],
+            passportSeries: ['',Validators.required, Validators.minLength(2)],
+            passportNumber: ['',Validators.required, Validators.minLength(7)],
+            issuedBy: ['',Validators.required],
+            dateOfIssue: ['',Validators.required],
+            identificationNumber: ['',Validators.required, Validators.pattern(Patterns.IdentificationNumber)],
+            placeOfBirth: ['',Validators.required],
+            locationAddress: ['',Validators.required],
+            cityId: [0,Validators.required],
+            registrationAddress: ['',Validators.required],
+            citizenshipId: [0,Validators.required],
+            disabilityId: [0,Validators.required],
+            familyStatusId: [0,Validators.required],
+            email: ['',Validators.email],
+            homePhone: [''],
+            mobilePhone: [''],
+            company: [''],
+            jobTitle: [''],
+            isPensioner: [false],
+            monthIncome: [null,Validators.min(0)]
 
         })
 
@@ -82,7 +88,7 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.clientForm.disable();
+        //this.clientForm.disable();
 
 
         let client = new ClientDto();
@@ -116,7 +122,7 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
         this._clientService.createClient(client)
             .subscribe(
                 () => {
-                    this._router.navigateByUrl('/');
+                    this._router.navigateByUrl('/client/list');
                 },
                 () => {
                     this.clientForm.enable();

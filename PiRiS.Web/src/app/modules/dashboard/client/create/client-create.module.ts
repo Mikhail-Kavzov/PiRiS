@@ -11,6 +11,7 @@ import { SharedModule } from 'app/shared/shared.module';
 import { ClientCreateComponent } from './client-create.component';
 import { clientCreateRoutes } from './client-create.routing';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 @NgModule({
     declarations: [
@@ -26,6 +27,7 @@ import { MatSelectModule } from '@angular/material/select';
         MatProgressSpinnerModule,
         FuseCardModule,
         MatSelectModule,
+        MatDatepickerModule,
         SharedModule,
     ]
 })

@@ -16,7 +16,7 @@ public static class ServiceExtensions
         services.AddDbContext<BankDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DbConnection"));
-        });
+        }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
         services.AddScoped<IClientRepository, ClientRepository>();
         services.AddScoped<IDisabilityRepository, DisabilityRepository>();

@@ -78,5 +78,6 @@ public class ClientDto
 
     public bool IsPensioner { get; set; }
 
+    [Range(0, double.MaxValue)]
     public decimal? MonthIncome { get; set; }
 }
