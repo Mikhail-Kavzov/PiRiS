@@ -1,7 +1,7 @@
 ﻿using PiRiS.Common.Constants;
 using System.ComponentModel.DataAnnotations;
 
-namespace PiRiS.Business.Dto;
+namespace PiRiS.Business.Dto.Client;
 
 public class ClientDto
 {

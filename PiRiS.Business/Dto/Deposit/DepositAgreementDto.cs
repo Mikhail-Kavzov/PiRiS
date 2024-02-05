@@ -1,4 +1,7 @@
-﻿namespace PiRiS.Business.Dto;
+﻿using PiRiS.Business.Dto.Currency;
+using PiRiS.Business.Dto.DepositPlan;
+
+namespace PiRiS.Business.Dto.Deposit;
 
 public class DepositAgreementDto
 {

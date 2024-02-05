@@ -28,6 +28,7 @@ public static class ServiceExtensions
         services.AddTransient<IDepositRepository, DepositRepository>();
         services.AddTransient<ICreditPlanRepository, CreditPlanRepository>();
         services.AddTransient<ICreditRepository, CreditRepository>();
+        services.AddTransient<IAccountPlanRepository, AccountPlanRepository>();
 
         services.AddTransient<IUnitOfWork, UoW>();
     }

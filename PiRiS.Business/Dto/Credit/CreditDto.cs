@@ -1,9 +1,11 @@
 ﻿using PiRiS.Data.Models.Enums;
 
-namespace PiRiS.Business.Dto;
+namespace PiRiS.Business.Dto.Credit;
 
 public class CreditDto
 {
+    public int CreditId { get; set; }
+
     public string CreditNumber { get; set; }
 
     public DateTime StartDate { get; set; }

@@ -28,7 +28,4 @@ public class Credit
 
     public Client Client { get; set; } = null!;
 
-    public int CurrencyId { get; set; }
-    public Currency Currency { get; set; } = null!;
-
 }

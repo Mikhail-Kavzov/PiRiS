@@ -1,6 +1,7 @@
-﻿using PiRiS.Data.Models;
+﻿using PiRiS.Business.Dto.CreditPlan;
+using PiRiS.Business.Dto.Currency;
 
-namespace PiRiS.Business.Dto;
+namespace PiRiS.Business.Dto.Credit;
 
 public class CreditAgreementDto
 {

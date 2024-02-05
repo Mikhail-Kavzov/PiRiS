@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PiRiS.Business.Dto;
+namespace PiRiS.Business.Dto.Deposit;
 
 public class DepositCreateDto
 {
-    [Required]
-    public int CurrencyId { get; set; }
-
     [Required]
     public int DepositPlanId { get; set; }
 
@@ -20,8 +17,5 @@ public class DepositCreateDto
     [Required]
     [Range(1, double.MaxValue)]
     public decimal Sum { get; set; }
-
-    [Required]
-    public DateTime StartDate { get; set; }
 
 }

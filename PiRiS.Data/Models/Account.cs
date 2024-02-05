@@ -8,7 +8,6 @@ public class Account
 {
     public int AccountId { get; set; }
 
-    [StringLength(13, MinimumLength = 13)]
     public string AccountNumber { get; set; } = null!;
 
     public decimal Debit { get; set; }

@@ -19,7 +19,7 @@ internal class Program
 
         builder.Services.AddEntityFramework(builder.Configuration);
 
-        builder.Services.AddBusinessDependencies();
+        builder.Services.AddBusinessDependencies(builder.Configuration);
         builder.Services.AddBusinessMappings();
         builder.Services.AddCors(builder.Configuration);
 

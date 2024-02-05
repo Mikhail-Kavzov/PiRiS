@@ -1,12 +1,10 @@
 ﻿using PiRiS.Common.Constants;
 using System.ComponentModel.DataAnnotations;
 
-namespace PiRiS.Business.Dto;
+namespace PiRiS.Business.Dto.Credit;
 
 public class CreditCreateDto
 {
-    [Required]
-    public int CurrencyId { get; set; }
 
     [Required]
     public int CreditPlanId { get; set; }
@@ -20,7 +18,4 @@ public class CreditCreateDto
 
     [Range(100, double.MaxValue, ErrorMessage = "Credit sum shouldn't be less than {0}")]
     public decimal Sum { get; set; }
-
-    [Required]
-    public DateTime StartDate { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PiRiS.Business.Dto;
+using PiRiS.Business.Dto.Deposit;
 using PiRiS.Business.Managers.Interfaces;
 
 namespace PiRiS.Api.Controllers

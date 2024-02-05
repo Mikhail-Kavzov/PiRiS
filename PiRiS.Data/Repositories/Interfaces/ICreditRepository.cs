@@ -3,6 +3,7 @@ using PiRiS.Data.Repositories.Interfaces.Base;
 
 namespace PiRiS.Data.Repositories.Interfaces;
 
-public interface ICreditRepository : IRepository, ICreateRepository<Credit>, IListRepository<Credit>, ICountRepository<Credit>
+public interface ICreditRepository : IRepository, ICreateRepository<Credit>, IListRepository<Credit>,
+    ICountRepository<Credit>, IExistsRepository<Credit>
 {
 }

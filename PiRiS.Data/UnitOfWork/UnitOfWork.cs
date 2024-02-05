@@ -24,12 +24,14 @@ public class UnitOfWork : IUnitOfWork
 
     public ICreditRepository CreditRepository { get; }
 
+    public IAccountPlanRepository AccountPlanRepository { get; }
+
     public UnitOfWork(IClientRepository clientRepository, IDisabilityRepository disabilityRepository,
         IFamilyStatusRepository familyStatusRepository, ICityRepository cityRepository,
         ICitizenshipRepository citizenshipRepository,
         IDepositPlanRepository depositPlanRepository, ICurrencyRepository currencyRepository,
         IDepositRepository depositRepository, ICreditPlanRepository creditPlanRepository,
-        ICreditRepository creditRepository)
+        ICreditRepository creditRepository, IAccountPlanRepository accountPlanRepository)
     {
         ClientRepository = clientRepository;
         DisabilityRepository = disabilityRepository;
@@ -41,5 +43,6 @@ public class UnitOfWork : IUnitOfWork
         DepositRepository = depositRepository;
         CreditPlanRepository = creditPlanRepository;
         CreditRepository = creditRepository;
+        AccountPlanRepository = accountPlanRepository;
     }
 }

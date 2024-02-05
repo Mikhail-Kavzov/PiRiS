@@ -28,6 +28,11 @@ public class CreditRepository : BaseRepository, ICreditRepository
         _context.Credits.Add(entity);
     }
 
+    public async Task<bool> ExistsAsync(Expression<Func<Credit, bool>> predicate)
+    {
+       return await _context.Credits.AnyAsync(predicate);
+    }
+
     public Task<IEnumerable<Credit>> GetAllAsync()
     {
         throw new NotImplementedException();

@@ -1,9 +1,11 @@
 ﻿using PiRiS.Data.Models.Enums;
 
-namespace PiRiS.Business.Dto;
+namespace PiRiS.Business.Dto.Deposit;
 
 public class DepositDto
 {
+    public int DepositId { get; set; }
+
     public string DepositNumber { get; set; }
 
     public DateTime StartDate { get; set; }

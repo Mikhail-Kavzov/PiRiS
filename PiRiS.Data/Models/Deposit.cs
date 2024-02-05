@@ -28,6 +28,4 @@ public class Deposit
 
     public DepositPlan DepositPlan { get; set; } = null!;
 
-    public int CurrencyId { get; set; }
-    public Currency Currency { get; set; } = null!;
 }

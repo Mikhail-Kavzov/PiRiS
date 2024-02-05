@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using PiRiS.Business.Dto;
+using PiRiS.Business.Dto.Client;
 using PiRiS.Business.Enums;
 using PiRiS.Business.Exceptions;
 using PiRiS.Business.Managers.Interfaces;

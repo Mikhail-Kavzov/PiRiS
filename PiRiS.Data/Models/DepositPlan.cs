@@ -8,6 +8,10 @@ public class DepositPlan
 
     public string Name { get; set; } = null!;
 
+    public int CurrencyId { get; set; }
+
+    public Currency Currency { get; set; } = null!;
+
     public int DayPeriod { get; set; }
 
     public double Percent { get; set; }

@@ -1,8 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using PiRiS.Business.Dto;
+using PiRiS.Business.Dto.Currency;
+using PiRiS.Business.Dto.Deposit;
+using PiRiS.Business.Dto.DepositPlan;
 using PiRiS.Business.Exceptions;
 using PiRiS.Business.Managers.Interfaces;
+using PiRiS.Business.Options;
+using PiRiS.Business.Services.Interfaces;
 using PiRiS.Data.Models;
 using PiRiS.Data.UnitOfWork;
 using System.Linq.Expressions;
@@ -11,15 +16,20 @@ namespace PiRiS.Business.Managers;
 
 public class DepositManager : BaseManager, IDepositManager
 {
-    public DepositManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger logger) : base(mapper, unitOfWork, logger)
+    private readonly IAccountService _accountService;
+
+    public DepositManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger logger, IAccountService accountService) 
+        : base(mapper, unitOfWork, logger)
     {
+        _accountService = accountService;
     }
 
     public async Task CreateDepositAsync(DepositCreateDto depositCreateDto)
     {
-        if (depositCreateDto.StartDate > DateTime.Today)
+        var isExists = await UnitOfWork.DepositRepository.ExistsAsync(x => x.DepositNumber == depositCreateDto.DepositNumber);
+        if (isExists)
         {
-            throw new ServiceException($"Start date cannot be more than current day");
+            throw new ServiceException($"Deposit with such number already exists");
         }
 
         var newDeposit = Mapper.Map<Deposit>(depositCreateDto);
@@ -31,12 +41,6 @@ public class DepositManager : BaseManager, IDepositManager
             throw new NotFoundException($"Client not found");
         }
 
-        var currencyExists = await UnitOfWork.CurrencyRepository.ExistsAsync(x => x.CurrencyId == newDeposit.CurrencyId);
-        if (!currencyExists)
-        {
-            throw new NotFoundException($"Currency not found");
-        }
-
         var plan = await UnitOfWork.DepositPlanRepository.GetEntityAsync(newDeposit.DepositPlanId);
         if (plan == null)
         {
@@ -44,10 +48,27 @@ public class DepositManager : BaseManager, IDepositManager
         }
 
         newDeposit.EndDate = newDeposit.StartDate.AddDays(plan.DayPeriod);
-        //create accounts here
+        await _accountService.CreateAccountsAsync(newDeposit);
         UnitOfWork.DepositRepository.Create(newDeposit);
         await UnitOfWork.DepositRepository.SaveChangesAsync();
 
+    }
+
+    public async Task CreatePlanAsync(DepositPlanCreateDto depositPlanCreateDto)
+    {
+        var newPlan = Mapper.Map<DepositPlan>(depositPlanCreateDto);
+
+        var accountPlan = await UnitOfWork.AccountPlanRepository.GetEntityAsync(x => x.Code == AccountOptions.IndividualCode);
+        if (accountPlan == null)
+        {
+            throw new NotFoundException("Account plan for individuals not found");
+        }
+
+        newPlan.MainAccountPlan = accountPlan;
+        newPlan.PercentAccountPlan = accountPlan;
+
+        UnitOfWork.DepositPlanRepository.Create(newPlan);
+        await UnitOfWork.DepositPlanRepository.SaveChangesAsync();
     }
 
     public async Task<DepositAgreementDto> GetDepositAgreementAsync()
@@ -77,6 +98,18 @@ public class DepositManager : BaseManager, IDepositManager
         return new PaginationList<DepositDto>
         {
             Items = Mapper.Map<List<DepositDto>>(deposits),
+            TotalCount = totalCount
+        };
+    }
+
+    public async Task<PaginationList<DepositPlanDto>> GetPlansAsync(PaginationDto paginationDto)
+    {
+        var depositPlans = await UnitOfWork.DepositPlanRepository.GetListAsync(paginationDto.Skip, paginationDto.Take);
+        var totalCount = await UnitOfWork.DepositPlanRepository.CountAsync();
+
+        return new PaginationList<DepositPlanDto>
+        {
+            Items = Mapper.Map<List<DepositPlanDto>>(depositPlans),
             TotalCount = totalCount
         };
     }

@@ -10,6 +10,10 @@ public class CreditPlan
 
     public int MonthPeriod { get; set; }
 
+    public int CurrencyId { get; set; }
+
+    public Currency Currency { get; set; } = null!;
+
     public double Percent { get; set; }
 
     public CreditType CreditType { get; set; }

@@ -1,5 +1,10 @@
 ﻿using AutoMapper;
-using PiRiS.Business.Dto;
+using PiRiS.Business.Dto.Client;
+using PiRiS.Business.Dto.Credit;
+using PiRiS.Business.Dto.CreditPlan;
+using PiRiS.Business.Dto.Currency;
+using PiRiS.Business.Dto.Deposit;
+using PiRiS.Business.Dto.DepositPlan;
 using PiRiS.Data.Models;
 
 namespace PiRiS.Business.Mapper;
@@ -23,7 +28,6 @@ public class BusinessProfile : Profile
 
         CreateMap<DepositPlan, DepositAgreementDto>();
 
-        CreateMap<Client, ClientAgreementDto>();
         CreateMap<Currency, CurrencyDto>();
         CreateMap<DepositCreateDto, Deposit>();
 
@@ -43,6 +47,14 @@ public class BusinessProfile : Profile
             .ForMember(x=> x.CreditType, opt=> opt.MapFrom(x=> x.CreditPlan.CreditType))
             .ForMember(x => x.MainAccountNumber, opt => opt.MapFrom(x => x.MainAccount.AccountNumber))
             .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber));
+
+        CreateMap<DepositPlanCreateDto, DepositPlan>();
+        CreateMap<DepositPlan, DepositPlanDto>()
+            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.Currency.CurrencyName));
+
+        CreateMap<CreditPlanCreateDto, CreditPlan>();
+        CreateMap<CreditPlan, CreditPlanDto>()
+            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.Currency.CurrencyName));
 
     }
 }

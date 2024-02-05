@@ -29,6 +29,11 @@ public class DepositRepository : BaseRepository, IDepositRepository
         _context.Deposits.Add(entity);
     }
 
+    public async Task<bool> ExistsAsync(Expression<Func<Deposit, bool>> predicate)
+    {
+        return await _context.Deposits.AnyAsync(predicate);
+    }
+
     public Task<IEnumerable<Deposit>> GetAllAsync()
     {
         throw new NotImplementedException();

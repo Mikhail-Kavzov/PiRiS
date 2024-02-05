@@ -1,7 +1,7 @@
 ﻿using PiRiS.Business.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace PiRiS.Business.Dto;
+namespace PiRiS.Business.Dto.Client;
 
 public class ClientPaginationDto
 {
@@ -9,7 +9,7 @@ public class ClientPaginationDto
     public int Skip { get; set; }
 
     [Range(0, 100, ErrorMessage = "Take should be between {0} and {1}")]
-    public int Take {  get; set; }
+    public int Take { get; set; }
 
     [MaxLength(30)]
     public string Surname { get; set; }

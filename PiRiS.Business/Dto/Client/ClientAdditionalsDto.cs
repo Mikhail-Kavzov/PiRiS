@@ -1,4 +1,4 @@
-﻿namespace PiRiS.Business.Dto;
+﻿namespace PiRiS.Business.Dto.Client;
 
 public class ClientAdditionalsDto
 {

@@ -23,5 +23,7 @@ namespace PiRiS.Data.UnitOfWork
         ICreditPlanRepository CreditPlanRepository { get; }
 
         ICreditRepository CreditRepository { get; }
+
+        IAccountPlanRepository AccountPlanRepository { get; }
     }
 }

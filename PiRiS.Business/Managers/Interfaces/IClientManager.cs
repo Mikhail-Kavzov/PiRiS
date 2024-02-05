@@ -1,4 +1,5 @@
 ﻿using PiRiS.Business.Dto;
+using PiRiS.Business.Dto.Client;
 
 namespace PiRiS.Business.Managers.Interfaces;
 

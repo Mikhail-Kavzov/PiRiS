@@ -1,6 +1,6 @@
 ﻿using PiRiS.Data.Models.Enums;
 
-namespace PiRiS.Business.Dto;
+namespace PiRiS.Business.Dto.CreditPlan;
 
 public class CreditPlanAgreementDto
 {
