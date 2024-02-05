@@ -13,5 +13,15 @@ namespace PiRiS.Data.UnitOfWork
         ICitizenshipRepository CitizenshipRepository { get; }
 
         ICityRepository CityRepository { get; }
+
+        IDepositPlanRepository DepositPlanRepository { get; }
+
+        ICurrencyRepository CurrencyRepository { get; }
+
+        IDepositRepository DepositRepository { get; }
+
+        ICreditPlanRepository CreditPlanRepository { get; }
+
+        ICreditRepository CreditRepository { get; }
     }
 }

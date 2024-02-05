@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PiRiS.Business.Dto;
+﻿namespace PiRiS.Business.Dto;
 
 public class ClientViewDto
 {

@@ -21,5 +21,14 @@ public class BusinessProfile : Profile
             .ForMember(x => x.CitizenshipName, opt => opt.MapFrom(x => x.Citizenship.CitizenshipName))
             .ForMember(x => x.CityName, opt => opt.MapFrom(x => x.City.Name));
 
+        CreateMap<DepositPlan, DepositAgreementDto>();
+
+        CreateMap<Client, ClientAgreementDto>();
+        CreateMap<Currency, CurrencyDto>();
+        CreateMap<DepositCreateDto, Deposit>();
+
+        CreateMap<CreditPlan, CreditPlanAgreementDto>();
+        CreateMap<CreditCreateDto, Credit>();
+
     }
 }

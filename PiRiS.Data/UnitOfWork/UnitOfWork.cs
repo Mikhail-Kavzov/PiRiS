@@ -14,14 +14,32 @@ public class UnitOfWork : IUnitOfWork
 
     public ICityRepository CityRepository { get; }
 
+    public IDepositPlanRepository DepositPlanRepository { get; }
+
+    public ICurrencyRepository CurrencyRepository { get; }
+
+    public IDepositRepository DepositRepository { get; }
+
+    public ICreditPlanRepository CreditPlanRepository { get; }
+
+    public ICreditRepository CreditRepository { get; }
+
     public UnitOfWork(IClientRepository clientRepository, IDisabilityRepository disabilityRepository,
         IFamilyStatusRepository familyStatusRepository, ICityRepository cityRepository,
-        ICitizenshipRepository citizenshipRepository)
+        ICitizenshipRepository citizenshipRepository,
+        IDepositPlanRepository depositPlanRepository, ICurrencyRepository currencyRepository,
+        IDepositRepository depositRepository, ICreditPlanRepository creditPlanRepository,
+        ICreditRepository creditRepository)
     {
         ClientRepository = clientRepository;
         DisabilityRepository = disabilityRepository;
         FamilyStatusRepository = familyStatusRepository;
         CityRepository = cityRepository;
+        CurrencyRepository = currencyRepository;
+        DepositPlanRepository = depositPlanRepository;
         CitizenshipRepository = citizenshipRepository;
+        DepositRepository = depositRepository;
+        CreditPlanRepository = creditPlanRepository;
+        CreditRepository = creditRepository;
     }
 }

@@ -53,4 +53,7 @@ public class Client
     public bool IsPensioner { get; set; }
 
     public decimal? MonthIncome { get; set; }
+
+    public int? CurrencyId { get; set; }
+    public Currency? Currency { get; set; }
 }

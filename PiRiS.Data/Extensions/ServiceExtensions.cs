@@ -18,12 +18,17 @@ public static class ServiceExtensions
             options.UseNpgsql(configuration.GetConnectionString("DbConnection"));
         }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
-        services.AddScoped<IClientRepository, ClientRepository>();
-        services.AddScoped<IDisabilityRepository, DisabilityRepository>();
-        services.AddScoped<ICitizenshipRepository, CitizenshipRepository>();
-        services.AddScoped<ICityRepository, CityRepository>();
-        services.AddScoped<IFamilyStatusRepository, FamilyStatusRepository>();
+        services.AddTransient<IClientRepository, ClientRepository>();
+        services.AddTransient<IDisabilityRepository, DisabilityRepository>();
+        services.AddTransient<ICitizenshipRepository, CitizenshipRepository>();
+        services.AddTransient<ICityRepository, CityRepository>();
+        services.AddTransient<IFamilyStatusRepository, FamilyStatusRepository>();
+        services.AddTransient<IDepositPlanRepository, DepositPlanRepository>();
+        services.AddTransient<ICurrencyRepository, CurrencyRepository>();
+        services.AddTransient<IDepositRepository, DepositRepository>();
+        services.AddTransient<ICreditPlanRepository, CreditPlanRepository>();
+        services.AddTransient<ICreditRepository, CreditRepository>();
 
-        services.AddScoped<IUnitOfWork, UoW>();
+        services.AddTransient<IUnitOfWork, UoW>();
     }
 }

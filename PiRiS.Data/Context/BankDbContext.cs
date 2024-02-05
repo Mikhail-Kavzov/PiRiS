@@ -21,12 +21,30 @@ public class BankDbContext : DbContext
 
     public DbSet<Disability> Disabilities { get; set; } = null!;
 
+    public DbSet<Credit> Credits { get; set; } = null!;
+
+    public DbSet<CreditPlan> CreditPlans { get; set; } = null!;
+
+    public DbSet<Deposit> Deposits { get; set; } = null!;
+
+    public DbSet<DepositPlan> DepositPlans { get; set; } = null!;
+
+    public DbSet<AccountPlan> AccountPlans { get; set; } = null!;
+
+    public DbSet<Account> Accounts { get; set; } = null!;
+
+    public DbSet<Currency> Currencies { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.ApplyConfiguration(new ClientConfig());
+        modelBuilder.ApplyConfiguration(new DepositConfig());
+        modelBuilder.ApplyConfiguration(new CreditConfig());
+        modelBuilder.ApplyConfiguration(new CreditPlanConfig());
+        modelBuilder.ApplyConfiguration(new DepositPlanConfig());
     }
 
 }
