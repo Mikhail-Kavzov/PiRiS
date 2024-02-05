@@ -30,5 +30,19 @@ public class BusinessProfile : Profile
         CreateMap<CreditPlan, CreditPlanAgreementDto>();
         CreateMap<CreditCreateDto, Credit>();
 
+        CreateMap<Deposit, DepositDto>()
+            .ForMember(x => x.PlanName, opt => opt.MapFrom(x => x.DepositPlan.Name))
+            .ForMember(x=> x.Percent, opt=> opt.MapFrom(x=> x.DepositPlan.Percent))
+            .ForMember(x=> x.DepositType, opt=> opt.MapFrom(x=> x.DepositPlan.DepositType))
+            .ForMember(x => x.MainAccountNumber, opt => opt.MapFrom(x => x.MainAccount.AccountNumber))
+            .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber));
+
+        CreateMap<Credit, CreditDto>()
+            .ForMember(x => x.PlanName, opt => opt.MapFrom(x => x.CreditPlan.Name))
+            .ForMember(x=> x.Percent, opt=> opt.MapFrom(x=> x.CreditPlan.Percent))
+            .ForMember(x=> x.CreditType, opt=> opt.MapFrom(x=> x.CreditPlan.CreditType))
+            .ForMember(x => x.MainAccountNumber, opt => opt.MapFrom(x => x.MainAccount.AccountNumber))
+            .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber));
+
     }
 }

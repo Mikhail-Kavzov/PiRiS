@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using PiRiS.Common.Constants;
+using System.ComponentModel.DataAnnotations;
 
 namespace PiRiS.Business.Dto;
 
@@ -14,7 +15,7 @@ public class CreditCreateDto
     public int ClientId { get; set; }
 
     [Required]
-    [RegularExpression(@"\d{9}", ErrorMessage = "Deposit number contains 9 numbers")]
+    [RegularExpression(Patterns.CreditNumber, ErrorMessage = "Deposit number contains 9 numbers")]
     public string CreditNumber { get; set; }
 
     [Range(100, double.MaxValue, ErrorMessage = "Credit sum shouldn't be less than {0}")]

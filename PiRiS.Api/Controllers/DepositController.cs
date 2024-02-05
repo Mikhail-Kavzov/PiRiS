@@ -14,7 +14,7 @@ namespace PiRiS.Api.Controllers
         }
 
         [HttpGet("Agreement")]
-        public async Task<ActionResult<DepositAgreementDto>> GetDepositDataAsync()
+        public async Task<ActionResult<DepositAgreementDto>> GetDepositAgreementAsync()
         {
             var depositAgreementDto = await _depositManager.GetDepositAgreementAsync();
             return Ok(depositAgreementDto);
@@ -25,6 +25,13 @@ namespace PiRiS.Api.Controllers
         {
             await _depositManager.CreateDepositAsync(depositCreateDto);
             return Ok();
+        }
+
+        [HttpGet("List")]
+        public async Task<ActionResult<PaginationList<DepositDto>>> GetDepositsAsync([FromQuery] DepositPaginationDto depositPaginationDto)
+        {
+            var deposits = await _depositManager.GetDepositsAsync(depositPaginationDto);
+            return Ok(deposits);
         }
     }
 }

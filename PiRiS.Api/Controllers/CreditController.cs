@@ -28,5 +28,12 @@ namespace PiRiS.Api.Controllers
             return Ok();
         }
 
+        [HttpGet("List")]
+        public async Task<ActionResult<PaginationList<CreditDto>>> GetCreditsAsync([FromQuery] CreditPaginationDto creditPaginationDto)
+        {
+            var credits = await _creditManager.GetCreditsAsync(creditPaginationDto);
+            return Ok(credits);
+        }
+
     }
 }

@@ -3,6 +3,6 @@ using PiRiS.Data.Repositories.Interfaces.Base;
 
 namespace PiRiS.Data.Repositories.Interfaces;
 
-public interface IDepositRepository : IRepository, ICreateRepository<Deposit>
+public interface IDepositRepository : IRepository, ICreateRepository<Deposit>, IListRepository<Deposit>, ICountRepository<Deposit>
 {
 }

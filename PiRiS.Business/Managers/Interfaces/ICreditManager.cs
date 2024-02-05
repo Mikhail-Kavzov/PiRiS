@@ -6,4 +6,5 @@ public interface ICreditManager : IBaseManager
 {
     Task<CreditAgreementDto> GetCreditAgreementAsync();
     Task CreateCreditAsync(CreditCreateDto creditCreateDto);
+    Task<PaginationList<CreditDto>> GetCreditsAsync(CreditPaginationDto paginationDto);
 }
