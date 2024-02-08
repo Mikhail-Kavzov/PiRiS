@@ -8,10 +8,7 @@ export class ErrorsService
 
     showErrors(error): void
     {
-        if (error.isUnconfirmed) {
-            return;
-        }
-        if (error && error.errors)
+        if (error)
         {
             this.showValidationErrors(error);
         }
@@ -27,10 +24,16 @@ export class ErrorsService
 
     showValidationErrors(error): void
     {
-        const errorFields = Object.keys(error.errors);
+        if (error.errors) {
+            const errorFields = Object.keys(error.errors);
 
-        errorFields.forEach((field) => {
-            this._messagesService.openError(error.errors[field].join('<br>'));
-        });
+            errorFields.forEach((field) => {
+                this._messagesService.openError(error.errors[field].join('<br>'));
+            });
+        }
+        else {
+            this._messagesService.openError(error)
+        }
+        
     }
 }

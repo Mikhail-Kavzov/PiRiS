@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Net.Http.Headers;
-using System.ComponentModel.DataAnnotations;
+using PiRiS.Business.Exceptions;
 
 namespace PiRiS.Api.Middlewares
 {
@@ -32,6 +30,14 @@ namespace PiRiS.Api.Middlewares
             {
                 await _next.Invoke(context);
             }
+            catch (NotFoundException ex)
+            {
+                await WriteProblemDetails(context, StatusCodes.Status404NotFound, ex.Message);
+            }
+            catch (ServiceException ex)
+            {
+                await WriteProblemDetails(context, StatusCodes.Status400BadRequest, ex.Message);
+            }
             catch (Exception ex)
             {
                 if (context.Response.HasStarted)
@@ -43,7 +49,7 @@ namespace PiRiS.Api.Middlewares
                 {
                     _logger.LogWarning($"{ex}. TraceId: {context.TraceIdentifier}");
 
-                    await WriteProblemDetails(context);
+                    await WriteProblemDetails(context, StatusCodes.Status500InternalServerError, "Internal error");
 
                     return;
                 }
@@ -56,15 +62,15 @@ namespace PiRiS.Api.Middlewares
             }
         }
 
-        private Task WriteProblemDetails(HttpContext context)
+        private Task WriteProblemDetails(HttpContext context, int statusCode, string? message = null)
         {
             var routeData = context.GetRouteData() ?? _emptyRouteData;
 
             var actionContext = new ActionContext(context, routeData, _emptyActionDescriptor);
 
-            var result = new ObjectResult(null)
+            var result = new ObjectResult(message)
             {
-                StatusCode =  context.Response.StatusCode,
+                StatusCode =  statusCode
             };
 
             result.ContentTypes.Add("application/problem+json");

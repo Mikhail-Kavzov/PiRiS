@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
@@ -11,7 +11,7 @@ import { ClientService } from '../client.service';
     selector: 'client-update',
     templateUrl: './client-update.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
+    animations: fuseAnimations,
 })
 export class ClientUpdateComponent implements OnInit, OnDestroy {
     clientForm: FormGroup;
@@ -26,33 +26,22 @@ export class ClientUpdateComponent implements OnInit, OnDestroy {
     familyStatuses: FamilyStatusDto[];
 
     constructor(
-        private _activatedRoute: ActivatedRoute,
         private _formBuilder: FormBuilder,
         private _router: Router,
-        private _clientService: ClientService
+        private _clientService: ClientService,
     ) {
     }
 
-
-
     ngOnInit(): void {
 
-        this._clientService.client$.pipe(
-            takeUntil(this._unsubscribeAll)
-        ).subscribe(
-            (client: ClientDto) => {
-                this.updatedClient = client;
-            }
-        );
-
         this.clientForm = this._formBuilder.group({
-            surname: ['', Validators.required, Validators.pattern(Patterns.ClientNames)],
-            firstName: ['', Validators.required, Validators.pattern(Patterns.ClientNames)],
-            lastName: ['', Validators.required, Validators.pattern(Patterns.ClientNames)],
-            passportSeries: ['', Validators.required, Validators.pattern(Patterns.PassportSeries)],
-            passportNumber: ['', Validators.required, Validators.pattern(Patterns.PassportNumber)],
+            surname: ['', [Validators.required, Validators.pattern(Patterns.ClientNames)]],
+            firstName: ['', [Validators.required, Validators.pattern(Patterns.ClientNames)]],
+            lastName: ['', [Validators.required, Validators.pattern(Patterns.ClientNames)]],
+            passportSeries: ['', [Validators.required, Validators.pattern(Patterns.PassportSeries)]],
+            passportNumber: ['', [Validators.required, Validators.pattern(Patterns.PassportNumber)]],
             issuedBy: ['', Validators.required],
-            identificationNumber: ['', Validators.required, Validators.pattern(Patterns.IdentificationNumber)],
+            identificationNumber: ['', [Validators.required, Validators.pattern(Patterns.IdentificationNumber)]],
             placeOfBirth: ['', Validators.required],
             locationAddress: ['', Validators.required],
             cityId: ['', Validators.required],
@@ -72,6 +61,15 @@ export class ClientUpdateComponent implements OnInit, OnDestroy {
 
         })
 
+        this._clientService.client$.pipe(
+            takeUntil(this._unsubscribeAll)
+        ).subscribe(
+            (client: ClientDto) => {
+                this.updatedClient = client;
+            }
+        );
+
+
         this._clientService.additionals$.pipe(takeUntil(this._unsubscribeAll))
             .subscribe(
                 (result: ClientAdditionalsDto) => {
@@ -84,6 +82,8 @@ export class ClientUpdateComponent implements OnInit, OnDestroy {
             )
 
     }
+
+
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

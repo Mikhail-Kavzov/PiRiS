@@ -41,7 +41,6 @@ export class ErrorInterceptor implements HttpInterceptor
     {
         return new Promise<any>((resolve, reject) => {
             const reader = new FileReader();
-
             reader.onload = (e: Event) =>
             {
                 try

@@ -35,13 +35,13 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
 
         this.clientForm = this._formBuilder.group({
-            surname: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
-            firstName: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
-            lastName: ['',Validators.required, Validators.pattern(Patterns.ClientNames)],
-            passportSeries: ['',Validators.required, Validators.pattern(Patterns.PassportSeries)],
-            passportNumber: ['',Validators.required, Validators.pattern(Patterns.PassportNumber)],
+            surname: ['',[Validators.required, Validators.pattern(Patterns.ClientNames)]],
+            firstName: ['',[Validators.required, Validators.pattern(Patterns.ClientNames)]],
+            lastName: ['',[Validators.required, Validators.pattern(Patterns.ClientNames)]],
+            passportSeries: ['',[Validators.required, Validators.pattern(Patterns.PassportSeries)]],
+            passportNumber: ['',[Validators.required, Validators.pattern(Patterns.PassportNumber)]],
             issuedBy: ['',Validators.required],
-            identificationNumber: ['',Validators.required, Validators.pattern(Patterns.IdentificationNumber)],
+            identificationNumber: ['',[Validators.required, Validators.pattern(Patterns.IdentificationNumber)]],
             placeOfBirth: ['',Validators.required],
             locationAddress: ['',Validators.required],
             cityId: [1,Validators.required],

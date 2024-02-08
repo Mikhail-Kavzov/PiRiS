@@ -73,7 +73,7 @@
                         <mat-error *ngIf="clientForm.get('passportSeries').hasError('required')">
                             Passport series is required
                         </mat-error>
-                        <mat-error *ngIf="clientForm.get('passportSeries').hasError('minLength')">
+                        <mat-error *ngIf="clientForm.get('passportSeries').hasError('pattern')">
                             Passport series sould be equal to 2 symbols
                         </mat-error>
                     </mat-form-field>
@@ -87,8 +87,8 @@
                         <mat-error *ngIf="clientForm.get('passportNumber').hasError('required')">
                             Passport number is required
                         </mat-error>
-                        <mat-error *ngIf="clientForm.get('passportNumber').hasError('minLength')">
-                            Passport number sould be equal to 7 symbols
+                        <mat-error *ngIf="clientForm.get('passportNumber').hasError('pattern')">
+                            Passport number sould be equal to 7 digits
                         </mat-error>
                     </mat-form-field>
 
@@ -102,7 +102,7 @@
                             Identification number is required
                         </mat-error>
                         <mat-error *ngIf="clientForm.get('identificationNumber').hasError('pattern')">
-                            Only latin letters and figures. Length 14 symbols
+                            Identification number pattern: '0000000X000XX0'
                         </mat-error>
                     </mat-form-field>
 
@@ -217,8 +217,11 @@
                     </mat-checkbox>
 
                     <mat-form-field class="w-full">
-                        <mat-label>Month Income</mat-label>
+                        <mat-label>Month Income (BYN)</mat-label>
                         <input id="monthIncome" [formControlName]="'monthIncome'" matInput type="number" />
+                        <mat-error *ngIf="clientForm.get('monthIncome').hasError('min')">
+                            Income should be >=0
+                        </mat-error>
                     </mat-form-field>
 
                     <mat-form-field class="w-full">
