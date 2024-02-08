@@ -1,4 +1,5 @@
 import { Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -9,11 +10,11 @@ import { Subject } from 'rxjs';
 export class EmptyLayoutComponent implements OnDestroy
 {
     private _unsubscribeAll: Subject<any> = new Subject<any>();
-
+    isLoadingRedirect: boolean = false;
     /**
      * Constructor
      */
-    constructor()
+    constructor(private _router: Router)
     {
     }
 
@@ -29,5 +30,21 @@ export class EmptyLayoutComponent implements OnDestroy
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
+    }
+
+    isNotPage(pageName: string) {
+        let currentUrl = this._router.url
+            .replace('/', '');
+
+        return pageName != currentUrl;
+    }
+
+    redirectToPage(page: String) {
+        this.isLoadingRedirect = true;
+
+        this._router.navigate([page])
+            .then(() => {
+                this.isLoadingRedirect = false;
+            });
     }
 }

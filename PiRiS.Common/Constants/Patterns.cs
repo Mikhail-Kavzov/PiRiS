@@ -3,7 +3,7 @@
 public static class Patterns
 {
     public const string ClientName = @"^[A-z,А-я,ё,Ё]{1,30}$";
-    public const string IdentificationNumber = @"^[A-Z,0-9]{14}$";
+    public const string IdentificationNumber = @"^[0-9]{7}[A-Z]{1}[0-9]{3}[A-Z]{2}[0-9]{1}$";
     public const string Phone = @"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$";
     public const string PassportSeries = @"^[A-Z]{2}$";
     public const string PassportNumber = @"^[0-9]{7}$";

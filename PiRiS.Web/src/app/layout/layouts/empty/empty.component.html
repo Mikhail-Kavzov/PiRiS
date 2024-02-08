@@ -1,9 +1,28 @@
-<!-- Loading bar -->
-<fuse-loading-bar></fuse-loading-bar>
-
 <!-- Wrapper -->
-<div class="flex flex-col flex-auto w-full">
+<div class="flex flex-col flex-auto w-full m min-w-0 bg-primary-100">
+    <div class="relative flex flex-0 items-center w-full h-16 sm:h-20 px-4 sm:px-8 z-49 print:hidden">
 
+        <div class="flex items-center">
+            <button *ngIf="isNotPage('clientlist')"
+                    class="navigation-btn button-stretch mr-8 min-h-8 w-28"
+                    mat-flat-button
+                    [color]="'link'"
+                    [disabled]="isLoadingRedirect"
+                    (click)="redirectToPage('/client/list')">
+                Client List
+            </button>
+
+            <button *ngIf="isNotPage('clientcreate')"
+                    class="navigation-btn button-stretch mr-8 min-h-8 w-36"
+                    mat-flat-button
+                    [color]="'link'"
+                    [disabled]="isLoadingRedirect"
+                    (click)="redirectToPage('/client/create')">
+                Create Client
+            </button>
+
+        </div>
+    </div>
     <!-- Content -->
     <div class="flex flex-col flex-auto">
         <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
