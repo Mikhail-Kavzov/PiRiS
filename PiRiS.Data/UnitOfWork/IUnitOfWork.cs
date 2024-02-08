@@ -25,5 +25,11 @@ namespace PiRiS.Data.UnitOfWork
         ICreditRepository CreditRepository { get; }
 
         IAccountPlanRepository AccountPlanRepository { get; }
+
+        ITransactionRepository TransactionRepository { get; }
+
+        IAccountRepository AccountRepository { get; }
+
+        IBankInformationRepository BankInformationRepository { get; }
     }
 }

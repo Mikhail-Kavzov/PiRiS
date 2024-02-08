@@ -34,5 +34,19 @@ namespace PiRiS.Api.Controllers
             var deposits = await _depositManager.GetDepositsAsync(depositPaginationDto);
             return Ok(deposits);
         }
+
+        [HttpPost("Withdraw")]
+        public async Task<ActionResult> WithdrawPercent([FromBody] int depositId)
+        {
+            await _depositManager.WithdrawPercentsAsync(depositId);
+            return Ok();
+        }
+
+        [HttpPost("Close")]
+        public async Task<ActionResult> CloseDepositAsync([FromBody] int depositId)
+        {
+            await _depositManager.CloseDepositAsync(depositId);
+            return Ok();
+        }
     }
 }

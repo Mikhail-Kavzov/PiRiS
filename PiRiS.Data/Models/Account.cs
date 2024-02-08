@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
 
 namespace PiRiS.Data.Models;
 
@@ -27,5 +26,9 @@ public class Account
     public List<Deposit> MainDeposits { get; set; } = null!;
 
     public List<Deposit> PercentDeposits { get; set; } = null!;
+
+    public List<Transaction> DebitTransactions { get; set; } = null!;
+
+    public List<Transaction> CreditTransactions { get; set; } = null!;
 
 }

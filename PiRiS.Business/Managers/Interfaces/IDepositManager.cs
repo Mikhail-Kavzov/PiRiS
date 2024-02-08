@@ -11,4 +11,6 @@ public interface IDepositManager : IBaseManager
     Task<PaginationList<DepositDto>> GetDepositsAsync(DepositPaginationDto paginationDto);
     Task CreatePlanAsync(DepositPlanCreateDto depositPlanCreateDto);
     Task<PaginationList<DepositPlanDto>> GetPlansAsync(PaginationDto paginationDto);
+    Task WithdrawPercentsAsync(int depositId);
+    Task CloseDepositAsync(int depositId);
 }

@@ -5,7 +5,9 @@ using PiRiS.Business.Dto.CreditPlan;
 using PiRiS.Business.Dto.Currency;
 using PiRiS.Business.Dto.Deposit;
 using PiRiS.Business.Dto.DepositPlan;
+using PiRiS.Common.Constants;
 using PiRiS.Data.Models;
+using PiRiS.Data.Models.Enums;
 
 namespace PiRiS.Business.Mapper;
 
@@ -36,10 +38,17 @@ public class BusinessProfile : Profile
 
         CreateMap<Deposit, DepositDto>()
             .ForMember(x => x.PlanName, opt => opt.MapFrom(x => x.DepositPlan.Name))
-            .ForMember(x=> x.Percent, opt=> opt.MapFrom(x=> x.DepositPlan.Percent))
-            .ForMember(x=> x.DepositType, opt=> opt.MapFrom(x=> x.DepositPlan.DepositType))
+            .ForMember(x => x.Percent, opt => opt.MapFrom(x => x.DepositPlan.Percent))
+            .ForMember(x => x.DepositType, opt => opt.MapFrom(x => x.DepositPlan.DepositType))
             .ForMember(x => x.MainAccountNumber, opt => opt.MapFrom(x => x.MainAccount.AccountNumber))
-            .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber));
+            .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber))
+            .ForMember(x => x.Surname, opt => opt.MapFrom(x => x.Client.Surname))
+            .ForMember(x => x.LastName, opt => opt.MapFrom(x => x.Client.LastName))
+            .ForMember(x => x.FirstName, opt => opt.MapFrom(x => x.Client.FirstName))
+            .ForMember(x=> x.CurrencyName, opt=> opt.MapFrom(x=> x.DepositPlan.Currency.CurrencyName))
+            .ForMember(x => x.DailyProfit, opt => opt.MapFrom(x => (x.Sum * (decimal)x.DepositPlan.Percent) / BankParams.PercentDelimiter / BankParams.DaysInYear))
+            .ForMember(x => x.CanClose, opt => opt.Ignore())
+            .ForMember(x => x.CanWithdraw, opt => opt.Ignore());
 
         CreateMap<Credit, CreditDto>()
             .ForMember(x => x.PlanName, opt => opt.MapFrom(x => x.CreditPlan.Name))

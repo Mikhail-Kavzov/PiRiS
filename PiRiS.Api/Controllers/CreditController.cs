@@ -36,5 +36,25 @@ namespace PiRiS.Api.Controllers
             return Ok(credits);
         }
 
+        [HttpPost("Close")]
+        public async Task<ActionResult> CloseCreditAsync([FromBody] int creditId)
+        {
+            await _creditManager.CloseCreditAsync(creditId);
+            return Ok();
+        }
+
+        [HttpPost("Pay")]
+        public async Task<ActionResult> PayPersentsAsync([FromBody] int creditId)
+        {
+            await _creditManager.PayPercentsAsync(creditId);
+            return Ok();
+        }
+
+        [HttpGet("Schedule")]
+        public async Task<ActionResult<CreditShcheduleDto>> GetScheduleAsync([FromQuery] int creditId)
+        {
+            var schedule = await _creditManager.GetScheduleAsync(creditId);
+            return Ok(schedule);
+        }
     }
 }

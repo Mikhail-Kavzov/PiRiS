@@ -6,4 +6,6 @@ public interface IAccountService
 {
     Task CreateAccountsAsync(Deposit deposit);
     Task CreateAccountsAsync(Credit credit);
+    Task<Account> GetBankAccountAsync();
+    Task<Account> GetFundAccountAsync();
 }

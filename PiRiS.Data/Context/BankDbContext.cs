@@ -35,6 +35,10 @@ public class BankDbContext : DbContext
 
     public DbSet<Currency> Currencies { get; set; } = null!;
 
+    public DbSet<Transaction> Transactions { get; set; } = null!;
+
+    public DbSet<BankInformation> BankInformation { get; set; } = null!;
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,6 +49,7 @@ public class BankDbContext : DbContext
         modelBuilder.ApplyConfiguration(new CreditConfig());
         modelBuilder.ApplyConfiguration(new CreditPlanConfig());
         modelBuilder.ApplyConfiguration(new DepositPlanConfig());
+        modelBuilder.ApplyConfiguration(new TransactionConfig());
     }
 
 }

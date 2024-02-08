@@ -33,9 +33,20 @@ public class CreditRepository : BaseRepository, ICreditRepository
        return await _context.Credits.AnyAsync(predicate);
     }
 
-    public Task<IEnumerable<Credit>> GetAllAsync()
+    public async Task<IEnumerable<Credit>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        return await _context.Credits.ToListAsync();
+    }
+
+    public async Task<Credit?> GetEntityAsync(int id, bool trackChanges = true)
+    {
+        return await _context.Credits.Include(x=> x.CreditPlan).Include(x=>x.MainAccount)
+            .Include(x=>x.PercentAccount).FirstOrDefaultAsync(x => x.CreditId == id);
+    }
+
+    public async Task<Credit?> GetEntityAsync(Expression<Func<Credit, bool>> predicate)
+    {
+        return await _context.Credits.FirstOrDefaultAsync(predicate);
     }
 
     public async Task<IEnumerable<Credit>> GetListAsync(int skip, int take, Expression<Func<Credit, bool>>? predicate = null,
@@ -53,7 +64,12 @@ public class CreditRepository : BaseRepository, ICreditRepository
             query = isAscending ? query.OrderBy(sort) : query.OrderByDescending(sort);
         }
 
-        return await query.Skip(skip).Take(take).Include(x => x.MainAccount)
-            .Include(x => x.PercentAccount).Include(x => x.CreditPlan).ToListAsync();
+        return await query.Skip(skip).Take(take).Include(x => x.MainAccount).Include(x=> x.Client)
+            .Include(x => x.PercentAccount).Include(x => x.CreditPlan).ThenInclude(x=>x.Currency).ToListAsync();
+    }
+
+    public void Update(Credit entity)
+    {
+        _context.Credits.Update(entity);
     }
 }

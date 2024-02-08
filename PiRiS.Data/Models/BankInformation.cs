@@ -2,6 +2,7 @@
 
 public class BankInformation
 {
+    public int BankInformationId { get; set; }
     public DateTime CurrentDay { get; set; }
 
 }

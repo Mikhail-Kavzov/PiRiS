@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using PiRiS.Business.Options;
 using PiRiS.Business.Services.Interfaces;
+using PiRiS.Common.Constants;
 using PiRiS.Data.Models;
 using PiRiS.Data.UnitOfWork;
 
@@ -48,5 +50,15 @@ public class AccountService : BaseService, IAccountService
         var percentAccount = CreateAccount(depositPlan.PercentAccountPlan, credit.ClientId, random.Next());
         credit.MainAccount = mainAccount;
         credit.PercentAccount = percentAccount;
+    }
+
+    public async Task<Account> GetBankAccountAsync()
+    {
+        return await UnitOfWork.AccountRepository.GetEntityAsync(x=> x.AccountPlan.Code == AccountOptions.BankCode);
+    }
+
+    public async Task<Account> GetFundAccountAsync()
+    {
+        return await UnitOfWork.AccountRepository.GetEntityAsync(x => x.AccountPlan.Code == AccountOptions.FundCode);
     }
 }
