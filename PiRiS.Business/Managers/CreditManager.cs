@@ -22,7 +22,7 @@ public class CreditManager : BaseManager, ICreditManager
     private readonly IBankService _bankService;
     private readonly ITransactionService _transactionService;
 
-    public CreditManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger logger, IAccountService accountService,
+    public CreditManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger<CreditManager> logger, IAccountService accountService,
         ITransactionService transactionService, IBankService bankService)
         : base(mapper, unitOfWork, logger)
     {

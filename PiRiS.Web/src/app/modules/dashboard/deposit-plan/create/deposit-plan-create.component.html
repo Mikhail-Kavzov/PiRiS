@@ -1,0 +1,87 @@
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
+    <div class="flex md:max-w-6xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
+
+        <div class="w-full sm:w-auto py-4 px-4 sm:p-10 sm:rounded-2xl sm:shadow sm:bg-card">
+            <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+
+                <!-- Title -->
+                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Create Plan</div>
+
+                <!-- Form -->
+                <form class="mt-4"
+                      [formGroup]="depositForm">
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Plan Name</mat-label>
+                        <input id="name"
+                               matInput
+                               [formControlName]="'name'" maxlength="30">
+                        <mat-error *ngIf="depositForm.get('name').hasError('required')">
+                            Deposit plan name is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Day Period</mat-label>
+                        <input id="dayPeriod" [formControlName]="'dayPeriod'" matInput type="number" min="1" step="1" />
+                        <mat-error *ngIf="depositForm.get('dayPeriod').hasError('required')">
+                            Day period is required
+                        </mat-error>
+                        <mat-error *ngIf="depositForm.get('dayPeriod').hasError('min')">
+                            Day period should be >=1
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Percent</mat-label>
+                        <input id="percent" [formControlName]="'percent'" matInput type="number" />
+                        <mat-error *ngIf="depositForm.get('percent').hasError('required')">
+                            Percent is required
+                        </mat-error>
+                        <mat-error *ngIf="depositForm.get('percent').hasError('min')">
+                            Percent should be >=0
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Deposit Type</mat-label>
+                        <mat-select formControlName="depositType">
+                            <mat-option value="0" selected>Revocable</mat-option>
+                            <mat-option value="1">Term</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="depositForm.get('depositType').hasError('required')">
+                            Deposit type is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Currency</mat-label>
+                        <mat-select formControlName="currencyId">
+                            <ng-container *ngFor="let currency of currencies">
+                                <mat-option [value]="currency.currencyId" selected>{{currency.currencyName}}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="depositForm.get('currencyId').hasError('required')">
+                            Currency is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Submit button -->
+                    <button class="fuse-mat-button-large w-full mt-6"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [disabled]="depositForm.invalid"
+                            (click)="create()">
+                        <span *ngIf="!depositForm.disabled">
+                            Create Plan
+                        </span>
+                        <mat-progress-spinner *ngIf="depositForm.disabled"
+                                              [diameter]="24"
+                                              [mode]="'indeterminate'"></mat-progress-spinner>
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

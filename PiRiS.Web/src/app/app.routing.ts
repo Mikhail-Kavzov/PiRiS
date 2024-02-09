@@ -17,6 +17,28 @@ export const appRoutes: Route[] = [
             { path: 'update', loadChildren: () => import('app/modules/dashboard/client/update/client-update.module').then(m => m.ClientUpdateModule) },
         ]
     },
+    {
+        path: 'deposit-plan',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: 'create', loadChildren: () => import('app/modules/dashboard/deposit-plan/create/deposit-plan-create.module').then(m => m.DepositPlanCreateModule) },
+            { path: 'list', loadChildren: () => import('app/modules/dashboard/deposit-plan/list/deposit-plan-list.module').then(m => m.DepositPlanListModule) },
+        ]
+    },
+    {
+        path: 'credit-plan',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: 'create', loadChildren: () => import('app/modules/dashboard/credit-plan/create/credit-plan-create.module').then(m => m.CreditPlanCreateModule) },
+            { path: 'list', loadChildren: () => import('app/modules/dashboard/credit-plan/list/credit-plan-list.module').then(m => m.CreditPlanListModule) },
+        ]
+    },
 
 
     {

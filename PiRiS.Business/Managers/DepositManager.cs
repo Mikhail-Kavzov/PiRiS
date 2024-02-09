@@ -13,7 +13,6 @@ using PiRiS.Data.UnitOfWork;
 using PiRiS.Data.Models.Enums;
 using System.Linq.Expressions;
 using PiRiS.Common.Constants;
-using System.Runtime.InteropServices;
 
 namespace PiRiS.Business.Managers;
 
@@ -23,7 +22,7 @@ public class DepositManager : BaseManager, IDepositManager
     private readonly ITransactionService _transactionService;
     private readonly IBankService _bankService;
 
-    public DepositManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger logger,
+    public DepositManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger<DepositManager> logger,
         IAccountService accountService, ITransactionService transactionService, IBankService bankService) 
         : base(mapper, unitOfWork, logger)
     {
