@@ -21,5 +21,6 @@ public static class ServiceExtensions
         services.AddTransient<ICurrencyManager, CurrencyManager>();
         services.AddTransient<IBankManager, BankManager>();
         services.AddTransient<IAtmManager, AtmManager>();
+        services.AddTransient<IAccountManager, AccountManager>();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using PiRiS.Business.Dto.Account;
 using PiRiS.Business.Dto.Atm;
 using PiRiS.Business.Dto.Credit;
 using PiRiS.Business.Exceptions;
@@ -20,6 +21,25 @@ public class AtmManager : BaseManager, IAtmManager
     {
         _transactionService = transactionService;
         _accountService = accountService;
+    }
+
+    public async Task GetAccountAsync(int creditId)
+    {
+        var credit = await UnitOfWork.CreditRepository.GetEntityAsync(creditId);
+        var account = credit.MainAccount;
+
+    }
+
+    public async Task<AccountDto> GetAccountAsync(string accountNumber)
+    {
+        var account = await UnitOfWork.AccountRepository.GetEntityAsync(x => x.AccountNumber == accountNumber);
+
+        if (account == null)
+        {
+            throw new NotFoundException("Account not found");
+        }
+
+        return Mapper.Map<AccountDto>(account);
     }
 
     public async Task<CreditDto> LoginAsync(string creditCardNumber, string creditCardCode)

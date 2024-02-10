@@ -3,6 +3,7 @@ using PiRiS.Data.Repositories.Interfaces.Base;
 
 namespace PiRiS.Data.Repositories.Interfaces;
 
-public interface IAccountRepository : IRepository, IGetRepository<Account, int>, IUpdateRepository<Account>
-{
+public interface IAccountRepository : IRepository, IGetRepository<Account, int>,
+    IUpdateRepository<Account>, IListRepository<Account>, ICountRepository<Account>
+{ 
 }

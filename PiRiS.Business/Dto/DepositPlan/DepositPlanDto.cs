@@ -14,5 +14,5 @@ public class DepositPlanDto
 
     public double Percent { get; set; }
 
-    public DepositType DepositType { get; set; }
+    public string DepositType { get; set; }
 }

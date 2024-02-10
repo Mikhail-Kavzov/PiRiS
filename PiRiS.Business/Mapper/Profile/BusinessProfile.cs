@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using PiRiS.Business.Dto.Account;
 using PiRiS.Business.Dto.Client;
 using PiRiS.Business.Dto.Credit;
 using PiRiS.Business.Dto.CreditPlan;
@@ -42,7 +43,7 @@ public class BusinessProfile : Profile
         CreateMap<Deposit, DepositDto>()
             .ForMember(x => x.PlanName, opt => opt.MapFrom(x => x.DepositPlan.Name))
             .ForMember(x => x.Percent, opt => opt.MapFrom(x => x.DepositPlan.Percent))
-            .ForMember(x => x.DepositType, opt => opt.MapFrom(x => x.DepositPlan.DepositType))
+            .ForMember(x => x.DepositType, opt => opt.MapFrom(x => x.DepositPlan.DepositType.ToString()))
             .ForMember(x => x.MainAccountNumber, opt => opt.MapFrom(x => x.MainAccount.AccountNumber))
             .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber))
             .ForMember(x => x.Surname, opt => opt.MapFrom(x => x.Client.Surname))
@@ -56,7 +57,7 @@ public class BusinessProfile : Profile
         CreateMap<Credit, CreditDto>()
             .ForMember(x => x.PlanName, opt => opt.MapFrom(x => x.CreditPlan.Name))
             .ForMember(x => x.Percent, opt => opt.MapFrom(x => x.CreditPlan.Percent))
-            .ForMember(x => x.CreditType, opt => opt.MapFrom(x => x.CreditPlan.CreditType))
+            .ForMember(x => x.CreditType, opt => opt.MapFrom(x => x.CreditPlan.CreditType.ToString()))
             .ForMember(x => x.MainAccountNumber, opt => opt.MapFrom(x => x.MainAccount.AccountNumber))
             .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber))
             .ForMember(x => x.Surname, opt => opt.MapFrom(x => x.Client.Surname))
@@ -68,11 +69,18 @@ public class BusinessProfile : Profile
 
         CreateMap<DepositPlanCreateDto, DepositPlan>();
         CreateMap<DepositPlan, DepositPlanDto>()
-            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.Currency.CurrencyName));
+            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.Currency.CurrencyName))
+            .ForMember(x => x.DepositType, opt => opt.MapFrom(x => x.DepositType.ToString()));
 
         CreateMap<CreditPlanCreateDto, CreditPlan>();
         CreateMap<CreditPlan, CreditPlanDto>()
-            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.Currency.CurrencyName));
+            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.Currency.CurrencyName))
+            .ForMember(x => x.CreditType, opt => opt.MapFrom(x => x.CreditType.ToString()));
+
+        CreateMap<Account, AccountDto>()
+            .ForMember(x => x.AccountPlanName, opt => opt.MapFrom(x => x.AccountPlan.Name))
+            .ForMember(x=> x.AccountPlanCode, opt=> opt.MapFrom(x=> x.AccountPlan.Code))
+            .ForMember(x => x.AccountPlanType, opt => opt.MapFrom(x => x.AccountPlan.AccountType.ToString()));
 
     }
 }

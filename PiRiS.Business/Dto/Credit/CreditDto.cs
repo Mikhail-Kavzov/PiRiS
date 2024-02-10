@@ -20,7 +20,7 @@ public class CreditDto
 
     public double Percent { get; set; }
 
-    public CreditType CreditType { get; set; }
+    public string CreditType { get; set; }
 
     public string MainAccountNumber { get; set; }
 

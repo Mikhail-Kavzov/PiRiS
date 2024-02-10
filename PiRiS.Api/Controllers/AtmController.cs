@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PiRiS.Business.Dto.Account;
 using PiRiS.Business.Dto.Atm;
 using PiRiS.Business.Dto.Credit;
 using PiRiS.Business.Managers.Interfaces;
@@ -39,5 +40,13 @@ public class AtmController : ApiController
         };
 
         return Ok(report);
+    }
+
+    [HttpPost("Account")]
+    public async Task<ActionResult<AccountDto>> GetBalanceAsync([FromBody] AtmLoginDto loginDto)
+    {
+        var creditDto = await _atmManager.LoginAsync(loginDto.CreditCardNumber, loginDto.CreditCardCode);
+        var accountDto = await _atmManager.GetAccountAsync(creditDto.MainAccountNumber);
+        return Ok(accountDto);
     }
 }

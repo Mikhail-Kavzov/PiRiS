@@ -89,6 +89,13 @@ public class ClientManager : BaseManager, IClientManager
         {
             throw new NotFoundException($"Client with id {clientId} not found");
         }
+
+        var hasCredits = await UnitOfWork.CreditRepository.ExistsAsync(x => x.ClientId == clientId && x.Sum != 0);
+        if (hasCredits)
+        {
+            throw new ServiceException("Client has unclosed credits");
+        }
+
         UnitOfWork.ClientRepository.Delete(client);
 
         await UnitOfWork.ClientRepository.SaveChangesAsync();
