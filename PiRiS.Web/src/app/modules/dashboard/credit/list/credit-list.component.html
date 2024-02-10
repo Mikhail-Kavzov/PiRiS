@@ -134,10 +134,15 @@
                                         (click)="closeCredit()">
                                     Close
                                 </button>
-                                <button *ngIf="selectedCredit.canWithdraw" mat-flat-button
+                                <button *ngIf="selectedCredit.canPayPercents" mat-flat-button
                                         [color]="'primary'"
-                                        (click)="withdrawPercents()">
-                                    Withdraw Percents
+                                        (click)="payPercents()">
+                                    Pay Percents
+                                </button>
+                                <button mat-flat-button
+                                        [color]="'primary'"
+                                        (click)="showSchedule()">
+                                    Schedule
                                 </button>
                             </div>
                         </div>

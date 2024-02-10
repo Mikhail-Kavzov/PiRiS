@@ -24,6 +24,8 @@ export class DepositCreateComponent implements OnInit, OnDestroy {
     selectedCurrency: string = '';
     searchControl: UntypedFormControl = new UntypedFormControl();
 
+    selectedPlan: DepositPlanAgreementDto;
+
     constructor(
         private _formBuilder: FormBuilder,
         private _router: Router,
@@ -68,6 +70,7 @@ export class DepositCreateComponent implements OnInit, OnDestroy {
 
     planHandler(plan: DepositPlanAgreementDto) {
         this.selectedCurrency = plan.currencyName;
+        this.selectedPlan = plan;
     }
 
     create() {

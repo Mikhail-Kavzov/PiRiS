@@ -4,6 +4,7 @@ using PiRiS.Data.Models;
 using PiRiS.Data.UnitOfWork;
 using PiRiS.Data.Models.Enums;
 using PiRiS.Business.Exceptions;
+using PiRiS.Common.Constants;
 
 namespace PiRiS.Business.Services;
 
@@ -16,6 +17,62 @@ public class TransactionService : BaseService, ITransactionService
     {
         _accountService = accountService;
         _bankService = bankService;
+    }
+
+    public async Task CloseCreditsForDayAsync()
+    {
+        var currentDay = await _bankService.GetCurrentDayAsync();
+        var fundAccount = await _accountService.GetFundAccountAsync();
+
+        var credits = await UnitOfWork.CreditRepository
+            .GetListAsync(0, int.MaxValue, x => x.Sum > 0 && currentDay >= x.StartDate && currentDay <= x.EndDate);
+
+        foreach (var credit in credits)
+        {
+            decimal percentSum = 0;
+            var monthes = credit.CreditPlan.MonthPeriod;
+
+            double monthPercent = credit.CreditPlan.Percent / BankParams.MonthInYear;
+
+            if (credit.CreditPlan.CreditType == CreditType.Annuity)
+            {
+                var temp = Math.Pow(1 + monthPercent, monthes);
+                var coef = monthPercent * temp / (temp - 1);
+
+                var monthPayment = coef * (double)credit.Sum;
+                percentSum = (decimal)monthPayment / BankParams.DaysInMonth;
+            }
+            else
+            {
+                var rest = (double)credit.Sum;
+                var dayCreditPart = (double)credit.Sum / monthes / BankParams.DaysInMonth;
+                double percentPerDay = monthPercent / BankParams.DaysInMonth;
+
+                var totalDays = (currentDay - credit.StartDate).TotalDays;
+                for (int i = 0; i < totalDays; i++)
+                {
+                    rest -= dayCreditPart;
+                }
+
+                percentSum = (decimal)(dayCreditPart + rest * percentPerDay);
+            }
+
+            await PerformTransactionAsync(credit.PercentAccount, fundAccount, percentSum);
+        }
+    }
+
+    public async Task CloseDepositsForDayAsync()
+    {
+        var currentDay = await _bankService.GetCurrentDayAsync();
+        var deposits = await UnitOfWork.DepositRepository
+            .GetListAsync(0, int.MaxValue, x => x.Sum > 0 && currentDay >= x.StartDate && currentDay <= x.EndDate);
+
+        foreach (var deposit in deposits)
+        {
+            var percentSum = deposit.Sum * (decimal)(deposit.DepositPlan.Percent / BankParams.PercentDelimiter / BankParams.DaysInYear);
+            var fundAccount = await _accountService.GetFundAccountAsync();
+            await PerformTransactionAsync(fundAccount, deposit.PercentAccount, percentSum);
+        }
     }
 
     public async Task PerformBankDebitTransactionAsync(decimal amount)

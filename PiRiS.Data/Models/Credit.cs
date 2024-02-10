@@ -1,4 +1,6 @@
-﻿namespace PiRiS.Data.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PiRiS.Data.Models;
 
 public class Credit
 {
@@ -27,5 +29,11 @@ public class Credit
     public int ClientId { get; set; }
 
     public Client Client { get; set; } = null!;
+
+    [StringLength(16, MinimumLength = 16)]
+    public string CreditCardNumber { get; set; } = null!;
+
+    [StringLength(4, MinimumLength = 4)]
+    public string CreditCardCode { get; set; } = null!;
 
 }

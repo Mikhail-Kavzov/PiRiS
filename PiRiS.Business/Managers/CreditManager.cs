@@ -32,10 +32,11 @@ public class CreditManager : BaseManager, ICreditManager
 
     public async Task CreateCreditAsync(CreditCreateDto creditCreateDto)
     {
-        var isExists = await UnitOfWork.CreditRepository.ExistsAsync(x => x.CreditNumber == creditCreateDto.CreditNumber);
+        var isExists = await UnitOfWork.CreditRepository.ExistsAsync(x => x.CreditNumber == creditCreateDto.CreditNumber
+        || x.CreditCardNumber == creditCreateDto.CreditCardNumber);
         if (isExists)
         {
-            throw new ServiceException($"Credit with such number already exists");
+            throw new ServiceException($"Credit with such number or credit card already exists");
         }
 
         var newCredit = Mapper.Map<Credit>(creditCreateDto);
@@ -107,10 +108,18 @@ public class CreditManager : BaseManager, ICreditManager
 
         var credits = await UnitOfWork.CreditRepository.GetListAsync(paginationDto.Skip, paginationDto.Take, predicate);
         var totalCount = await UnitOfWork.CreditRepository.CountAsync(predicate);
+        var creditDtos = Mapper.Map<List<CreditDto>>(credits);
+        var currentDay = await _bankService.GetCurrentDayAsync();
+
+        foreach (var credit in creditDtos)
+        {
+            credit.CanClose = credit.EndDate <= currentDay && credit.Sum > 0;
+            credit.CanPayPercents = (currentDay - credit.StartDate).TotalDays % BankParams.DaysInMonth == 0 && credit.Sum > 0;
+        }
 
         return new PaginationList<CreditDto>
         {
-            Items = Mapper.Map<List<CreditDto>>(credits),
+            Items = creditDtos,
             TotalCount = totalCount
         };
     }

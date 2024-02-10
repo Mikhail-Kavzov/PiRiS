@@ -36,6 +36,12 @@
                         </mat-error>
                     </mat-form-field>
 
+                    <div *ngIf="selectedPlan" class="flex items-center flex-col">
+                        <p>Deposit Type: {{selectedPlan.depositType}}</p>
+                        <p>Days: {{selectedPlan.dayPeriod}}</p>
+                        <p>Percent: {{selectedPlan.percent}}</p>
+                    </div>
+
                     <mat-form-field class="w-full">
                         <mat-label>Deposit Sum ({{selectedCurrency}})</mat-label>
                         <input id="sum" [formControlName]="'sum'" matInput type="number" />

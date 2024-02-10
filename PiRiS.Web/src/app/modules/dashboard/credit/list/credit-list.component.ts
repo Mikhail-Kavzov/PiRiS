@@ -121,9 +121,9 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
         })
     }
 
-    withdrawPercents() {
+    payPercents() {
         this._creditService.payPercents(this.selectedCredit.creditId).subscribe(() => {
-            //
+           //
             this._changeDetectorRef.markForCheck();
         })
     }

@@ -12,12 +12,14 @@ public static class ServiceExtensions
     public static void AddBusinessDependencies(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IAccountService, AccountService>();
-        services.AddTransient<ITransactionService, TransactionService>();
         services.AddTransient<IBankService, BankService>();
+        services.AddTransient<ITransactionService, TransactionService>();
 
         services.AddTransient<IClientManager, ClientManager>();
         services.AddTransient<IDepositManager, DepositManager>();
         services.AddTransient<ICreditManager, CreditManager>();
         services.AddTransient<ICurrencyManager, CurrencyManager>();
+        services.AddTransient<IBankManager, BankManager>();
+        services.AddTransient<IAtmManager, AtmManager>();
     }
 }

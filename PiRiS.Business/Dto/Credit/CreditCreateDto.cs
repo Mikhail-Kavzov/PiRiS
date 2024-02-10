@@ -18,4 +18,12 @@ public class CreditCreateDto
 
     [Range(100, double.MaxValue, ErrorMessage = "Credit sum shouldn't be less than {0}")]
     public decimal Sum { get; set; }
+
+    [Required]
+    [RegularExpression(Patterns.CreditCardNumber)]
+    public string CreditCardNumber { get; set; }
+
+    [Required]
+    [RegularExpression(Patterns.CreditCardCode)]
+    public string CreditCardCode { get; set; }
 }

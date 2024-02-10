@@ -8,4 +8,6 @@ public interface ITransactionService: IBaseService
     Task PerformTransactionAsync(int debitAccountId, int creditAccountId, decimal amount);
     Task WithdrawBankTransactionAsync(decimal amount);
     Task PerformBankDebitTransactionAsync(decimal amount);
+    Task CloseDepositsForDayAsync();
+    Task CloseCreditsForDayAsync();
 }

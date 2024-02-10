@@ -17,10 +17,37 @@
                                matInput
                                [formControlName]="'creditNumber'" maxlength="9">
                         <mat-error *ngIf="creditForm.get('creditNumber').hasError('required')">
-                            Credit Number is required
+                            Credit number is required
                         </mat-error>
                         <mat-error *ngIf="creditForm.get('creditNumber').hasError('pattern')">
                             Enter valid credit number
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Credit Card Number</mat-label>
+                        <input id="creditCardNumber"
+                               matInput
+                               [formControlName]="'creditCardNumber'" maxlength="16">
+                        <mat-error *ngIf="creditForm.get('creditCardNumber').hasError('required')">
+                            Credit card number is required
+                        </mat-error>
+                        <mat-error *ngIf="creditForm.get('creditCardNumber').hasError('pattern')">
+                            Enter valid credit card number
+                        </mat-error>
+                    </mat-form-field>
+
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Credit Card Code</mat-label>
+                        <input id="creditCardCode"
+                               matInput
+                               [formControlName]="'creditCardCode'" maxlength="4">
+                        <mat-error *ngIf="creditForm.get('creditCardCode').hasError('required')">
+                            Credit card code is required
+                        </mat-error>
+                        <mat-error *ngIf="creditForm.get('creditCardCode').hasError('pattern')">
+                            Enter valid credit card code
                         </mat-error>
                     </mat-form-field>
 
@@ -35,6 +62,12 @@
                             Credit plan is required
                         </mat-error>
                     </mat-form-field>
+
+                    <div *ngIf="selectedPlan" class="flex items-center flex-col">
+                        <p>Credit Type: {{selectedPlan.creditType}}</p>
+                        <p>Monthes: {{selectedPlan.monthPeriod}}</p>
+                        <p>Percent: {{selectedPlan.percent}}</p>
+                    </div>
 
                     <mat-form-field class="w-full">
                         <mat-label>Credit Sum ({{selectedCurrency}})</mat-label>

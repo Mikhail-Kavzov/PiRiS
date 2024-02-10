@@ -23,6 +23,7 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
     clients: ClientViewDto[];
     selectedCurrency: string = '';
     searchControl: UntypedFormControl = new UntypedFormControl();
+    selectedPlan: CreditPlanAgreementDto;
 
     constructor(
         private _formBuilder: FormBuilder,
@@ -38,7 +39,9 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
             creditPlanId: ['', Validators.required],
             clientId: ['', Validators.required],
             sum: [1, [Validators.required, Validators.min(1)]],
-            creditNumber: ['',[Validators.required, Validators.pattern(Patterns.CreditNumber)]]
+            creditNumber: ['', [Validators.required, Validators.pattern(Patterns.CreditNumber)]],
+            creditCardNumber: ['', [Validators.required, Validators.pattern(Patterns.CreditCardNumber)]],
+            creditCardCode: ['',[Validators.required, Validators.pattern(Patterns.CreditCardCode)]]
         })
 
         this._creditService.plans$.pipe(takeUntil(this._unsubscribeAll))
@@ -68,6 +71,7 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
 
     planHandler(plan: CreditPlanAgreementDto) {
         this.selectedCurrency = plan.currencyName;
+        this.selectedPlan = plan;
     }
 
     create() {
@@ -81,6 +85,8 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
         credit.creditNumber = this.creditForm.get('creditNumber').value;
         credit.creditPlanId = this.creditForm.get('creditPlanId').value;
         credit.sum = this.creditForm.get('sum').value;
+        this.creditForm.get('creditCardNumber').value;
+        this.creditForm.get('creditCardCode').value;
 
         this._creditService.createCredit(credit).subscribe(()=>{
             this._router.navigateByUrl('');

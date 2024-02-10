@@ -5,5 +5,8 @@ export enum Patterns {
     PassportSeries = "^[A-Z]{2}$",
     PassportNumber = "^[0-9]{7}$",
     DepositNumber = "^\d{9}$",
-    CreditNumber = "^\d{9}$"
+    CreditNumber = "^\d{9}$",
+    CreditCardNumber = "^\d{16}$",
+    CreditCardCode = "^\d{4}$"
+
 }
