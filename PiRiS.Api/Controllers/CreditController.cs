@@ -51,7 +51,7 @@ namespace PiRiS.Api.Controllers
         }
 
         [HttpGet("Schedule")]
-        public async Task<ActionResult<CreditShcheduleDto>> GetScheduleAsync([FromQuery] int creditId)
+        public async Task<ActionResult<CreditScheduleDto>> GetScheduleAsync([FromQuery] int creditId)
         {
             var schedule = await _creditManager.GetScheduleAsync(creditId);
             return Ok(schedule);

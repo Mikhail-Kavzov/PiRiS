@@ -1,0 +1,156 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <!-- Header -->
+    <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+        <!-- Title -->
+        <div class="text-4xl text-center font-extrabold tracking-tight">Credit List</div>
+        <!-- Actions -->
+        <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+
+            <!-- Search -->
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded min-w-64"
+                            [subscriptSizing]="'dynamic'">
+                <mat-icon class="icon-size-5"
+                          matPrefix
+                          [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                <input matInput
+                       [formControl]="searchInputControl"
+                       [autocomplete]="'off'"
+                       [placeholder]="'Search By Credit Number'"
+                       maxlength="9">
+            </mat-form-field>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+
+        <!-- Credit list -->
+        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+            <ng-container *ngIf="credits.length > 0; else noCredits">
+                <div class="grid">
+                    <!-- Header -->
+                    <div class="credit-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                        <div></div>
+                        <div>Credit Number</div>
+                        <div class="hidden lg:block">Start Date</div>
+                        <div class="hidden lg:block">End Date</div>
+                        <div class="hidden lg:block">Sum</div>
+                        <div class="hidden md:block">Credit Plan</div>
+                        <div>Percent</div>
+                        <div class="max-md:block">Details</div>
+                    </div>
+                    <!-- Rows -->
+                    <ng-container *ngFor="let credit of credits; trackBy: trackByFn">
+                        <div class="credit-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+                            <div></div>
+                            <!-- Id -->
+                            <div class="truncate">
+                                {{credit.creditName}}
+                            </div>
+
+                            <div class="hidden lg:block truncate">
+                                {{credit.startDate | date: 'dd/MM/yyyy'}}
+                            </div>
+
+                            <div class="hidden lg:block truncate">
+                                {{credit.endDate | date: 'dd/MM/yyyy'}}
+                            </div>
+
+                            <div class="hidden lg:block truncate">
+                                {{credit.sum}} {{credit.currencyName}}
+                            </div>
+
+                            <div class="hidden md:block truncate">
+                                {{credit.planName}}
+                            </div>
+
+                            <div class="truncate">
+                                {{credit.percent}}%
+                            </div>
+
+                            <!-- Details button -->
+                            <div class="max-md:block">
+                                <button class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                                        mat-stroked-button
+                                        (click)="toggleDetails(credit)">
+                                    <mat-icon class="icon-size-5"
+                                              [svgIcon]="selectedCredit?.creditId === credit.creditId ? 'heroicons_solid:chevron-up' : 'heroicons_solid:chevron-down'"></mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="grid">
+                            <ng-container *ngIf="selectedCredit?.creditId === credit.creditId">
+                                <ng-container *ngTemplateOutlet="rowDetailsTemplate; context: {$implicit: credit}"></ng-container>
+                            </ng-container>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+
+            <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                           [length]="pagination.length"
+                           [pageIndex]="pagination.page"
+                           [pageSize]="pagination.size"
+                           [pageSizeOptions]="[5, 10, 20]"
+                           [showFirstLastButtons]="true"></mat-paginator>
+
+            <ng-template #rowDetailsTemplate
+                         let-credit>
+                <div class="shadow-lg overflow-hidden">
+                    <div class="flex border-b">
+
+                        <div class="flex flex-col sm:flex-row p-8 w-full">
+                            <div class="flex flex-auto flex-wrap">
+                                <div class="flex flex-col w-full lg:w-2/4 sm:pl-8">
+                                    <div class="credit-select-element">
+                                        <span class="mr-4">Credit Type:</span>
+                                        <p>{{selectedCredit.creditType}}</p>
+                                    </div>
+                                    <div class="credit-select-element">
+                                        <span class="mr-4">Main Account:</span>
+                                        <p>{{selectedCredit.mainAccountNumber}}</p>
+                                    </div>
+                                    <div class="credit-select-element">
+                                        <span class="mr-4">Percent Account:</span>
+                                        <p>{{selectedCredit.percentAccountNumber}}</p>
+                                    </div>
+                                    <div class="credit-select-element">
+                                        <span class="mr-4">Owner:</span>
+                                        <p>{{selectedCredit.surname}} {{selectedCredit.firstName}} {{selectedCredit.lastName}}</p>
+                                    </div>
+                                    <div class="credit-select-element">
+                                        <span class="mr-4">Daily Income:</span>
+                                        <p>{{selectedCredit.dailyProfit}} {{selectedCredit.currencyName}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-end border-t px-8 py-4">
+                            <div class="flex items-center">
+                                <button *ngIf="selectedCredit.canClose" mat-flat-button class="mr-4"
+                                        [color]="'primary'"
+                                        (click)="closeCredit()">
+                                    Close
+                                </button>
+                                <button *ngIf="selectedCredit.canWithdraw" mat-flat-button
+                                        [color]="'primary'"
+                                        (click)="withdrawPercents()">
+                                    Withdraw Percents
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+
+            <ng-template #noCredits>
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No credits</div>
+            </ng-template>
+
+        </div>
+
+    </div>
+
+</div>

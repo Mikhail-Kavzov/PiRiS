@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using PiRiS.Business.Dto;
-using PiRiS.Business.Dto.Currency;
 using PiRiS.Business.Dto.Deposit;
 using PiRiS.Business.Dto.DepositPlan;
 using PiRiS.Business.Exceptions;
@@ -129,12 +128,10 @@ public class DepositManager : BaseManager, IDepositManager
     public async Task<DepositAgreementDto> GetDepositAgreementAsync()
     {
         var depositPlanTask = UnitOfWork.DepositPlanRepository.GetAllAsync();
-        var currencyTask = UnitOfWork.CurrencyRepository.GetAllAsync();
 
         return new DepositAgreementDto
         {
-            DepositPlans = Mapper.Map<List<DepositPlanAggreementDto>>(await depositPlanTask),
-            Currencies = Mapper.Map<List<CurrencyDto>>(await currencyTask),
+            DepositPlans = Mapper.Map<List<DepositPlanAgreementDto>>(await depositPlanTask),
         };
     }
 

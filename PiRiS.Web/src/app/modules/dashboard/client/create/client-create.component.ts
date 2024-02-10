@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from '
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseValidators } from '@fuse/validators';
 import { Subject, takeUntil } from 'rxjs';
 import { CitizenshipDto, CityDto, ClientAdditionalsDto, ClientDto, DisabilityDto, FamilyStatusDto } from '../../../../../api/api.client';
 import { Patterns } from '../../../../core/enums/patterns.enum';

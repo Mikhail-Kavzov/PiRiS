@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using PiRiS.Business.Dto;
 using PiRiS.Business.Dto.Credit;
 using PiRiS.Business.Dto.CreditPlan;
-using PiRiS.Business.Dto.Currency;
 using PiRiS.Business.Exceptions;
 using PiRiS.Business.Managers.Interfaces;
 using PiRiS.Business.Options;
@@ -90,12 +89,10 @@ public class CreditManager : BaseManager, ICreditManager
     public async Task<CreditAgreementDto> GetCreditAgreementAsync()
     {
         var creditTask = UnitOfWork.CreditPlanRepository.GetAllAsync();
-        var currencyTask = UnitOfWork.CurrencyRepository.GetAllAsync();
 
         return new CreditAgreementDto
         {
             CreditPlans = Mapper.Map<List<CreditPlanAgreementDto>>(await creditTask),
-            Currencies = Mapper.Map<List<CurrencyDto>>(await currencyTask),
         };
     }
 
@@ -130,7 +127,7 @@ public class CreditManager : BaseManager, ICreditManager
         };
     }
 
-    public async Task<CreditShcheduleDto> GetScheduleAsync(int creditId)
+    public async Task<CreditScheduleDto> GetScheduleAsync(int creditId)
     {
         var credit = await UnitOfWork.CreditRepository.GetEntityAsync(creditId);
 
@@ -140,7 +137,7 @@ public class CreditManager : BaseManager, ICreditManager
         }
 
         var currentDay = await _bankService.GetCurrentDayAsync();
-        var shcheduleDto = new CreditShcheduleDto
+        var shcheduleDto = new CreditScheduleDto
         {
             CreditId = creditId,
             CurrentDay = currentDay,

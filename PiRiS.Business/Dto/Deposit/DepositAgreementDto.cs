@@ -5,6 +5,5 @@ namespace PiRiS.Business.Dto.Deposit;
 
 public class DepositAgreementDto
 {
-    public List<DepositPlanAggreementDto> DepositPlans { get; set; }
-    public List<CurrencyDto> Currencies { get; set; }
+    public List<DepositPlanAgreementDto> DepositPlans { get; set; }
 }

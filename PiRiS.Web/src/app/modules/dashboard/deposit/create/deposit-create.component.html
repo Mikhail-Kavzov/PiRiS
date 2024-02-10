@@ -1,0 +1,92 @@
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
+    <div class="flex md:max-w-6xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
+
+        <div class="w-full sm:w-auto py-4 px-4 sm:p-10 sm:rounded-2xl sm:shadow sm:bg-card">
+            <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+
+                <!-- Title -->
+                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Create Plan</div>
+
+                <!-- Form -->
+                <form class="mt-4"
+                      [formGroup]="depositForm">
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Deposit Number</mat-label>
+                        <input id="depositNumber"
+                               matInput
+                               [formControlName]="'depositNumber'" maxlength="9">
+                        <mat-error *ngIf="depositForm.get('depositNumber').hasError('required')">
+                            Deposit Number is required
+                        </mat-error>
+                        <mat-error *ngIf="depositForm.get('depositNumber').hasError('pattern')">
+                            Enter valid deposit number
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Deposit Plan</mat-label>
+                        <mat-select formControlName="depositPlanId">
+                            <ng-container *ngFor="let plan of plans">
+                                <mat-option [value]="plan.depositPlanId" (click)="planHandler(plan)" selected>{{plan.name}}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="depositForm.get('depositPlanId').hasError('required')">
+                            Deposit plan is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Deposit Sum ({{selectedCurrency}})</mat-label>
+                        <input id="sum" [formControlName]="'sum'" matInput type="number" />
+                        <mat-error *ngIf="depositForm.get('sum').hasError('required')">
+                            Sum is required
+                        </mat-error>
+                        <mat-error *ngIf="clientForm.get('sum').hasError('min')">
+                            Sum should be >=0
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded min-w-64"
+                                    [subscriptSizing]="'dynamic'">
+                        <mat-icon class="icon-size-5"
+                                  matPrefix
+                                  [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                        <input matInput
+                               [formControl]="searchControl"
+                               [autocomplete]="'off'"
+                               [placeholder]="'Search Clients'"
+                               maxlength="30">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Client</mat-label>
+                        <mat-select formControlName="clientId">
+                            <ng-container *ngFor="let client of clients; trackBy: trackClients">
+                                <mat-option [value]="client.clientId" selected>{{client.surname}} {{client.firstName}} {{client.lastName}}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="depositForm.get('clientId').hasError('required')">
+                            Client is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Submit button -->
+                    <button class="fuse-mat-button-large w-full mt-6"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [disabled]="depositForm.invalid"
+                            (click)="create()">
+                        <span *ngIf="!depositForm.disabled">
+                            Create Plan
+                        </span>
+                        <mat-progress-spinner *ngIf="depositForm.disabled"
+                                              [diameter]="24"
+                                              [mode]="'indeterminate'"></mat-progress-spinner>
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

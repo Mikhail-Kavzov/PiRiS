@@ -35,12 +35,12 @@ public class DepositPlanRepository : BaseRepository, IDepositPlanRepository
 
     public async Task<IEnumerable<DepositPlan>> GetAllAsync()
     {
-        return await _context.DepositPlans.ToListAsync();
+        return await _context.DepositPlans.Include(x => x.Currency).ToListAsync();
     }
 
     public async Task<DepositPlan?> GetEntityAsync(int id, bool trackChanges = true)
     {
-        return await _context.DepositPlans.FirstOrDefaultAsync(x=> x.DepositPlanId == id);
+        return await _context.DepositPlans.FirstOrDefaultAsync(x => x.DepositPlanId == id);
     }
 
     public Task<DepositPlan?> GetEntityAsync(Expression<Func<DepositPlan, bool>> predicate)
@@ -64,6 +64,6 @@ public class DepositPlanRepository : BaseRepository, IDepositPlanRepository
         }
 
         return await query.Skip(skip).Take(take)
-            .Include(x=> x.Currency).Include(x=>x.MainAccountPlan).Include(x=>x.PercentAccountPlan).ToListAsync();
+            .Include(x => x.Currency).Include(x => x.MainAccountPlan).Include(x => x.PercentAccountPlan).ToListAsync();
     }
 }

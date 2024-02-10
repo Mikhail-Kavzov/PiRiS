@@ -653,7 +653,7 @@ export class ApiClient {
      * @param creditId (optional) 
      * @return Success
      */
-    apiCreditSchedule(creditId: number | undefined): Observable<CreditShcheduleDto> {
+    apiCreditSchedule(creditId: number | undefined): Observable<CreditScheduleDto> {
         let url_ = this.baseUrl + "/api/Credit/Schedule?";
         if (creditId === null)
             throw new Error("The parameter 'creditId' cannot be null.");
@@ -677,14 +677,14 @@ export class ApiClient {
                 try {
                     return this.processApiCreditSchedule(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<CreditShcheduleDto>;
+                    return _observableThrow(e) as any as Observable<CreditScheduleDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<CreditShcheduleDto>;
+                return _observableThrow(response_) as any as Observable<CreditScheduleDto>;
         }));
     }
 
-    protected processApiCreditSchedule(response: HttpResponseBase): Observable<CreditShcheduleDto> {
+    protected processApiCreditSchedule(response: HttpResponseBase): Observable<CreditScheduleDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -695,7 +695,7 @@ export class ApiClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CreditShcheduleDto.fromJS(resultData200);
+            result200 = CreditScheduleDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -1913,6 +1913,7 @@ export class CreditPlanAgreementDto implements ICreditPlanAgreementDto {
     monthPeriod?: number;
     percent?: number;
     creditType?: CreditType;
+    currencyName: string;
 
     constructor(data?: ICreditPlanAgreementDto) {
         if (data) {
@@ -2115,7 +2116,7 @@ export interface ICreditPlanDtoPaginationList {
     totalCount?: number;
 }
 
-export class CreditShcheduleDto implements ICreditShcheduleDto {
+export class CreditScheduleDto implements ICreditShcheduleDto {
     creditId?: number;
     currentDay?: Date;
     schedule?: { [key: string]: number; } | undefined;
@@ -2143,9 +2144,9 @@ export class CreditShcheduleDto implements ICreditShcheduleDto {
         }
     }
 
-    static fromJS(data: any): CreditShcheduleDto {
+    static fromJS(data: any): CreditScheduleDto {
         data = typeof data === 'object' ? data : {};
-        let result = new CreditShcheduleDto();
+        let result = new CreditScheduleDto();
         result.init(data);
         return result;
     }
@@ -2217,7 +2218,7 @@ export interface ICurrencyDto {
 }
 
 export class DepositAgreementDto implements IDepositAgreementDto {
-    depositPlans?: DepositPlanAggreementDto[] | undefined;
+    depositPlans?: DepositPlanAgreementDto[] | undefined;
     currencies?: CurrencyDto[] | undefined;
 
     constructor(data?: IDepositAgreementDto) {
@@ -2234,7 +2235,7 @@ export class DepositAgreementDto implements IDepositAgreementDto {
             if (Array.isArray(_data["depositPlans"])) {
                 this.depositPlans = [] as any;
                 for (let item of _data["depositPlans"])
-                    this.depositPlans!.push(DepositPlanAggreementDto.fromJS(item));
+                    this.depositPlans!.push(DepositPlanAgreementDto.fromJS(item));
             }
             if (Array.isArray(_data["currencies"])) {
                 this.currencies = [] as any;
@@ -2268,7 +2269,7 @@ export class DepositAgreementDto implements IDepositAgreementDto {
 }
 
 export interface IDepositAgreementDto {
-    depositPlans?: DepositPlanAggreementDto[] | undefined;
+    depositPlans?: DepositPlanAgreementDto[] | undefined;
     currencies?: CurrencyDto[] | undefined;
 }
 
@@ -2476,11 +2477,12 @@ export interface IDepositDtoPaginationList {
     totalCount?: number;
 }
 
-export class DepositPlanAggreementDto implements IDepositPlanAggreementDto {
+export class DepositPlanAgreementDto implements IDepositPlanAggreementDto {
     depositPlanId?: number;
     name?: string | undefined;
     dayPeriod?: number;
     percent?: number;
+    currencyName?: string;
     depositType?: DepositType;
 
     constructor(data?: IDepositPlanAggreementDto) {
@@ -2502,9 +2504,9 @@ export class DepositPlanAggreementDto implements IDepositPlanAggreementDto {
         }
     }
 
-    static fromJS(data: any): DepositPlanAggreementDto {
+    static fromJS(data: any): DepositPlanAgreementDto {
         data = typeof data === 'object' ? data : {};
-        let result = new DepositPlanAggreementDto();
+        let result = new DepositPlanAgreementDto();
         result.init(data);
         return result;
     }

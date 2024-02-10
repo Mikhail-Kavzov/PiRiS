@@ -13,4 +13,6 @@ public class CreditPlanAgreementDto
     public double Percent { get; set; }
 
     public CreditType CreditType { get; set; }
+
+    public string CurrencyName { get; set; }
 }

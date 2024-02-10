@@ -2,7 +2,7 @@
 
 namespace PiRiS.Business.Dto.DepositPlan;
 
-public class DepositPlanAggreementDto
+public class DepositPlanAgreementDto
 {
     public int DepositPlanId { get; set; }
 
@@ -13,5 +13,7 @@ public class DepositPlanAggreementDto
     public double Percent { get; set; }
 
     public DepositType DepositType { get; set; }
+
+    public string CurrencyName { get; set; }
 
 }

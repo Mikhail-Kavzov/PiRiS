@@ -30,12 +30,12 @@ public class CreditPlanRepository : BaseRepository, ICreditPlanRepository
 
     public async Task<IEnumerable<CreditPlan>> GetAllAsync()
     {
-        return await _context.CreditPlans.ToListAsync();
+        return await _context.CreditPlans.Include(x => x.Currency).ToListAsync();
     }
 
     public async Task<CreditPlan?> GetEntityAsync(int id, bool trackChanges = true)
     {
-        return await _context.CreditPlans.FirstOrDefaultAsync(x=> x.CreditPlanId == id);
+        return await _context.CreditPlans.FirstOrDefaultAsync(x => x.CreditPlanId == id);
     }
 
     public Task<CreditPlan?> GetEntityAsync(Expression<Func<CreditPlan, bool>> predicate)
@@ -57,7 +57,7 @@ public class CreditPlanRepository : BaseRepository, ICreditPlanRepository
         {
             query = isAscending ? query.OrderBy(sort) : query.OrderByDescending(sort);
         }
-        return await query.Skip(skip).Take(take).Include(x=> x.Currency)
-            .Include(x=> x.MainAccountPlan).Include(x=>x.PercentAccountPlan).ToListAsync();
+        return await query.Skip(skip).Take(take).Include(x => x.Currency)
+            .Include(x => x.MainAccountPlan).Include(x => x.PercentAccountPlan).ToListAsync();
     }
 }

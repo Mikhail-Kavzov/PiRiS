@@ -1,6 +1,6 @@
 ﻿namespace PiRiS.Business.Dto.Credit;
 
-public class CreditShcheduleDto
+public class CreditScheduleDto
 {
     public int CreditId { get; set; }
 

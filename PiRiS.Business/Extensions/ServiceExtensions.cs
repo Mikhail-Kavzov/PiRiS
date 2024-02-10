@@ -18,5 +18,6 @@ public static class ServiceExtensions
         services.AddTransient<IClientManager, ClientManager>();
         services.AddTransient<IDepositManager, DepositManager>();
         services.AddTransient<ICreditManager, CreditManager>();
+        services.AddTransient<ICurrencyManager, CurrencyManager>();
     }
 }

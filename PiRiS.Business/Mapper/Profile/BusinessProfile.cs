@@ -28,12 +28,15 @@ public class BusinessProfile : Profile
             .ForMember(x => x.CitizenshipName, opt => opt.MapFrom(x => x.Citizenship.CitizenshipName))
             .ForMember(x => x.CityName, opt => opt.MapFrom(x => x.City.Name));
 
-        CreateMap<DepositPlan, DepositAgreementDto>();
+        CreateMap<DepositPlan, DepositPlanAgreementDto>()
+            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.Currency.CurrencyName));
 
         CreateMap<Currency, CurrencyDto>();
         CreateMap<DepositCreateDto, Deposit>();
 
-        CreateMap<CreditPlan, CreditPlanAgreementDto>();
+        CreateMap<CreditPlan, CreditPlanAgreementDto>()
+            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.Currency.CurrencyName));
+
         CreateMap<CreditCreateDto, Credit>();
 
         CreateMap<Deposit, DepositDto>()
@@ -52,10 +55,16 @@ public class BusinessProfile : Profile
 
         CreateMap<Credit, CreditDto>()
             .ForMember(x => x.PlanName, opt => opt.MapFrom(x => x.CreditPlan.Name))
-            .ForMember(x=> x.Percent, opt=> opt.MapFrom(x=> x.CreditPlan.Percent))
-            .ForMember(x=> x.CreditType, opt=> opt.MapFrom(x=> x.CreditPlan.CreditType))
+            .ForMember(x => x.Percent, opt => opt.MapFrom(x => x.CreditPlan.Percent))
+            .ForMember(x => x.CreditType, opt => opt.MapFrom(x => x.CreditPlan.CreditType))
             .ForMember(x => x.MainAccountNumber, opt => opt.MapFrom(x => x.MainAccount.AccountNumber))
-            .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber));
+            .ForMember(x => x.PercentAccountNumber, opt => opt.MapFrom(x => x.PercentAccount.AccountNumber))
+            .ForMember(x => x.Surname, opt => opt.MapFrom(x => x.Client.Surname))
+            .ForMember(x => x.LastName, opt => opt.MapFrom(x => x.Client.LastName))
+            .ForMember(x => x.FirstName, opt => opt.MapFrom(x => x.Client.FirstName))
+            .ForMember(x => x.CurrencyName, opt => opt.MapFrom(x => x.CreditPlan.Currency.CurrencyName))
+            .ForMember(x => x.CanClose, opt => opt.Ignore())
+            .ForMember(x => x.CanPayPercents, opt => opt.Ignore());
 
         CreateMap<DepositPlanCreateDto, DepositPlan>();
         CreateMap<DepositPlan, DepositPlanDto>()

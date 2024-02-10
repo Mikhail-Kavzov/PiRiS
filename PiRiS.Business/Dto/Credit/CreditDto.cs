@@ -14,6 +14,8 @@ public class CreditDto
 
     public decimal Sum { get; set; }
 
+    public string CurrencyName { get; set; }
+
     public string PlanName { get; set; }
 
     public double Percent { get; set; }
@@ -23,4 +25,14 @@ public class CreditDto
     public string MainAccountNumber { get; set; }
 
     public string PercentAccountNumber { get; set; }
+
+    public string Surname { get; set; }
+
+    public string FirstName { get; set; }
+
+    public string LastName { get; set; }
+
+    public bool CanClose { get; set; }
+
+    public bool CanPayPercents { get; set; }
 }
