@@ -149,13 +149,14 @@ public class DepositManager : BaseManager, IDepositManager
 
         var depositDtos = Mapper.Map<List<DepositDto>>(deposits);
         var currentDay = await _bankService.GetCurrentDayAsync();
+        var stringRevocable = DepositType.Revocable.ToString();
 
         foreach(var depositDto in depositDtos)
         {
-            depositDto.CanClose = (depositDto.DepositType == DepositType.Revocable 
+            depositDto.CanClose = (depositDto.DepositType == stringRevocable 
                 || depositDto.EndDate < currentDay) && depositDto.Sum > 0;
 
-            depositDto.CanWithdraw = depositDto.DepositType == DepositType.Revocable && depositDto.Sum > 0
+            depositDto.CanWithdraw = depositDto.DepositType == stringRevocable && depositDto.Sum > 0
             && (currentDay - depositDto.StartDate).TotalDays % BankParams.DaysInMonth == 0;
         }
 
