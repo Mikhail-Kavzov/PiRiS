@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'api/api.service';
-import { AtmLoginDto, WithdrawMoneyDto } from '../../../../api/api.client';
+import { AtmLoginDto, TransferMoneyDto, WithdrawMoneyDto } from '../../../../api/api.client';
 
 @Injectable({
     providedIn: 'root'
@@ -51,5 +51,15 @@ export class AtmService {
                 creditCardNumber: cardNumber,
                 creditCardCode: cardPin
             }));
+    }
+
+    transferMoney(cardNumber: string, cardPin: string, sum: number, mobilePhone: string, mobilePhoneConfirmation: string) {
+        return this._apiService.apiClient.apiAtmTransfer(new TransferMoneyDto({
+            creditCardNumber: cardNumber,
+            creditCardCode: cardPin,
+            sum: sum,
+            mobilePhone: mobilePhone,
+            mobilePhoneConfirmation: mobilePhoneConfirmation
+        }));
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PiRiS.Business.Dto.Account;
 using PiRiS.Business.Dto.Atm;
-using PiRiS.Business.Dto.Credit;
 using PiRiS.Business.Managers.Interfaces;
 using PiRiS.Business.Services.Interfaces;
 
@@ -48,5 +47,20 @@ public class AtmController : ApiController
         var creditDto = await _atmManager.LoginAsync(loginDto.CreditCardNumber, loginDto.CreditCardCode);
         var accountDto = await _atmManager.GetAccountAsync(creditDto.MainAccountNumber);
         return Ok(accountDto);
+    }
+
+    [HttpPost("Transfer")]
+    public async Task<ActionResult<AtmReportDto>> TransferMoneyAsync([FromBody] TransferMoneyDto transferMoneyDto)
+    {
+        var creditDto = await _atmManager.LoginAsync(transferMoneyDto.CreditCardNumber, transferMoneyDto.CreditCardCode);
+        //transfer money here
+        var report = new AtmReportDto
+        {
+            CreditCardNumber = transferMoneyDto.CreditCardNumber,
+            OperationDate = await _bankService.GetCurrentDayAsync(),
+            OperationName = $"Transfer money to {transferMoneyDto.MobilePhone}",
+            Sum = transferMoneyDto.Sum,
+        };
+        return Ok(transferMoneyDto);
     }
 }

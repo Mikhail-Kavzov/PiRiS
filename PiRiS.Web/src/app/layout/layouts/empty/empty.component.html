@@ -3,22 +3,24 @@
     <div class="relative flex flex-0 items-center w-full h-16 sm:h-20 px-4 sm:px-8 z-49 print:hidden">
 
         <div class="flex items-center">
-            <button *ngIf="isNotPage('clientlist')"
-                    class="navigation-btn button-stretch mr-8 min-h-8 w-28"
-                    mat-flat-button
-                    [color]="'link'"
-                    [disabled]="isLoadingRedirect"
-                    (click)="redirectToPage('/client/list')">
-                Client List
-            </button>
+            <ng-container *ngFor="let mainButton of mainButtons">
+                <button *ngIf="isModule(mainButton.modulePath)"
+                        class="navigation-btn button-stretch mr-8 min-h-8 w-28"
+                        mat-flat-button
+                        [color]="'link'"
+                        [disabled]="isLoadingRedirect"
+                        (click)="redirectToPage(mainButton.link)">
+                    {{mainButton.name}}
+                </button>
+            </ng-container>
 
-            <button *ngIf="isNotPage('clientcreate')"
+            <button
                     class="navigation-btn button-stretch mr-8 min-h-8 w-36"
                     mat-flat-button
                     [color]="'link'"
                     [disabled]="isLoadingRedirect"
-                    (click)="redirectToPage('/client/create')">
-                Create Client
+                    (click)="redirectToPage('/')">
+                Home
             </button>
 
         </div>

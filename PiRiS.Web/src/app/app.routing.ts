@@ -39,6 +39,21 @@ export const appRoutes: Route[] = [
         ]
     },
     {
+        path: 'atm',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: 'account-query', loadChildren: () => import('app/modules/dashboard/atm/account/query/atm-account-query.module').then(m => m.AtmAccountQueryModule) },
+            { path: 'login', loadChildren: () => import('app/modules/dashboard/atm/login/atm-login.module').then(m => m.AtmLoginModule) },
+            { path: 'main', loadChildren: () => import('app/modules/dashboard/atm/main/atm-main-page.module').then(m => m.AtmMainPageModule) },
+            { path: 'transfer', loadChildren: () => import('app/modules/dashboard/atm/transfer/atm-transfer.module').then(m => m.AtmTransferModule )},
+            { path: 'withdraw', loadChildren: () => import('app/modules/dashboard/atm/withdraw/atm-withdraw.module').then(m => m.AtmWithdrawModule) },
+
+        ]
+    },
+    {
         path: 'deposit',
         component: LayoutComponent,
         data: {
