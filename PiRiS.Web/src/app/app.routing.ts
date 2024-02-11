@@ -3,8 +3,18 @@ import { LayoutComponent } from 'app/layout/layout.component';
 
 export const appRoutes: Route[] = [
 
-    { path: 'main-page-redirect', pathMatch: 'full', redirectTo: 'client/list' },
+    { path: 'main-page-redirect', pathMatch: 'full', redirectTo: '' },
 
+    {
+        path: '',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: '', loadChildren: () => import('app/modules/dashboard/main/main-page.module').then(m => m.MainPageModule) },
+        ]
+    },
     {
         path: 'client',
         component: LayoutComponent,
@@ -29,6 +39,17 @@ export const appRoutes: Route[] = [
         ]
     },
     {
+        path: 'deposit',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: 'create', loadChildren: () => import('app/modules/dashboard/deposit/create/deposit-create.module').then(m => m.DepositCreateModule) },
+            { path: 'list', loadChildren: () => import('app/modules/dashboard/deposit/list/deposit-list.module').then(m => m.DepositListModule) },
+        ]
+    },
+    {
         path: 'credit-plan',
         component: LayoutComponent,
         data: {
@@ -37,6 +58,39 @@ export const appRoutes: Route[] = [
         children: [
             { path: 'create', loadChildren: () => import('app/modules/dashboard/credit-plan/create/credit-plan-create.module').then(m => m.CreditPlanCreateModule) },
             { path: 'list', loadChildren: () => import('app/modules/dashboard/credit-plan/list/credit-plan-list.module').then(m => m.CreditPlanListModule) },
+        ]
+    },
+    {
+        path: 'credit',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: 'create', loadChildren: () => import('app/modules/dashboard/credit/create/credit-create.module').then(m => m.CreditCreateModule) },
+            { path: 'list', loadChildren: () => import('app/modules/dashboard/credit/list/credit-list.module').then(m => m.CreditListModule) },
+            { path: 'schedule', loadChildren: () => import('app/modules/dashboard/credit/schedule/credit-schedule.module').then(m => m.CreditScheduleModule) },
+        ]
+    },
+
+    {
+        path: 'account',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: 'list', loadChildren: () => import('app/modules/dashboard/account/list/account-list.module').then(m => m.AccountListModule) },
+        ]
+    },
+    {
+        path: 'bank',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: '', loadChildren: () => import('app/modules/dashboard/bank/bank.module').then(m => m.BankModule) },
         ]
     },
 

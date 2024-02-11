@@ -12,7 +12,7 @@ public class DepositPlanAgreementDto
 
     public double Percent { get; set; }
 
-    public DepositType DepositType { get; set; }
+    public string DepositType { get; set; }
 
     public string CurrencyName { get; set; }
 

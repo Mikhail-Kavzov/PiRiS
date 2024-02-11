@@ -4,27 +4,27 @@ import { MatPaginator } from '@angular/material/paginator';
 import { debounceTime, Subject, switchMap, takeUntil } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { Pagination } from '../../../../../types/pagination.types';
-import { CreditService } from '../credit.service';
+import { AccountService } from '../account.service';
 import { Router } from '@angular/router';
-import { CreditDto } from '../../../../../api/api.client';
+import { AccountDto } from '../../../../../api/api.client';
 
 @Component({
-    selector: 'credit-list',
-    templateUrl: './credit-list.component.html',
-    styleUrls: ['./credit-list.component.scss'],
+    selector: 'account-list',
+    templateUrl: './account-list.component.html',
+    styleUrls: ['./account-list.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     animations: fuseAnimations
 })
-export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
+export class AccountListComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild(MatPaginator) private _paginator: MatPaginator;
 
-    credits: CreditDto[];
+    accounts: AccountDto[];
     pagination: Pagination;
 
     searchInputControl: UntypedFormControl = new UntypedFormControl();
 
-    selectedCredit: CreditDto | null = null;
+    selectedAccount: AccountDto | null = null;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     /**
@@ -32,7 +32,7 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _creditService: CreditService,
+        private _accountService: AccountService,
         private _router: Router,
 
     ) {
@@ -41,7 +41,7 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
     ngOnInit(): void {
 
 
-        this._creditService.pagination$
+        this._accountService.pagination$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((pagination: Pagination) => {
 
@@ -50,11 +50,11 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this._changeDetectorRef.markForCheck();
             });
 
-        this._creditService.credits$
+        this._accountService.accounts$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((credits: CreditDto[]) => {
+            .subscribe((accounts: AccountDto[]) => {
 
-                this.credits = credits;
+                this.accounts = accounts;
 
                 this._changeDetectorRef.markForCheck();
             });
@@ -67,7 +67,7 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.closeDetails();
                     query = query ?? '';
 
-                    return this._creditService.getCredits(0, this._paginator.pageSize, query);
+                    return this._accountService.getAccounts(0, this._paginator.pageSize, query);
                 })
             )
             .subscribe();
@@ -84,7 +84,7 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.closeDetails();
                     let search = this.searchInputControl.value ?? '';
 
-                    return this._creditService.getCredits(this._paginator.pageIndex, this._paginator.pageSize, search);
+                    return this._accountService.getAccounts(this._paginator.pageIndex, this._paginator.pageSize, search);
                 })
             ).subscribe();
         }
@@ -95,42 +95,22 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    toggleDetails(credit: CreditDto): void {
+    toggleDetails(account: AccountDto): void {
 
-        if (this.selectedCredit && this.selectedCredit.creditId === credit.creditId) {
+        if (this.selectedAccount && this.selectedAccount.accountId === account.accountId) {
 
             this.closeDetails();
             return;
         }
-        this.selectedCredit = credit;
+        this.selectedAccount = account;
         this._changeDetectorRef.markForCheck();
     }
 
     closeDetails(): void {
-        this.selectedCredit = null;
+        this.selectedAccount = null;
     }
 
-    trackByFn(index: number, item: CreditDto): any {
-        return item.creditId || index;
-    }
-
-    closeCredit() {
-        this._creditService.closeCredit(this.selectedCredit.creditId).subscribe(() => {
-            this.selectedCredit.canClose = false;
-            this.selectedCredit.canPayPercents = false;
-            this._changeDetectorRef.markForCheck();
-        })
-    }
-
-    payPercents() {
-        this._creditService.payPercents(this.selectedCredit.creditId).subscribe(() => {
-            this.selectedCredit.canPayPercents = false;
-            this._changeDetectorRef.markForCheck();
-        })
-    }
-
-    showSchedule() {
-        let creditId = this.selectedCredit.creditId;
-        this._router.navigateByUrl(`/credit/schedule?creditId=${creditId}`);
+    trackByFn(index: number, item: AccountDto): any {
+        return item.accountId || index;
     }
 }
