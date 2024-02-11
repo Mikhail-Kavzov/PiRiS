@@ -7,6 +7,5 @@ export enum Patterns {
     DepositNumber = "^\d{9}$",
     CreditNumber = "^\d{9}$",
     CreditCardNumber = "^\d{16}$",
-    CreditCardCode = "^\d{4}$"
-
+    CreditCardCode = "^\d{4}$",
 }

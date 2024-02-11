@@ -2,17 +2,15 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { MainData } from './models/main-data.model';
+import { MainData } from '../../../../types/main-data.model';
 
 @Component({
     selector: 'main-page',
     templateUrl: './main-page.component.html',
-    styleUrls: ['./main-page.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })
 export class MainPageComponent implements OnInit {
-    clientForm: FormGroup;
 
     mainButtons: MainData[];
 

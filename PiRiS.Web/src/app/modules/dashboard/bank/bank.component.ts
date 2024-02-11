@@ -16,9 +16,11 @@ export class BankComponent {
     }
 
     closeBankDay() {
-        this._bankService.closeBankDay().subscribe(() => {
-           // this._router.navigateByUrl('/account/list');
-        });
+        this._bankService.closeBankDay();
+    }
+
+    accounts() {
+        this._router.navigateByUrl('/account/list');
     }
 
 }

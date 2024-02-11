@@ -89,7 +89,7 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
         this.creditForm.get('creditCardCode').value;
 
         this._creditService.createCredit(credit).subscribe(()=>{
-            this._router.navigateByUrl('');
+            this._router.navigateByUrl('/credit/list');
         })
     }
 

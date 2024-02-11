@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { debounceTime,  Subject, switchMap, takeUntil } from 'rxjs';
+import { debounceTime, Subject, switchMap, takeUntil } from 'rxjs';
 import { DepositCreateDto, DepositPlanAgreementDto, ClientViewDto, SortDirection, ClientSortField } from '../../../../../api/api.client';
 import { Patterns } from '../../../../core/enums/patterns.enum';
 import { ClientService } from '../../client/client.service';
@@ -40,7 +40,7 @@ export class DepositCreateComponent implements OnInit, OnDestroy {
             depositPlanId: ['', Validators.required],
             clientId: ['', Validators.required],
             sum: [1, [Validators.required, Validators.min(1)]],
-            depositNumber: ['',[Validators.required, Validators.pattern(Patterns.DepositNumber)]]
+            depositNumber: ['', [Validators.required, Validators.pattern(Patterns.DepositNumber)]]
         })
 
         this._depositService.plans$.pipe(takeUntil(this._unsubscribeAll))
@@ -85,8 +85,8 @@ export class DepositCreateComponent implements OnInit, OnDestroy {
         deposit.depositPlanId = this.depositForm.get('depositPlanId').value;
         deposit.sum = this.depositForm.get('sum').value;
 
-        this._depositService.createDeposit(deposit).subscribe(()=>{
-            this._router.navigateByUrl('');
+        this._depositService.createDeposit(deposit).subscribe(() => {
+            this._router.navigateByUrl('/deposit/list');
         })
     }
 

@@ -19,10 +19,10 @@ public class AtmController : ApiController
     }
 
     [HttpPost("Login")]
-    public async Task<ActionResult<CreditDto>> LoginAsync([FromBody] AtmLoginDto loginDto)
+    public async Task<ActionResult> LoginAsync([FromBody] AtmLoginDto loginDto)
     {
-        var creditDto = await _atmManager.LoginAsync(loginDto.CreditCardNumber, loginDto.CreditCardCode);
-        return Ok(creditDto);
+        await _atmManager.LoginAsync(loginDto.CreditCardNumber, loginDto.CreditCardCode);
+        return Ok();
     }
 
     [HttpPost("Withdraw")]

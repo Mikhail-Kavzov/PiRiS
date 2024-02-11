@@ -1,0 +1,58 @@
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
+    <div class="flex md:max-w-6xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
+
+        <div class="w-full sm:w-auto py-4 px-4 sm:p-10 sm:rounded-2xl sm:shadow sm:bg-card">
+            <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+
+                <!-- Title -->
+                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">ATM Login</div>
+
+                <!-- Form -->
+                <form class="mt-4"
+                      [formGroup]="loginForm">
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Card Number</mat-label>
+                        <input id="creditCardNumber"
+                               matInput
+                               [formControlName]="'creditCardNumber'" maxlength="16">
+                        <mat-error *ngIf="loginForm.get('creditCardNumber').hasError('required')">
+                            Card number is required
+                        </mat-error>
+                        <mat-error *ngIf="loginForm.get('creditCardNumber').hasError('pattern')">
+                            Card number should contain only digits
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Card Pin</mat-label>
+                        <input id="creditCardCode"
+                               matInput
+                               [formControlName]="'creditCardCode'" maxlength="4">
+                        <mat-error *ngIf="loginForm.get('creditCardCode').hasError('required')">
+                            Card pin is required
+                        </mat-error>
+                        <mat-error *ngIf="loginForm.get('creditCardCode').hasError('pattern')">
+                            Card pin should contain only digits
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Submit button -->
+                    <button class="fuse-mat-button-large w-full mt-6"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [disabled]="loginForm.invalid"
+                            (click)="login()">
+                        <span *ngIf="!loginForm.disabled">
+                            Login
+                        </span>
+                        <mat-progress-spinner *ngIf="loginForm.disabled"
+                                              [diameter]="24"
+                                              [mode]="'indeterminate'"></mat-progress-spinner>
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

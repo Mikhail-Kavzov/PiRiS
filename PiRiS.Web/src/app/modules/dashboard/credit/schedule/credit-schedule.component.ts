@@ -7,7 +7,6 @@ import { CreditScheduleDto } from '../../../../../api/api.client';
 @Component({
     selector: 'credit-schedule',
     templateUrl: './credit-schedule.component.html',
-    styleUrls: ['./credit-schedule.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: fuseAnimations
 })

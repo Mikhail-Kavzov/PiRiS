@@ -57,7 +57,7 @@ export class CreditPlanCreateComponent implements OnInit, OnDestroy {
         creditPlan.currencyId = this.creditForm.get('currencyId').value;
 
         this._creditPlanService.createPlan(creditPlan).subscribe(()=>{
-            this._router.navigateByUrl('');
+            this._router.navigateByUrl('/credit-plan/list');
         })
     }
 

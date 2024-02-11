@@ -58,7 +58,7 @@ export class DepositPlanCreateComponent implements OnInit, OnDestroy {
         depositPlan.currencyId = this.depositForm.get('currencyId').value;
 
         this._depositPlanService.createPlan(depositPlan).subscribe(()=>{
-            this._router.navigateByUrl('');
+            this._router.navigateByUrl('/deposit-plan/list');
         })
     }
 

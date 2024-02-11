@@ -8,6 +8,6 @@
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist\PiRiS.Web\</PublishAssetsDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\types\" />
+    <Folder Include="src\app\modules\dashboard\atm\transfer\" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,52 @@
+<atm-logout></atm-logout>
+<ng-container *ngIf="!account; else accountPage">
+    <div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
+
+        <div class="flex md:max-w-6xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
+
+            <div class="w-full sm:w-auto py-4 px-4 sm:p-10 sm:rounded-2xl sm:shadow sm:bg-card">
+                <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+
+                    <!-- Title -->
+                    <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Enter Pin</div>
+
+                    <!-- Form -->
+                    <form class="mt-4"
+                          [formGroup]="accountForm">
+
+                        <mat-form-field class="w-full">
+                            <mat-label>Card Pin</mat-label>
+                            <input id="creditCardCode"
+                                   matInput
+                                   [formControlName]="'creditCardCode'" maxlength="4">
+                            <mat-error *ngIf="accountForm.get('creditCardCode').hasError('required')">
+                                Card pin is required
+                            </mat-error>
+                            <mat-error *ngIf="accountForm.get('creditCardCode').hasError('pattern')">
+                                Card pin should contain only digits
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!-- Submit button -->
+                        <button class="fuse-mat-button-large w-full mt-6"
+                                mat-flat-button
+                                [color]="'primary'"
+                                [disabled]="accountForm.invalid"
+                                (click)="getAccount()">
+                            <span *ngIf="!accountForm.disabled">
+                                Get Account
+                            </span>
+                            <mat-progress-spinner *ngIf="accountForm.disabled"
+                                                  [diameter]="24"
+                                                  [mode]="'indeterminate'"></mat-progress-spinner>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #accountPage>
+    <atm-account-view [account]="account"></atm-account-view>
+</ng-template>
