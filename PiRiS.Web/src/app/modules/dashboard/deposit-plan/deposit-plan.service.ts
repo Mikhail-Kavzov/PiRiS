@@ -29,7 +29,7 @@ export class DepositPlanService {
     }
 
     getPlans(page: number, take: number) {
-        return this._apiService.apiClient.apiDepositPlanList(page, take).pipe(
+        return this._apiService.apiClient.apiDepositPlanList(page * take, take).pipe(
             tap((plans) => {
                 this._plans.next(plans.items);
                 this._pagination.next(new Pagination(page, take, plans.totalCount))

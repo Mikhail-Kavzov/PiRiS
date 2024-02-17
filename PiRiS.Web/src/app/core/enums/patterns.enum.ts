@@ -4,8 +4,8 @@ export enum Patterns {
     Phone = "^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$",
     PassportSeries = "^[A-Z]{2}$",
     PassportNumber = "^[0-9]{7}$",
-    DepositNumber = "^\d{9}$",
-    CreditNumber = "^\d{9}$",
-    CreditCardNumber = "^\d{16}$",
-    CreditCardCode = "^\d{4}$",
+    DepositNumber = "^[0-9]{9}$",
+    CreditNumber = "^[0-9]{9}$",
+    CreditCardNumber = "^[0-9]{16}$",
+    CreditCardCode = "^[0-9]{4}$",
 }

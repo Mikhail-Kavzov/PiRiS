@@ -7,4 +7,6 @@ public class CreditScheduleDto
     public DateTime CurrentDay { get; set; }
 
     public Dictionary<DateTime, double> Schedule { get; set; }
+
+    public string CurrencyName { get; set; }
 }

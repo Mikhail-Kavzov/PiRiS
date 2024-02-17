@@ -5,7 +5,7 @@
             <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
 
                 <!-- Title -->
-                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Create Plan</div>
+                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Create Deposit</div>
 
                 <!-- Form -->
                 <form class="mt-4"
@@ -36,7 +36,7 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <div *ngIf="selectedPlan" class="flex items-center flex-col">
+                    <div *ngIf="selectedPlan" class="flex items-center flex-col mb-4">
                         <p>Deposit Type: {{selectedPlan.depositType}}</p>
                         <p>Days: {{selectedPlan.dayPeriod}}</p>
                         <p>Percent: {{selectedPlan.percent}}</p>
@@ -48,12 +48,12 @@
                         <mat-error *ngIf="depositForm.get('sum').hasError('required')">
                             Sum is required
                         </mat-error>
-                        <mat-error *ngIf="clientForm.get('sum').hasError('min')">
+                        <mat-error *ngIf="depositForm.get('sum').hasError('min')">
                             Sum should be >=0
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded min-w-64"
+                    <mat-form-field class="w-full fuse-mat-dense  fuse-mat-rounded min-w-64 mb-4 mt-4"
                                     [subscriptSizing]="'dynamic'">
                         <mat-icon class="icon-size-5"
                                   matPrefix
@@ -67,7 +67,7 @@
 
                     <mat-form-field class="w-full">
                         <mat-label>Client</mat-label>
-                        <mat-select formControlName="clientId">
+                        <mat-select #clientSelect formControlName="clientId">
                             <ng-container *ngFor="let client of clients; trackBy: trackClients">
                                 <mat-option [value]="client.clientId" selected>{{client.surname}} {{client.firstName}} {{client.lastName}}</mat-option>
                             </ng-container>
@@ -84,7 +84,7 @@
                             [disabled]="depositForm.invalid"
                             (click)="create()">
                         <span *ngIf="!depositForm.disabled">
-                            Create Plan
+                            Create Deposit
                         </span>
                         <mat-progress-spinner *ngIf="depositForm.disabled"
                                               [diameter]="24"

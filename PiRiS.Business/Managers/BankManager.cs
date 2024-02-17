@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using PiRiS.Business.Dto;
+using PiRiS.Business.Dto.Transaction;
 using PiRiS.Business.Managers.Interfaces;
 using PiRiS.Business.Services.Interfaces;
 using PiRiS.Data.UnitOfWork;
@@ -23,5 +25,18 @@ public class BankManager : BaseManager, IBankManager
         await _transactionService.CloseDepositsForDayAsync();
         await _transactionService.CloseCreditsForDayAsync();
         await _bankService.IncreaseCurrentDayAsync();
+    }
+
+    public async Task<PaginationList<TransactionDto>> GetTransactionsAsync(PaginationDto pagination)
+    {
+        var transactions = await UnitOfWork.TransactionRepository.GetListAsync(pagination.Skip, pagination.Take,
+            sort: x => x.TransactionDay, isAscending: false);
+        var totalCount = await UnitOfWork.TransactionRepository.CountAsync();
+
+        return new PaginationList<TransactionDto>
+        {
+            Items = Mapper.Map<List<TransactionDto>>(transactions),
+            TotalCount = totalCount,
+        };
     }
 }

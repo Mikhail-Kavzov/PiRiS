@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using PiRiS.Business.Dto.Account;
 using PiRiS.Business.Dto.Atm;
 using PiRiS.Business.Dto.Credit;
 using PiRiS.Business.Exceptions;
 using PiRiS.Business.Managers.Interfaces;
+using PiRiS.Business.Options;
 using PiRiS.Business.Services.Interfaces;
 using PiRiS.Data.UnitOfWork;
 
@@ -14,20 +16,15 @@ public class AtmManager : BaseManager, IAtmManager
 {
     private readonly ITransactionService _transactionService;
     private readonly IAccountService _accountService;
+    private readonly CurrencyOptions _currencyOptions;
 
     public AtmManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger<AtmManager> logger,
-        ITransactionService transactionService, IAccountService accountService)
+        ITransactionService transactionService, IAccountService accountService, IOptions<CurrencyOptions> currencyOptions)
         : base(mapper, unitOfWork, logger)
     {
         _transactionService = transactionService;
         _accountService = accountService;
-    }
-
-    public async Task GetAccountAsync(int creditId)
-    {
-        var credit = await UnitOfWork.CreditRepository.GetEntityAsync(creditId);
-        var account = credit.MainAccount;
-
+        _currencyOptions = currencyOptions.Value;
     }
 
     public async Task<AccountDto> GetAccountAsync(string accountNumber)
@@ -64,7 +61,14 @@ public class AtmManager : BaseManager, IAtmManager
         }
 
         var bankAccount = await _accountService.GetBankAccountAsync();
-        await _transactionService.PerformTransactionAsync(credit.MainAccount, bankAccount, sum);
-        await _transactionService.WithdrawBankTransactionAsync(sum);
+        var currencyName = credit.CreditPlan.Currency.CurrencyName;
+
+        var exchageRate = _currencyOptions.ExchangeCourse[currencyName];
+
+        var sumInByn = sum * exchageRate;
+
+        await _transactionService.PerformTransactionAsync(credit.MainAccount, bankAccount, sumInByn);
+
+        await _transactionService.WithdrawBankTransactionAsync(sumInByn);
     }
 }

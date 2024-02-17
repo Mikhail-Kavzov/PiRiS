@@ -17,8 +17,8 @@ public class AccountService : BaseService, IAccountService
     {
         var random = new Random();
         var depositPlan = deposit.DepositPlan ?? await UnitOfWork.DepositPlanRepository.GetEntityAsync(deposit.DepositPlanId);
-        var mainAccount = CreateAccount(depositPlan.MainAccountPlan, deposit.ClientId, random.Next());
-        var percentAccount = CreateAccount(depositPlan.PercentAccountPlan, deposit.ClientId, random.Next());
+        var mainAccount = CreateAccount(depositPlan.MainAccountPlan, deposit.ClientId, random.Next(0, int.MaxValue));
+        var percentAccount = CreateAccount(depositPlan.PercentAccountPlan, deposit.ClientId, random.Next(0, int.MaxValue));
         deposit.MainAccount = mainAccount;
         deposit.PercentAccount = percentAccount;
     }
@@ -30,7 +30,7 @@ public class AccountService : BaseService, IAccountService
             Debit = 0,
             Credit = 0,
             Balance = 0,
-            AccountPlan = accountPlan,
+            AccountPlanId = accountPlan.AccountPlanId,
             AccountNumber = GenerateAccountNumber(accountPlan.Code, clientId, order),
         };
     }
@@ -54,7 +54,7 @@ public class AccountService : BaseService, IAccountService
 
     public async Task<Account> GetBankAccountAsync()
     {
-        return await UnitOfWork.AccountRepository.GetEntityAsync(x=> x.AccountPlan.Code == AccountOptions.BankCode);
+        return await UnitOfWork.AccountRepository.GetEntityAsync(x => x.AccountPlan.Code == AccountOptions.BankCode);
     }
 
     public async Task<Account> GetFundAccountAsync()

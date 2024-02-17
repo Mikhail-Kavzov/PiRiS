@@ -34,7 +34,7 @@ export class DepositService {
     }
 
     getDeposits(page: number, take: number, depositNumber: string = '') {
-        return this._apiService.apiClient.apiDepositList(page, take, depositNumber).pipe(
+        return this._apiService.apiClient.apiDepositList(page * take, take, depositNumber).pipe(
             tap((deposits) => {
 
                 this._deposits.next(deposits.items);

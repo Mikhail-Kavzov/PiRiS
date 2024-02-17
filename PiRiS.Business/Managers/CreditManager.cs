@@ -12,6 +12,7 @@ using PiRiS.Data.Models;
 using PiRiS.Data.UnitOfWork;
 using System.Linq.Expressions;
 using PiRiS.Data.Models.Enums;
+using Microsoft.Extensions.Options;
 
 namespace PiRiS.Business.Managers;
 
@@ -20,14 +21,16 @@ public class CreditManager : BaseManager, ICreditManager
     private readonly IAccountService _accountService;
     private readonly IBankService _bankService;
     private readonly ITransactionService _transactionService;
+    private readonly CurrencyOptions _currencyOptions;
 
     public CreditManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger<CreditManager> logger, IAccountService accountService,
-        ITransactionService transactionService, IBankService bankService)
+        ITransactionService transactionService, IBankService bankService, IOptions<CurrencyOptions> currencyOptions)
         : base(mapper, unitOfWork, logger)
     {
         _accountService = accountService;
         _bankService = bankService;
         _transactionService = transactionService;
+        _currencyOptions = currencyOptions.Value;
     }
 
     public async Task CreateCreditAsync(CreditCreateDto creditCreateDto)
@@ -54,18 +57,27 @@ public class CreditManager : BaseManager, ICreditManager
             throw new NotFoundException("Plan not found");
         }
 
-        newCredit.StartDate = default;
+        var currentDay = await _bankService.GetCurrentDayAsync();
+
+        newCredit.StartDate = currentDay;
         newCredit.EndDate = newCredit.StartDate.AddMonths(plan.MonthPeriod);
 
         await _accountService.CreateAccountsAsync(newCredit);
         UnitOfWork.CreditRepository.Create(newCredit);
         await UnitOfWork.CreditRepository.SaveChangesAsync();
 
-        await _transactionService
-            .PerformTransactionAsync(await _accountService.GetFundAccountAsync(), newCredit.MainAccount, newCredit.Sum);
+        var mainAccount = await UnitOfWork.AccountRepository.GetEntityAsync(x => x.AccountNumber == newCredit.MainAccount.AccountNumber);
+        var currencyName = await UnitOfWork.CreditRepository.GetCurrencyNameAsync(x=> x.CreditNumber == newCredit.CreditNumber);
 
-        await _transactionService.PerformTransactionAsync(newCredit.MainAccount, await _accountService.GetBankAccountAsync(), newCredit.Sum);
-        await _transactionService.WithdrawBankTransactionAsync(newCredit.Sum);
+        var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
+
+        var sumInByn = newCredit.Sum * exchangeRate;
+
+        await _transactionService
+            .PerformTransactionAsync(await _accountService.GetFundAccountAsync(), mainAccount, sumInByn);
+
+        await _transactionService.PerformTransactionAsync(mainAccount, await _accountService.GetBankAccountAsync(), sumInByn);
+        await _transactionService.WithdrawBankTransactionAsync(sumInByn);
 
     }
 
@@ -80,8 +92,8 @@ public class CreditManager : BaseManager, ICreditManager
             throw new NotFoundException("Account plan for credits not found");
         }
 
-        newPlan.MainAccountPlan = accountPlan;
-        newPlan.PercentAccountPlan = accountPlan;
+        newPlan.MainAccountPlanId = accountPlan.AccountPlanId;
+        newPlan.PercentAccountPlanId = accountPlan.AccountPlanId;
 
         UnitOfWork.CreditPlanRepository.Create(newPlan);
         await UnitOfWork.CreditPlanRepository.SaveChangesAsync();
@@ -103,7 +115,7 @@ public class CreditManager : BaseManager, ICreditManager
 
         if (!string.IsNullOrEmpty(paginationDto.CreditNumber))
         {
-            predicate = x => x.CreditNumber == paginationDto.CreditNumber;
+            predicate = x => x.CreditNumber.StartsWith(paginationDto.CreditNumber);
         }
 
         var credits = await UnitOfWork.CreditRepository.GetListAsync(paginationDto.Skip, paginationDto.Take, predicate);
@@ -145,12 +157,14 @@ public class CreditManager : BaseManager, ICreditManager
             throw new NotFoundException("Credit not found");
         }
 
+        var currencyName = credit.CreditPlan.Currency.CurrencyName;
         var currentDay = await _bankService.GetCurrentDayAsync();
         var shcheduleDto = new CreditScheduleDto
         {
             CreditId = creditId,
             CurrentDay = currentDay,
             Schedule = new Dictionary<DateTime, double>(),
+            CurrencyName = currencyName,
         };
 
         var monthes = credit.CreditPlan.MonthPeriod;
@@ -173,17 +187,19 @@ public class CreditManager : BaseManager, ICreditManager
         else
         {
             var creditRest = (double)credit.Sum;
-            var monthCreditPart = (double)credit.Sum / monthes;
+            var monthCreditDebt = (double)credit.Sum / monthes;
+            var creditMonthPercent = credit.CreditPlan.Percent / BankParams.PercentDelimiter / BankParams.DaysInYear * BankParams.DaysInMonth;
 
             DateTime paymentDate = credit.StartDate.AddMonths(1);
             for (int i = 0; i < monthes; i++)
             {
-                double currMonthPayment = monthCreditPart + creditRest * monthPercent;
+                double currMonthPayment = monthCreditDebt + creditRest * creditMonthPercent;
                 shcheduleDto.Schedule.Add(paymentDate, currMonthPayment);
 
-                creditRest -= monthCreditPart;
+                creditRest -= monthCreditDebt;
                 paymentDate = paymentDate.AddMonths(1);
             }
+
         }
         return shcheduleDto;
     }
@@ -205,7 +221,6 @@ public class CreditManager : BaseManager, ICreditManager
         var sum = Math.Abs(credit.PercentAccount.Balance);
 
         await _transactionService.WithdrawBankTransactionAsync(sum);
-
         await _transactionService.PerformTransactionAsync(await _accountService.GetBankAccountAsync(), credit.PercentAccount, sum);
     }
 
@@ -230,11 +245,14 @@ public class CreditManager : BaseManager, ICreditManager
         {
             throw new ServiceException("Credit has already been closed");
         }
+        var currencyName = credit.CreditPlan.Currency.CurrencyName;
+        var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
+        var sumInByn = credit.Sum * exchangeRate;
 
-        await _transactionService.PerformBankDebitTransactionAsync(credit.Sum);
+        await _transactionService.PerformBankDebitTransactionAsync(sumInByn);
 
-        await _transactionService.PerformTransactionAsync(await _accountService.GetBankAccountAsync(), credit.MainAccount, credit.Sum);
-        await _transactionService.PerformTransactionAsync(credit.MainAccount, await _accountService.GetFundAccountAsync(), credit.Sum);
+        await _transactionService.PerformTransactionAsync(await _accountService.GetBankAccountAsync(), credit.MainAccount, sumInByn);
+        await _transactionService.PerformTransactionAsync(credit.MainAccount, await _accountService.GetFundAccountAsync(), sumInByn);
 
         await _transactionService.PerformBankDebitTransactionAsync(credit.PercentAccount.Balance);
         await _transactionService.PerformTransactionAsync(await _accountService.GetBankAccountAsync(), credit.PercentAccount, credit.PercentAccount.Balance);

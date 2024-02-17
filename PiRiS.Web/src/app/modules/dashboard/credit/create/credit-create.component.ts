@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
@@ -25,6 +25,9 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
     searchControl: UntypedFormControl = new UntypedFormControl();
     selectedPlan: CreditPlanAgreementDto;
 
+    @ViewChild('clientSelect')
+    clientSelect;
+
     constructor(
         private _formBuilder: FormBuilder,
         private _router: Router,
@@ -34,6 +37,8 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
+
 
         this.creditForm = this._formBuilder.group({
             creditPlanId: ['', Validators.required],
@@ -54,6 +59,7 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
                 this.clients = clients;
             })
 
+
         this.searchControl.valueChanges.pipe(
             takeUntil(this._unsubscribeAll),
             debounceTime(300),
@@ -61,7 +67,9 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
                 query = query ?? '';
 
                 return this._clientService.getClients(0, 10, query, SortDirection.ascending, ClientSortField.surname);
-            })).subscribe();
+            })).subscribe(() => {
+                this.clientSelect.open();
+            });
 
     }
     ngOnDestroy(): void {
@@ -85,8 +93,8 @@ export class CreditCreateComponent implements OnInit, OnDestroy {
         credit.creditNumber = this.creditForm.get('creditNumber').value;
         credit.creditPlanId = this.creditForm.get('creditPlanId').value;
         credit.sum = this.creditForm.get('sum').value;
-        this.creditForm.get('creditCardNumber').value;
-        this.creditForm.get('creditCardCode').value;
+        credit.creditCardNumber = this.creditForm.get('creditCardNumber').value;
+        credit.creditCardCode = this.creditForm.get('creditCardCode').value;
 
         this._creditService.createCredit(credit).subscribe(()=>{
             this._router.navigateByUrl('/credit/list');

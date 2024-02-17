@@ -5,6 +5,8 @@ using PiRiS.Data.UnitOfWork;
 using PiRiS.Data.Models.Enums;
 using PiRiS.Business.Exceptions;
 using PiRiS.Common.Constants;
+using Microsoft.Extensions.Options;
+using PiRiS.Business.Options;
 
 namespace PiRiS.Business.Services;
 
@@ -12,17 +14,19 @@ public class TransactionService : BaseService, ITransactionService
 {
     private readonly IAccountService _accountService;
     private readonly IBankService _bankService;
+    private readonly CurrencyOptions _currencyOptions;
 
-    public TransactionService(IUnitOfWork unitOfWork, IMapper mapper, IAccountService accountService, IBankService bankService) : base(unitOfWork, mapper)
+    public TransactionService(IUnitOfWork unitOfWork, IMapper mapper, IAccountService accountService,
+        IBankService bankService, IOptions<CurrencyOptions> currencyOptions) : base(unitOfWork, mapper)
     {
         _accountService = accountService;
         _bankService = bankService;
+        _currencyOptions = currencyOptions.Value;
     }
 
     public async Task CloseCreditsForDayAsync()
     {
         var currentDay = await _bankService.GetCurrentDayAsync();
-        var fundAccount = await _accountService.GetFundAccountAsync();
 
         var credits = await UnitOfWork.CreditRepository
             .GetListAsync(0, int.MaxValue, x => x.Sum > 0 && currentDay >= x.StartDate && currentDay <= x.EndDate);
@@ -32,7 +36,7 @@ public class TransactionService : BaseService, ITransactionService
             decimal percentSum = 0;
             var monthes = credit.CreditPlan.MonthPeriod;
 
-            double monthPercent = credit.CreditPlan.Percent / BankParams.MonthInYear;
+            double monthPercent = credit.CreditPlan.Percent / BankParams.MonthInYear / BankParams.PercentDelimiter;
 
             if (credit.CreditPlan.CreditType == CreditType.Annuity)
             {
@@ -57,7 +61,10 @@ public class TransactionService : BaseService, ITransactionService
                 percentSum = (decimal)(dayCreditPart + rest * percentPerDay);
             }
 
-            await PerformTransactionAsync(credit.PercentAccount, fundAccount, percentSum);
+            var currencyName = credit.CreditPlan.Currency.CurrencyName;
+            var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
+            var fundAccount = await _accountService.GetFundAccountAsync();
+            await PerformTransactionAsync(credit.PercentAccount, fundAccount, percentSum * exchangeRate);
         }
     }
 
@@ -71,12 +78,17 @@ public class TransactionService : BaseService, ITransactionService
         {
             var percentSum = deposit.Sum * (decimal)(deposit.DepositPlan.Percent / BankParams.PercentDelimiter / BankParams.DaysInYear);
             var fundAccount = await _accountService.GetFundAccountAsync();
-            await PerformTransactionAsync(fundAccount, deposit.PercentAccount, percentSum);
+
+            var currencyName = deposit.DepositPlan.Currency.CurrencyName;
+            var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
+
+            await PerformTransactionAsync(fundAccount, deposit.PercentAccount, percentSum * exchangeRate);
         }
     }
 
     public async Task PerformBankDebitTransactionAsync(decimal amount)
     {
+        UnitOfWork.AccountRepository.ClearContext();
         var bankAccount = await _accountService.GetBankAccountAsync();
         bankAccount.Debit += amount;
         bankAccount.Balance = bankAccount.Debit - bankAccount.Credit;
@@ -94,7 +106,7 @@ public class TransactionService : BaseService, ITransactionService
             throw new NotFoundException("Debit account not found");
         }
 
-        if (creditAccount == null) 
+        if (creditAccount == null)
         {
             throw new NotFoundException("Credit account not found");
         }
@@ -104,6 +116,7 @@ public class TransactionService : BaseService, ITransactionService
 
     public async Task PerformTransactionAsync(Account debitAccount, Account creditAccount, decimal amount)
     {
+        UnitOfWork.AccountRepository.ClearContext();
         if (debitAccount.AccountPlan.AccountType == AccountType.Passive)
         {
             debitAccount.Debit += amount;
@@ -129,18 +142,25 @@ public class TransactionService : BaseService, ITransactionService
         var currentDay = await _bankService.GetCurrentDayAsync();
         var transaction = new Transaction
         {
-            DebitAccount = debitAccount,
-            CreditAccount = creditAccount,
+            DebitAccountId = debitAccount.AccountId,
+            CreditAccountId = creditAccount.AccountId,
             Amount = amount,
             TransactionDay = currentDay,
         };
 
         UnitOfWork.TransactionRepository.Create(transaction);
+        debitAccount.AccountPlan = null;
+        UnitOfWork.AccountRepository.Update(debitAccount);
+        creditAccount.AccountPlan = null;
+        UnitOfWork.AccountRepository.Update(creditAccount);
+
+        await UnitOfWork.AccountRepository.SaveChangesAsync();
         await UnitOfWork.TransactionRepository.SaveChangesAsync();
     }
 
     public async Task WithdrawBankTransactionAsync(decimal amount)
     {
+        UnitOfWork.AccountRepository.ClearContext();
         var bankAccount = await _accountService.GetBankAccountAsync();
         bankAccount.Credit += amount;
         bankAccount.Balance = bankAccount.Debit - bankAccount.Credit;

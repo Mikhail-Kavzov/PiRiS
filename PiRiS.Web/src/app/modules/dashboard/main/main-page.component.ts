@@ -27,6 +27,7 @@ export class MainPageComponent implements OnInit {
                 { link: '/credit-plan/list', name: 'Credit Plans' },
                 { link: '/deposit-plan/list', name: 'Deposit Plans' },
                 { link: '/atm/login', name: 'ATM' },
+                { link: '/transaction/list', name: 'Transactions' },
             ];
     }
 

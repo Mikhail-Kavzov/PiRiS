@@ -3,6 +3,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations';
 import { CreditService } from '../credit.service';
 import { CreditScheduleDto } from '../../../../../api/api.client';
+import { KeyValue } from '@angular/common';
 
 @Component({
     selector: 'credit-schedule',
@@ -31,5 +32,9 @@ export class CreditScheduleComponent implements OnInit, OnDestroy {
 
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
+    }
+
+    private onCompare(_left: KeyValue<any, any>, _right: KeyValue<any, any>): number {
+        return -1;
     }
 }

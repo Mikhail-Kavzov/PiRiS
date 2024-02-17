@@ -12,6 +12,11 @@ public abstract class BaseRepository : IRepository
         _context = context;
     }
 
+    public void ClearContext()
+    {
+        _context.ChangeTracker.Clear();
+    }
+
     public async Task SaveChangesAsync()
     {
         await _context.SaveChangesAsync();

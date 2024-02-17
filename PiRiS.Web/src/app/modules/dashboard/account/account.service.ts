@@ -25,7 +25,7 @@ export class AccountService {
     }
 
     getAccounts(page: number, take: number, accountNumber: string = '') {
-        return this._apiService.apiClient.apiAccountList(page, take, accountNumber).pipe(
+        return this._apiService.apiClient.apiAccountList(page * take, take, accountNumber).pipe(
             tap((accounts) => {
 
                 this._accounts.next(accounts.items);

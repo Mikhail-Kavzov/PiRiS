@@ -16,6 +16,8 @@ public static class ServiceExtensions
         services.AddDbContext<BankDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DbConnection"));
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+
         }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
         services.AddTransient<IClientRepository, ClientRepository>();

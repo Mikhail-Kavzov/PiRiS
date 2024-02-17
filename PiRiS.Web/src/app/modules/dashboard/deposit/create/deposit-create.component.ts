@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
@@ -26,6 +26,9 @@ export class DepositCreateComponent implements OnInit, OnDestroy {
 
     selectedPlan: DepositPlanAgreementDto;
 
+    @ViewChild('clientSelect')
+    clientSelect;
+
     constructor(
         private _formBuilder: FormBuilder,
         private _router: Router,
@@ -35,6 +38,8 @@ export class DepositCreateComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
+
 
         this.depositForm = this._formBuilder.group({
             depositPlanId: ['', Validators.required],
@@ -60,7 +65,9 @@ export class DepositCreateComponent implements OnInit, OnDestroy {
                 query = query ?? '';
 
                 return this._clientService.getClients(0, 10, query, SortDirection.ascending, ClientSortField.surname);
-            })).subscribe();
+            })).subscribe(() => {
+                this.clientSelect.open();
+            });
 
     }
     ngOnDestroy(): void {

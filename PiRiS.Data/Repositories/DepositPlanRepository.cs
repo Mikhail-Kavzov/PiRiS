@@ -40,7 +40,8 @@ public class DepositPlanRepository : BaseRepository, IDepositPlanRepository
 
     public async Task<DepositPlan?> GetEntityAsync(int id, bool trackChanges = true)
     {
-        return await _context.DepositPlans.FirstOrDefaultAsync(x => x.DepositPlanId == id);
+        return await _context.DepositPlans.Include(x=> x.MainAccountPlan).Include(x=>x.PercentAccountPlan)
+            .Include(x=>x.Currency).FirstOrDefaultAsync(x => x.DepositPlanId == id);
     }
 
     public Task<DepositPlan?> GetEntityAsync(Expression<Func<DepositPlan, bool>> predicate)

@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CreditPlanCreateDto, CurrencyDto } from '../../../../../api/api.client';
+import { CurrencyService } from '../../../../services/currency.service';
 import { CreditPlanService } from '../credit-plan.service';
 
 @Component({
@@ -22,22 +23,30 @@ export class CreditPlanCreateComponent implements OnInit, OnDestroy {
     constructor(
         private _formBuilder: FormBuilder,
         private _router: Router,
-        private _creditPlanService: CreditPlanService
+        private _creditPlanService: CreditPlanService,
+        private _currencyService: CurrencyService,
     ) {
     }
 
     ngOnInit(): void {
 
+        this._currencyService.currencies$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((currencies) => {
+                this.currencies = currencies;
+            });
+
         this.creditForm = this._formBuilder.group({
             monthPeriod: [1, [Validators.required, Validators.min(1)]],
             name: ['', Validators.required],
-            creditType: [0, Validators.required],
+            creditType: ['0', Validators.required],
             percent: [1, [Validators.required, Validators.min(0)]],
             currencyId: [1, Validators.required],
         })
 
 
     }
+
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

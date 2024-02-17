@@ -8,7 +8,7 @@ public class DepositPlanDto
 
     public string Name { get; set; }
 
-    public int CurrencyName { get; set; }
+    public string CurrencyName { get; set; }
 
     public int DayPeriod { get; set; }
 

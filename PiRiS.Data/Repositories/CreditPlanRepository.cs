@@ -35,7 +35,8 @@ public class CreditPlanRepository : BaseRepository, ICreditPlanRepository
 
     public async Task<CreditPlan?> GetEntityAsync(int id, bool trackChanges = true)
     {
-        return await _context.CreditPlans.FirstOrDefaultAsync(x => x.CreditPlanId == id);
+        return await _context.CreditPlans.Include(x=>x.MainAccountPlan).Include(x=>x.PercentAccountPlan)
+            .Include(x=>x.Currency).FirstOrDefaultAsync(x => x.CreditPlanId == id);
     }
 
     public Task<CreditPlan?> GetEntityAsync(Expression<Func<CreditPlan, bool>> predicate)

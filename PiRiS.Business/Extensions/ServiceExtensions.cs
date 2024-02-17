@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using PiRiS.Business.Managers;
 using PiRiS.Business.Managers.Interfaces;
+using PiRiS.Business.Options;
 using PiRiS.Business.Services;
 using PiRiS.Business.Services.Interfaces;
 
@@ -22,5 +23,8 @@ public static class ServiceExtensions
         services.AddTransient<IBankManager, BankManager>();
         services.AddTransient<IAtmManager, AtmManager>();
         services.AddTransient<IAccountManager, AccountManager>();
+
+        
+        services.Configure<CurrencyOptions>(configuration.GetSection("Currencies"));
     }
 }

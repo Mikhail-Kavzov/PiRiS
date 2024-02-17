@@ -3,4 +3,5 @@
 public interface IRepository
 {
     Task SaveChangesAsync();
+    void ClearContext();
 }

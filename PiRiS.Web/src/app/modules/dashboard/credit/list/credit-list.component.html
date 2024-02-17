@@ -46,7 +46,7 @@
                             <div></div>
                             <!-- Id -->
                             <div class="truncate">
-                                {{credit.creditName}}
+                                {{credit.creditNumber}}
                             </div>
 
                             <div class="hidden lg:block truncate">
@@ -119,10 +119,6 @@
                                         <span class="mr-4">Owner:</span>
                                         <p>{{selectedCredit.surname}} {{selectedCredit.firstName}} {{selectedCredit.lastName}}</p>
                                     </div>
-                                    <div class="credit-select-element">
-                                        <span class="mr-4">Daily Income:</span>
-                                        <p>{{selectedCredit.dailyProfit}} {{selectedCredit.currencyName}}</p>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -134,7 +130,7 @@
                                         (click)="closeCredit()">
                                     Close
                                 </button>
-                                <button *ngIf="selectedCredit.canPayPercents" mat-flat-button
+                                <button *ngIf="selectedCredit.canPayPercents" mat-flat-button class="mr-4"
                                         [color]="'primary'"
                                         (click)="payPercents()">
                                     Pay Percents

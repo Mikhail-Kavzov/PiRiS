@@ -29,6 +29,6 @@ public class AccountPlanRepository : BaseRepository, IAccountPlanRepository
 
     public async Task<AccountPlan?> GetEntityAsync(Expression<Func<AccountPlan, bool>> predicate)
     {
-        return await _context.AccountPlans.FirstOrDefaultAsync(predicate);
+        return await _context.AccountPlans.AsNoTracking().FirstOrDefaultAsync(predicate);
     }
 }

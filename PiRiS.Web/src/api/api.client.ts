@@ -366,6 +366,68 @@ export class ApiClient {
     }
 
     /**
+     * @param skip (optional) 
+     * @param take (optional) 
+     * @return Success
+     */
+    apiBankTransactionsList(skip: number | undefined, take: number | undefined): Observable<TransactionDtoPaginationList> {
+        let url_ = this.baseUrl + "/api/Bank/Transactions/List?";
+        if (skip === null)
+            throw new Error("The parameter 'skip' cannot be null.");
+        else if (skip !== undefined)
+            url_ += "Skip=" + encodeURIComponent("" + skip) + "&";
+        if (take === null)
+            throw new Error("The parameter 'take' cannot be null.");
+        else if (take !== undefined)
+            url_ += "Take=" + encodeURIComponent("" + take) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: any = {
+            observe: "response",
+            responseType: "blob",
+            withCredentials: true,
+            headers: new HttpHeaders({
+                "Accept": "text/plain"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_: any) => {
+            return this.processApiBankTransactionsList(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processApiBankTransactionsList(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TransactionDtoPaginationList>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TransactionDtoPaginationList>;
+        }));
+    }
+
+    protected processApiBankTransactionsList(response: HttpResponseBase): Observable<TransactionDtoPaginationList> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+                (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); } }
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+                let result200: any = null;
+                let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = TransactionDtoPaginationList.fromJS(resultData200);
+                return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+                return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param body (optional) 
      * @return Success
      */
@@ -2741,6 +2803,7 @@ export class CreditScheduleDto implements ICreditScheduleDto {
     creditId?: number;
     currentDay?: Date;
     schedule?: { [key: string]: number; } | undefined;
+    currencyName?: string | undefined;
 
     constructor(data?: ICreditScheduleDto) {
         if (data) {
@@ -2762,6 +2825,7 @@ export class CreditScheduleDto implements ICreditScheduleDto {
                         (<any>this.schedule)![key] = _data["schedule"][key];
                 }
             }
+            this.currencyName = _data["currencyName"];
         }
     }
 
@@ -2783,6 +2847,7 @@ export class CreditScheduleDto implements ICreditScheduleDto {
                     (<any>data["schedule"])[key] = (<any>this.schedule)[key];
             }
         }
+        data["currencyName"] = this.currencyName;
         return data;
     }
 }
@@ -2791,11 +2856,12 @@ export interface ICreditScheduleDto {
     creditId?: number;
     currentDay?: Date;
     schedule?: { [key: string]: number; } | undefined;
+    currencyName?: string | undefined;
 }
 
 export enum CreditType {
-    annuity = 0,
-    differentiated = 1,
+    _0 = 0,
+    _1 = 1,
 }
 
 export class CurrencyDto implements ICurrencyDto {
@@ -3197,7 +3263,7 @@ export interface IDepositPlanCreateDto {
 export class DepositPlanDto implements IDepositPlanDto {
     depositPlanId?: number;
     name?: string | undefined;
-    currencyName?: number;
+    currencyName?: string | undefined;
     dayPeriod?: number;
     percent?: number;
     depositType?: string | undefined;
@@ -3244,7 +3310,7 @@ export class DepositPlanDto implements IDepositPlanDto {
 export interface IDepositPlanDto {
     depositPlanId?: number;
     name?: string | undefined;
-    currencyName?: number;
+    currencyName?: string | undefined;
     dayPeriod?: number;
     percent?: number;
     depositType?: string | undefined;
@@ -3299,8 +3365,8 @@ export interface IDepositPlanDtoPaginationList {
 }
 
 export enum DepositType {
-    revocable = 0,
-    term = 1,
+    _0 = 0,
+    _1 = 1,
 }
 
 export class DisabilityDto implements IDisabilityDto {
@@ -3386,6 +3452,106 @@ export interface IFamilyStatusDto {
 export enum SortDirection {
     ascending = 0,
     descending = 1,
+}
+
+export class TransactionDto implements ITransactionDto {
+    transactionId?: number;
+    debitAccountNumber?: string | undefined;
+    creditAccountNumber?: string | undefined;
+    transactionDay?: Date;
+    amount?: number;
+
+    constructor(data?: ITransactionDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.transactionId = _data["transactionId"];
+            this.debitAccountNumber = _data["debitAccountNumber"];
+            this.creditAccountNumber = _data["creditAccountNumber"];
+            this.transactionDay = _data["transactionDay"] ? new Date(_data["transactionDay"].toString()) : <any>undefined;
+            this.amount = _data["amount"];
+        }
+    }
+
+    static fromJS(data: any): TransactionDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new TransactionDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["transactionId"] = this.transactionId;
+        data["debitAccountNumber"] = this.debitAccountNumber;
+        data["creditAccountNumber"] = this.creditAccountNumber;
+        data["transactionDay"] = this.transactionDay ? this.transactionDay.toISOString() : <any>undefined;
+        data["amount"] = this.amount;
+        return data;
+    }
+}
+
+export interface ITransactionDto {
+    transactionId?: number;
+    debitAccountNumber?: string | undefined;
+    creditAccountNumber?: string | undefined;
+    transactionDay?: Date;
+    amount?: number;
+}
+
+export class TransactionDtoPaginationList implements ITransactionDtoPaginationList {
+    items?: TransactionDto[] | undefined;
+    totalCount?: number;
+
+    constructor(data?: ITransactionDtoPaginationList) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(TransactionDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+        }
+    }
+
+    static fromJS(data: any): TransactionDtoPaginationList {
+        data = typeof data === 'object' ? data : {};
+        let result = new TransactionDtoPaginationList();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["totalCount"] = this.totalCount;
+        return data;
+    }
+}
+
+export interface ITransactionDtoPaginationList {
+    items?: TransactionDto[] | undefined;
+    totalCount?: number;
 }
 
 export class TransferMoneyDto implements ITransferMoneyDto {

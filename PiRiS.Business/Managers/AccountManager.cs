@@ -22,7 +22,7 @@ public class AccountManager : BaseManager, IAccountManager
 
         if (!string.IsNullOrEmpty(accountPaginationDto.AccountNumber))
         {
-            predicate = x=> x.AccountNumber == accountPaginationDto.AccountNumber;
+            predicate = x => x.AccountNumber.StartsWith(accountPaginationDto.AccountNumber);
         }
 
         var totalCount = await UnitOfWork.AccountRepository.CountAsync(predicate);

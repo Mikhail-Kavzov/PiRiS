@@ -41,3 +41,25 @@ INSERT INTO public."FamilyStatuses"(
 	(2, 'Married'),
 	(3, 'Engaged'),
 	(4, 'Divorced');
+
+INSERT INTO public."AccountPlans"(
+	"AccountPlanId", "Code", "Name", "AccountType")
+	VALUES 
+	(1, '1010', 'Bank cash desk', 0),
+	(2, '3014', 'Individuals', 1),
+	(3, '2400', 'Credits', 0),
+	(4, '7327', 'Development Fund', 1);
+
+INSERT INTO public."Currencies"(
+	"CurrencyId", "CurrencyName")
+	VALUES 
+	(1, 'USD'),
+	(2, 'BYN'),
+	(3, 'EURO'),
+	(4, 'RUB');
+
+INSERT INTO public."Accounts"(
+	"AccountId", "AccountNumber", "Debit", "Credit", "Balance", "AccountPlanId")
+	VALUES 
+	(-1, '1010000000000', 0, 0, 0, 1),
+	(-2, '7327000000000', 0, 100000000000, 100000000000, 4);

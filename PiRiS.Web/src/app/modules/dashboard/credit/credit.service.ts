@@ -39,7 +39,7 @@ export class CreditService {
     }
 
     getCredits(page: number, take: number, creditNumber: string = '') {
-        return this._apiService.apiClient.apiCreditList(page, take, creditNumber).pipe(
+        return this._apiService.apiClient.apiCreditList(page * take, take, creditNumber).pipe(
             tap((credits) => {
 
                 this._credits.next(credits.items);

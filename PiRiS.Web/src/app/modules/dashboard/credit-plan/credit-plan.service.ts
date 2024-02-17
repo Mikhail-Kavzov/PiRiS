@@ -29,7 +29,7 @@ export class CreditPlanService {
     }
 
     getPlans(page: number, take: number) {
-        return this._apiService.apiClient.apiCreditPlanList(page, take).pipe(
+        return this._apiService.apiClient.apiCreditPlanList(page * take, take).pipe(
             tap((plans) => {
                 this._plans.next(plans.items);
                 this._pagination.next(new Pagination(page, take, plans.totalCount))

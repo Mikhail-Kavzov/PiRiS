@@ -11,6 +11,6 @@ public class DepositPaginationDto
     [Range(0, 100, ErrorMessage = "Take should be between {0} and {1}")]
     public int Take { get; set; }
 
-    [RegularExpression(Patterns.DepositNumber)]
+    [MaxLength(9)]
     public string DepositNumber { get; set; }
 }

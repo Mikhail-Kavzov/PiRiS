@@ -35,7 +35,7 @@ public class AccountRepository : BaseRepository, IAccountRepository
 
     public async Task<Account?> GetEntityAsync(Expression<Func<Account, bool>> predicate)
     {
-        return await _context.Accounts.Include(x=> x.AccountPlan).FirstOrDefaultAsync(predicate);
+        return await _context.Accounts.Include(x=> x.AccountPlan).AsNoTracking().FirstOrDefaultAsync(predicate);
     }
 
     public async Task<IEnumerable<Account>> GetListAsync(int skip, int take, Expression<Func<Account, bool>>? predicate = null,

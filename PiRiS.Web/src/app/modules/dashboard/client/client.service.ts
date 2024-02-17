@@ -48,7 +48,7 @@ export class ClientService {
 
     getClients(page: number = 0, take: number = 0, surname: string = '',
         sortDirection: SortDirection = SortDirection.ascending, sortField: ClientSortField.surname) {
-        return this._apiService.apiClient.apiClientList(page* take, take, surname, sortField, sortDirection).pipe(
+        return this._apiService.apiClient.apiClientList(page * take, take, surname, sortField, sortDirection).pipe(
             tap((result) => {
                 this._clients.next(result.items);
                 this._pagination.next(new Pagination(page, take, result.totalCount));

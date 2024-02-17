@@ -12,6 +12,7 @@ using PiRiS.Data.UnitOfWork;
 using PiRiS.Data.Models.Enums;
 using System.Linq.Expressions;
 using PiRiS.Common.Constants;
+using Microsoft.Extensions.Options;
 
 namespace PiRiS.Business.Managers;
 
@@ -20,14 +21,16 @@ public class DepositManager : BaseManager, IDepositManager
     private readonly IAccountService _accountService;
     private readonly ITransactionService _transactionService;
     private readonly IBankService _bankService;
+    private readonly CurrencyOptions _currencyOptions;
 
     public DepositManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger<DepositManager> logger,
-        IAccountService accountService, ITransactionService transactionService, IBankService bankService) 
+        IAccountService accountService, ITransactionService transactionService, IBankService bankService, IOptions<CurrencyOptions> currencyOptions) 
         : base(mapper, unitOfWork, logger)
     {
         _accountService = accountService;
         _transactionService = transactionService;
         _bankService = bankService;
+        _currencyOptions = currencyOptions.Value;
     }
 
     public async Task CloseDepositAsync(int depositId)
@@ -39,7 +42,9 @@ public class DepositManager : BaseManager, IDepositManager
             throw new NotFoundException("Deposit not found");
         }
 
-        if (deposit.DepositPlan.DepositType == DepositType.Term && deposit.EndDate > DateTime.Today)
+        var currentDay = await _bankService.GetCurrentDayAsync();
+
+        if (deposit.DepositPlan.DepositType == DepositType.Term && deposit.EndDate > currentDay)
         {
             throw new ServiceException($"Cannot close term deposit before {deposit.EndDate}");
         }
@@ -49,12 +54,16 @@ public class DepositManager : BaseManager, IDepositManager
             throw new ServiceException("Deposit has already been closed");
         }
 
+        var currencyName = deposit.DepositPlan.Currency.CurrencyName;
+        var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
+        var sumInByn = deposit.Sum * exchangeRate;
+
         var debitFund = await _accountService.GetFundAccountAsync();
-        await _transactionService.PerformTransactionAsync(debitFund, deposit.MainAccount, deposit.Sum);
+        await _transactionService.PerformTransactionAsync(debitFund, deposit.MainAccount, sumInByn);
 
         var creditBank = await _accountService.GetBankAccountAsync();
 
-        await _transactionService.PerformTransactionAsync(deposit.MainAccount, creditBank, deposit.Sum);
+        await _transactionService.PerformTransactionAsync(deposit.MainAccount, creditBank, sumInByn);
 
         var percentSum = deposit.PercentAccount.Balance;
 
@@ -99,12 +108,18 @@ public class DepositManager : BaseManager, IDepositManager
         UnitOfWork.DepositRepository.Create(newDeposit);
         await UnitOfWork.DepositRepository.SaveChangesAsync();
 
-        await _transactionService.PerformBankDebitTransactionAsync(newDeposit.Sum);
+        var currencyName = await UnitOfWork.DepositRepository.GetCurrencyNameAsync(x=> x.DepositNumber == newDeposit.DepositNumber);
+        var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
+        var sumInByn = newDeposit.Sum * exchangeRate;
+
+        await _transactionService.PerformBankDebitTransactionAsync(sumInByn);
         var bankAccount = await _accountService.GetBankAccountAsync();
         var fundAccount = await _accountService.GetFundAccountAsync();
 
-        await _transactionService.PerformTransactionAsync(bankAccount, newDeposit.MainAccount, newDeposit.Sum);
-        await _transactionService.PerformTransactionAsync(newDeposit.MainAccount, fundAccount, newDeposit.Sum);
+        var mainAccount = await UnitOfWork.AccountRepository.GetEntityAsync(x => x.AccountNumber == newDeposit.MainAccount.AccountNumber);
+
+        await _transactionService.PerformTransactionAsync(bankAccount, mainAccount, sumInByn);
+        await _transactionService.PerformTransactionAsync(mainAccount, fundAccount, sumInByn);
 
     }
 
@@ -118,8 +133,8 @@ public class DepositManager : BaseManager, IDepositManager
             throw new NotFoundException("Account plan for individuals not found");
         }
 
-        newPlan.MainAccountPlan = accountPlan;
-        newPlan.PercentAccountPlan = accountPlan;
+        newPlan.MainAccountPlanId = accountPlan.AccountPlanId;
+        newPlan.PercentAccountPlanId = accountPlan.AccountPlanId;
 
         UnitOfWork.DepositPlanRepository.Create(newPlan);
         await UnitOfWork.DepositPlanRepository.SaveChangesAsync();
@@ -141,7 +156,7 @@ public class DepositManager : BaseManager, IDepositManager
 
         if (!string.IsNullOrEmpty(paginationDto.DepositNumber))
         {
-            predicate = x => x.DepositNumber == paginationDto.DepositNumber;
+            predicate = x => x.DepositNumber.StartsWith(paginationDto.DepositNumber);
         }
 
         var deposits = await UnitOfWork.DepositRepository.GetListAsync(paginationDto.Skip, paginationDto.Take, predicate);
@@ -154,7 +169,7 @@ public class DepositManager : BaseManager, IDepositManager
         foreach(var depositDto in depositDtos)
         {
             depositDto.CanClose = (depositDto.DepositType == stringRevocable 
-                || depositDto.EndDate < currentDay) && depositDto.Sum > 0;
+                || depositDto.EndDate <= currentDay) && depositDto.Sum > 0;
 
             depositDto.CanWithdraw = depositDto.DepositType == stringRevocable && depositDto.Sum > 0
             && (currentDay - depositDto.StartDate).TotalDays % BankParams.DaysInMonth == 0;

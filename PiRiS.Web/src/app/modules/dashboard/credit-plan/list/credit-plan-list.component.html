@@ -20,8 +20,8 @@
                         <div class="hidden lg:block">Credit Type</div>
                         <div class="hidden lg:block">Percent</div>
                         <div class="hidden lg:block">Currency</div>
-                        <div class="hidden md:block"></div>
-                        <div>Month Period</div>
+                        <div class="hidden md:block">Month Period</div>
+                        <div></div>
                     </div>
                     <!-- Rows -->
                     <ng-container *ngFor="let plan of plans; trackBy: trackByFn">
@@ -37,15 +37,15 @@
                             </div>
 
                             <div class="hidden lg:block truncate">
-                                {{plan.percent}}
+                                {{plan.percent}}%
                             </div>
 
                             <div class="hidden lg:block truncate">
-                                {{plan.currency}}
+                                {{plan.currencyName}}
                             </div>
 
                             <div class="hidden md:block truncate">
-                                {{plan.monthPeriod}}
+                                {{plan.monthPeriod}} monthes
                             </div>
                         </div>
                     </ng-container>

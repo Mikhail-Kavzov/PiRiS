@@ -39,6 +39,16 @@ export const appRoutes: Route[] = [
         ]
     },
     {
+        path: 'transaction',
+        component: LayoutComponent,
+        data: {
+            layout: 'empty'
+        },
+        children: [
+            { path: 'list', loadChildren: () => import('app/modules/dashboard/transaction/list/transaction-list.module').then(m => m.TransactionListModule) },
+        ]
+    },
+    {
         path: 'atm',
         component: LayoutComponent,
         data: {

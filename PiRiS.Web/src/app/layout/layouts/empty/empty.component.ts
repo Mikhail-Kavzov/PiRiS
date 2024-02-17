@@ -31,6 +31,7 @@ export class EmptyLayoutComponent implements OnInit, OnDestroy {
                 { link: '/account/list', name: 'Account List', modulePath: 'account' },
                 { link: '/bank', name: 'Bank', modulePath: 'bank' },
                 { link: '/atm/main', name: 'ATM Start Page', modulePath: 'atm' },
+                { link: '/transaction/list', name: 'Transaction List', modulePath: 'transaction' },
             ]
     }
 

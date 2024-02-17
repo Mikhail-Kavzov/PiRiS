@@ -2,8 +2,9 @@ import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { CreditPlanCreateDto, CurrencyDto, DepositPlanCreateDto } from '../../../../../api/api.client';
+import { CurrencyService } from '../../../../services/currency.service';
 import { DepositPlanService } from '../deposit-plan.service';
 
 @Component({
@@ -20,25 +21,30 @@ export class DepositPlanCreateComponent implements OnInit, OnDestroy {
     currencies: CurrencyDto[];
 
     constructor(
-        private _activatedRoute: ActivatedRoute,
         private _formBuilder: FormBuilder,
         private _router: Router,
-        private _depositPlanService:DepositPlanService
+        private _depositPlanService: DepositPlanService,
+        private _currencyService: CurrencyService
     ) {
     }
 
     ngOnInit(): void {
 
+        this._currencyService.currencies$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((currencies) => {
+                this.currencies = currencies;
+            });
+
         this.depositForm = this._formBuilder.group({
             dayPeriod: [1, [Validators.required, Validators.min(1)]],
             name: ['', Validators.required],
-            depositType: [0, Validators.required],
+            depositType: ['0', Validators.required],
             percent: [1, [Validators.required, Validators.min(0)]],
             currencyId: [1, Validators.required],
         })
-
-
     }
+
     ngOnDestroy(): void {
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

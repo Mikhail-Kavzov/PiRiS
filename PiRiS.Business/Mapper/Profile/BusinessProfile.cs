@@ -6,6 +6,7 @@ using PiRiS.Business.Dto.CreditPlan;
 using PiRiS.Business.Dto.Currency;
 using PiRiS.Business.Dto.Deposit;
 using PiRiS.Business.Dto.DepositPlan;
+using PiRiS.Business.Dto.Transaction;
 using PiRiS.Common.Constants;
 using PiRiS.Data.Models;
 
@@ -82,6 +83,10 @@ public class BusinessProfile : Profile
             .ForMember(x => x.AccountPlanName, opt => opt.MapFrom(x => x.AccountPlan.Name))
             .ForMember(x => x.AccountPlanCode, opt => opt.MapFrom(x => x.AccountPlan.Code))
             .ForMember(x => x.AccountPlanType, opt => opt.MapFrom(x => x.AccountPlan.AccountType.ToString()));
+
+        CreateMap<Transaction, TransactionDto>()
+            .ForMember(x => x.CreditAccountNumber, opt => opt.MapFrom(x => x.CreditAccount.AccountNumber))
+            .ForMember(x => x.DebitAccountNumber, opt => opt.MapFrom(x => x.DebitAccount.AccountNumber));
 
     }
 }
