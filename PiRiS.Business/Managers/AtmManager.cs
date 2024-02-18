@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using PiRiS.Business.Dto.Account;
-using PiRiS.Business.Dto.Atm;
 using PiRiS.Business.Dto.Credit;
 using PiRiS.Business.Exceptions;
 using PiRiS.Business.Managers.Interfaces;
@@ -61,14 +60,35 @@ public class AtmManager : BaseManager, IAtmManager
         }
 
         var bankAccount = await _accountService.GetBankAccountAsync();
-        var currencyName = credit.CreditPlan.Currency.CurrencyName;
 
-        var exchageRate = _currencyOptions.ExchangeCourse[currencyName];
+        await _transactionService.PerformTransactionAsync(credit.MainAccount, bankAccount, sum,
+            credit.MainAccount.AccountPlan.AccountType ,bankAccount.AccountPlan.AccountType);
 
-        var sumInByn = sum * exchageRate;
+        //await _transactionService.WithdrawBankTransactionAsync(sum);
+    }
 
-        await _transactionService.PerformTransactionAsync(credit.MainAccount, bankAccount, sumInByn);
+    public async Task TransferMoneyAsync(int creditId, decimal sum, string mobilePhone)
+    {
+        var clientToSend = await UnitOfWork.ClientRepository.GetEntityAsync(x => x.MobilePhone == mobilePhone);
+        if (clientToSend == null)
+        {
+            throw new NotFoundException("Client with mobile phone not found");
+        }
 
-        await _transactionService.WithdrawBankTransactionAsync(sumInByn);
+        var credit = await UnitOfWork.CreditRepository.GetEntityAsync(creditId);
+        if (credit.MainAccount.Balance < sum)
+        {
+            throw new ServiceException("Account doesn't have enough money");
+        }
+
+        var creditToSend = await UnitOfWork.CreditRepository.GetEntityAsync(x=> x.ClientId == clientToSend.ClientId);
+        if (creditToSend == null)
+        {
+            throw new NotFoundException("Requested client doesn't have accounts");
+        }
+        var account = creditToSend.MainAccount;
+        var sendPlan = creditToSend.MainAccount.AccountPlan.AccountType;
+
+        await _transactionService.PerformTransactionAsync(credit.MainAccount, account, sum, credit.MainAccount.AccountPlan.AccountType, sendPlan);
     }
 }

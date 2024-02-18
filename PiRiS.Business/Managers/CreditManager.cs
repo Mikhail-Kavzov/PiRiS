@@ -67,17 +67,14 @@ public class CreditManager : BaseManager, ICreditManager
         await UnitOfWork.CreditRepository.SaveChangesAsync();
 
         var mainAccount = await UnitOfWork.AccountRepository.GetEntityAsync(x => x.AccountNumber == newCredit.MainAccount.AccountNumber);
-        var currencyName = await UnitOfWork.CreditRepository.GetCurrencyNameAsync(x=> x.CreditNumber == newCredit.CreditNumber);
+        var currencyName = await UnitOfWork.CreditRepository.GetCurrencyNameAsync(x => x.CreditNumber == newCredit.CreditNumber);
 
         var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
 
         var sumInByn = newCredit.Sum * exchangeRate;
-
+        var fundAccount = await _accountService.GetFundAccountAsync();
         await _transactionService
-            .PerformTransactionAsync(await _accountService.GetFundAccountAsync(), mainAccount, sumInByn);
-
-        await _transactionService.PerformTransactionAsync(mainAccount, await _accountService.GetBankAccountAsync(), sumInByn);
-        await _transactionService.WithdrawBankTransactionAsync(sumInByn);
+            .PerformTransactionAsync(fundAccount, mainAccount, sumInByn, fundAccount.AccountPlan.AccountType, mainAccount.AccountPlan.AccountType);
 
     }
 
@@ -169,16 +166,16 @@ public class CreditManager : BaseManager, ICreditManager
 
         var monthes = credit.CreditPlan.MonthPeriod;
 
-        var monthPercent = credit.CreditPlan.Percent / BankParams.MonthInYear;
+        var monthPercent = credit.CreditPlan.Percent / BankParams.MonthInYear / BankParams.PercentDelimiter;
 
         if (credit.CreditPlan.CreditType == CreditType.Annuity)
         {
             var temp = Math.Pow(1 + monthPercent, monthes);
-            var monthPayment = (monthPercent * temp / (temp - 1)/ BankParams.PercentDelimiter) * (double)credit.Sum;
+            var monthPayment = (monthPercent * temp / (temp - 1)) * (double)credit.Sum;
 
             var paymentDate = credit.StartDate.AddMonths(1);
 
-            for (int i=0; i< monthes; i++)
+            for (int i = 0; i < monthes; i++)
             {
                 shcheduleDto.Schedule.Add(paymentDate, monthPayment);
                 paymentDate = paymentDate.AddMonths(1);
@@ -221,7 +218,9 @@ public class CreditManager : BaseManager, ICreditManager
         var sum = Math.Abs(credit.PercentAccount.Balance);
 
         await _transactionService.WithdrawBankTransactionAsync(sum);
-        await _transactionService.PerformTransactionAsync(await _accountService.GetBankAccountAsync(), credit.PercentAccount, sum);
+        var bankAccount = await _accountService.GetBankAccountAsync();
+        await _transactionService.PerformTransactionAsync(bankAccount, credit.PercentAccount, sum,
+            bankAccount.AccountPlan.AccountType, credit.PercentAccount.AccountPlan.AccountType);
     }
 
     public async Task CloseCreditAsync(int creditId)
@@ -249,13 +248,17 @@ public class CreditManager : BaseManager, ICreditManager
         var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
         var sumInByn = credit.Sum * exchangeRate;
 
-        await _transactionService.PerformBankDebitTransactionAsync(sumInByn);
+        await _transactionService.PerformBankIncomeTransactionAsync(sumInByn);
+        var bankAccount = await _accountService.GetBankAccountAsync();
+        var bankType = bankAccount.AccountPlan.AccountType;
+        var mainType = credit.MainAccount.AccountPlan.AccountType;
+        await _transactionService.PerformTransactionAsync(bankAccount, credit.MainAccount, sumInByn, bankType, mainType);
+        var fundAccount = await _accountService.GetFundAccountAsync();
+        await _transactionService.PerformTransactionAsync(credit.MainAccount, fundAccount, sumInByn, mainType, fundAccount.AccountPlan.AccountType);
 
-        await _transactionService.PerformTransactionAsync(await _accountService.GetBankAccountAsync(), credit.MainAccount, sumInByn);
-        await _transactionService.PerformTransactionAsync(credit.MainAccount, await _accountService.GetFundAccountAsync(), sumInByn);
-
-        await _transactionService.PerformBankDebitTransactionAsync(credit.PercentAccount.Balance);
-        await _transactionService.PerformTransactionAsync(await _accountService.GetBankAccountAsync(), credit.PercentAccount, credit.PercentAccount.Balance);
+        await _transactionService.PerformBankIncomeTransactionAsync(credit.PercentAccount.Balance);
+        await _transactionService.PerformTransactionAsync(bankAccount, credit.PercentAccount,
+            credit.PercentAccount.Balance, bankType, credit.PercentAccount.AccountPlan.AccountType);
 
         credit.Sum = 0;
         UnitOfWork.CreditRepository.Update(credit);

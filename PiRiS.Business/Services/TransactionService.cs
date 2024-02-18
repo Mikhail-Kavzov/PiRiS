@@ -30,6 +30,8 @@ public class TransactionService : BaseService, ITransactionService
 
         var credits = await UnitOfWork.CreditRepository
             .GetListAsync(0, int.MaxValue, x => x.Sum > 0 && currentDay >= x.StartDate && currentDay <= x.EndDate);
+        var fundAccount = await _accountService.GetFundAccountAsync();
+        var fundType = fundAccount.AccountPlan.AccountType;
 
         foreach (var credit in credits)
         {
@@ -49,22 +51,23 @@ public class TransactionService : BaseService, ITransactionService
             else
             {
                 var rest = (double)credit.Sum;
-                var dayCreditPart = (double)credit.Sum / monthes / BankParams.DaysInMonth;
+                var dayCreditDebt = (double)credit.Sum / monthes / BankParams.DaysInMonth;
                 double percentPerDay = monthPercent / BankParams.DaysInMonth;
 
                 var totalDays = (currentDay - credit.StartDate).TotalDays;
                 for (int i = 0; i < totalDays; i++)
                 {
-                    rest -= dayCreditPart;
+                    rest -= dayCreditDebt;
                 }
 
-                percentSum = (decimal)(dayCreditPart + rest * percentPerDay);
+                percentSum = (decimal)(dayCreditDebt + rest * percentPerDay);
             }
 
             var currencyName = credit.CreditPlan.Currency.CurrencyName;
             var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
-            var fundAccount = await _accountService.GetFundAccountAsync();
-            await PerformTransactionAsync(credit.PercentAccount, fundAccount, percentSum * exchangeRate);
+
+            await PerformTransactionAsync(credit.PercentAccount, fundAccount, percentSum * exchangeRate,
+                credit.PercentAccount.AccountPlan.AccountType, fundType);
         }
     }
 
@@ -73,20 +76,22 @@ public class TransactionService : BaseService, ITransactionService
         var currentDay = await _bankService.GetCurrentDayAsync();
         var deposits = await UnitOfWork.DepositRepository
             .GetListAsync(0, int.MaxValue, x => x.Sum > 0 && currentDay >= x.StartDate && currentDay <= x.EndDate);
+        var fundAccount = await _accountService.GetFundAccountAsync();
+        var fundType = fundAccount.AccountPlan.AccountType;
 
         foreach (var deposit in deposits)
         {
             var percentSum = deposit.Sum * (decimal)(deposit.DepositPlan.Percent / BankParams.PercentDelimiter / BankParams.DaysInYear);
-            var fundAccount = await _accountService.GetFundAccountAsync();
 
             var currencyName = deposit.DepositPlan.Currency.CurrencyName;
             var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
 
-            await PerformTransactionAsync(fundAccount, deposit.PercentAccount, percentSum * exchangeRate);
+            await PerformTransactionAsync(fundAccount, deposit.PercentAccount, percentSum * exchangeRate,
+                fundType, deposit.PercentAccount.AccountPlan.AccountType);
         }
     }
 
-    public async Task PerformBankDebitTransactionAsync(decimal amount)
+    public async Task PerformBankIncomeTransactionAsync(decimal amount)
     {
         UnitOfWork.AccountRepository.ClearContext();
         var bankAccount = await _accountService.GetBankAccountAsync();
@@ -111,13 +116,14 @@ public class TransactionService : BaseService, ITransactionService
             throw new NotFoundException("Credit account not found");
         }
 
-        await PerformTransactionAsync(debitAccount, creditAccount, amount);
+        await PerformTransactionAsync(debitAccount, creditAccount, amount, debitAccount.AccountPlan.AccountType, creditAccount.AccountPlan.AccountType);
     }
 
-    public async Task PerformTransactionAsync(Account debitAccount, Account creditAccount, decimal amount)
+    public async Task PerformTransactionAsync(Account debitAccount, Account creditAccount, decimal amount, AccountType debitType, AccountType creditType)
     {
         UnitOfWork.AccountRepository.ClearContext();
-        if (debitAccount.AccountPlan.AccountType == AccountType.Passive)
+        //withdrawn
+        if (debitType == AccountType.Passive)
         {
             debitAccount.Debit += amount;
             debitAccount.Balance = debitAccount.Credit - debitAccount.Debit;
@@ -128,7 +134,8 @@ public class TransactionService : BaseService, ITransactionService
             debitAccount.Balance = debitAccount.Debit - debitAccount.Credit;
         }
 
-        if (creditAccount.AccountPlan.AccountType == AccountType.Passive)
+        //income
+        if (creditType == AccountType.Passive)
         {
             creditAccount.Credit += amount;
             creditAccount.Balance = creditAccount.Credit - creditAccount.Debit;

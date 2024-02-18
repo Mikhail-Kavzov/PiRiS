@@ -6,4 +6,5 @@ public class AtmReportDto
     public DateTime OperationDate { get; set; }
     public decimal Sum { get; set; }
     public string OperationName { get; set; }
+    public string CurrencyName { get; set; }
 }

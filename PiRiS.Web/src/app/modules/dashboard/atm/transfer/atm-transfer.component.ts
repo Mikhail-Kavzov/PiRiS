@@ -29,7 +29,7 @@ export class AtmTransferComponent implements OnInit {
             sum: [0, [Validators.required, Validators.min(0)]],
             mobilePhone: ['', [Validators.required, Validators.pattern(Patterns.Phone)]],
             mobilePhoneConfirmation: ['', [Validators.required, Validators.pattern(Patterns.Phone)]],
-            operatorId: [0, Validators.required]
+            operatorId: ['0', Validators.required]
         },
         {
             validators: FuseValidators.mustMatch('mobilePhone','mobilePhoneConfirmation')

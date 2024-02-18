@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { BankService } from './bank.service';
@@ -11,17 +11,44 @@ import { BankService } from './bank.service';
 })
 export class BankComponent {
 
-    constructor(private _router: Router, private _bankService: BankService) {
+    messageText: string = '';
+    displayMessage: boolean = false;
+
+    constructor(private _router: Router, private _bankService: BankService, private _changeDetectorRef: ChangeDetectorRef) {
     }
 
     closeBankDay() {
-        this._bankService.closeBankDay().subscribe(() => {
-            alert('ok');
-        });
+        this._bankService.closeBankDay()
+            .subscribe(() => {
+                this.showSuccess('Day was closed');
+            },
+                () => {
+                    this.showError();
+                });
     }
 
     accounts() {
         this._router.navigateByUrl('/account/list');
+    }
+
+    hideMessage() {
+        this._changeDetectorRef.markForCheck();
+        setTimeout(() => {
+            this.displayMessage = false;
+            this._changeDetectorRef.markForCheck();
+        }, 3000);
+    }
+
+    showSuccess(text: string) {
+        this.messageText = text;
+        this.displayMessage = true;
+        this.hideMessage();
+    }
+
+    showError() {
+        this.messageText = 'Error occured';
+        this.displayMessage = true;
+        this.hideMessage();
     }
 
 }

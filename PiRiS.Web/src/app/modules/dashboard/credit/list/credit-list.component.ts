@@ -26,6 +26,9 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     selectedCredit: CreditDto | null = null;
 
+    messageText: string = '';
+    displayMessage: boolean = false;
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     /**
      * Constructor
@@ -115,22 +118,51 @@ export class CreditListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     closeCredit() {
-        this._creditService.closeCredit(this.selectedCredit.creditId).subscribe(() => {
-            this.selectedCredit.canClose = false;
-            this.selectedCredit.canPayPercents = false;
-            this._changeDetectorRef.markForCheck();
-        })
+        this.selectedCredit.canClose = false;
+        this.selectedCredit.canPayPercents = false;
+        this._creditService.closeCredit(this.selectedCredit.creditId)
+            .subscribe(() => {
+                this.showSuccess('Credit was closed');
+            },
+                () => {
+                    this.showError();
+                })
     }
 
     payPercents() {
-        this._creditService.payPercents(this.selectedCredit.creditId).subscribe(() => {
-            this.selectedCredit.canPayPercents = false;
-            this._changeDetectorRef.markForCheck();
-        })
+        this.selectedCredit.canPayPercents = false;
+        this._creditService.payPercents(this.selectedCredit.creditId)
+            .subscribe(() => {
+
+                this.showSuccess('Percents were successfully paid');
+            },
+                () => {
+                    this.showError();
+                });
     }
 
     showSchedule() {
         let creditId = this.selectedCredit.creditId;
         this._router.navigateByUrl(`/credit/schedule?creditId=${creditId}`);
+    }
+
+    hideMessage() {
+        this._changeDetectorRef.markForCheck();
+        setTimeout(() => {
+            this.displayMessage = false;
+            this._changeDetectorRef.markForCheck();
+        }, 3000);
+    }
+
+    showSuccess(text: string) {
+        this.messageText = text;
+        this.displayMessage = true;
+        this.hideMessage();
+    }
+
+    showError() {
+        this.messageText = 'Error occured';
+        this.displayMessage = true;
+        this.hideMessage();
     }
 }

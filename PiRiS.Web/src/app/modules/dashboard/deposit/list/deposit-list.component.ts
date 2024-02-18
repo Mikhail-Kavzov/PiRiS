@@ -26,6 +26,9 @@ export class DepositListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     selectedDeposit: DepositDto | null = null;
 
+    messageText: string = '';
+    displayMessage: boolean = false;
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     /**
      * Constructor
@@ -115,15 +118,48 @@ export class DepositListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     closeDeposit() {
-        this._depositService.closeDeposit(this.selectedDeposit.depositId).subscribe(() => {
-            this.selectedDeposit.canClose = false;
-            this.selectedDeposit.canWithdraw = false;
-        })
+        this.selectedDeposit.canClose = false;
+        this.selectedDeposit.canWithdraw = false;
+        this._depositService.closeDeposit(this.selectedDeposit.depositId).subscribe(
+            () => {
+
+                this.showSuccess('Deposit was closed');
+            },
+            () => {
+                this.showError();
+            });
+    }
+
+    hideMessage() {
+        this._changeDetectorRef.markForCheck();
+        setTimeout(() => {
+            this.displayMessage = false;
+            this._changeDetectorRef.markForCheck();
+        }, 3000);
     }
 
     withdrawPercents() {
-        this._depositService.withdrawPercents(this.selectedDeposit.depositId).subscribe(() => {
-            this.selectedDeposit.canWithdraw = false;
-        })
+        this.selectedDeposit.canWithdraw = false;
+
+        this._depositService.withdrawPercents(this.selectedDeposit.depositId)
+            .subscribe(
+                () => {
+                    this.showSuccess('Persents were successfully withdrawn')
+                },
+                () => {
+                    this.showError();
+                });
+    }
+
+    showSuccess(text: string) {
+        this.messageText = text;
+        this.displayMessage = true;
+        this.hideMessage();
+    }
+
+    showError() {
+        this.messageText = 'Error occured';
+        this.displayMessage = true;
+        this.hideMessage();
     }
 }

@@ -20,6 +20,7 @@ export class AtmWithdrawComponent implements OnInit {
         private _formBuilder: FormBuilder,
         private _atmService: AtmService
     ) {
+
     }
 
     ngOnInit(): void {
@@ -27,6 +28,7 @@ export class AtmWithdrawComponent implements OnInit {
             creditCardCode: ['', [Validators.required, Validators.pattern(Patterns.CreditCardCode)]],
             sum: [0, [Validators.required, Validators.min(0)]]
         });
+      
     }
 
     withdrawMoney() {

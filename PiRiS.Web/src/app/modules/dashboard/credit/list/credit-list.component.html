@@ -124,6 +124,9 @@
                         </div>
 
                         <div class="flex items-center justify-end border-t px-8 py-4">
+                            <div class="flex items-center mr-4" *ngIf="displayMessage">
+                                <p color="green" class="text-center">{{messageText}}</p>
+                            </div>
                             <div class="flex items-center">
                                 <button *ngIf="selectedCredit.canClose" mat-flat-button class="mr-4"
                                         [color]="'primary'"

@@ -50,15 +50,15 @@
                             </div>
 
                             <div class="hidden lg:block truncate">
-                                {{account.debit}} BYN
+                                {{account.debit | number: '1.0-2'}} BYN
                             </div>
 
                             <div class="hidden lg:block truncate">
-                                {{account.credit}} BYN
+                                {{account.credit | number: '1.0-2'}} BYN
                             </div>
 
                             <div class="hidden lg:block truncate">
-                                {{account.balance}} BYN
+                                {{account.balance | number: '1.0-2'}} BYN
                             </div>
 
                             <div class="hidden md:block truncate">
@@ -117,15 +117,15 @@
                                     </div>
                                     <div class="account-select-element">
                                         <span class="mr-4">Debit:</span>
-                                        <p>{{selectedAccount.debit}} BYN</p>
+                                        <p>{{selectedAccount.debit | number: '1.0-2'}} BYN</p>
                                     </div>
                                     <div class="account-select-element">
                                         <span class="mr-4">Credit:</span>
-                                        <p>{{selectedAccount.credit}} BYN</p>
+                                        <p>{{selectedAccount.credit | number: '1.0-2'}} BYN</p>
                                     </div>
                                     <div class="account-select-element">
                                         <span class="mr-4">Balance:</span>
-                                        <p>{{selectedAccount.balance}} BYN</p>
+                                        <p>{{selectedAccount.balance | number: '1.0-2'}} BYN</p>
                                     </div>
                                 </div>
                             </div>

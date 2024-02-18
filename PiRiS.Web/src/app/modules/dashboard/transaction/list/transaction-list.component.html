@@ -18,8 +18,8 @@
                         <div></div>
                         <div>Day</div>
                         <div class="hidden lg:block">Sum</div>
-                        <div class="hidden lg:block">Debit Account</div>
-                        <div class="hidden md:block">Credit Account</div>
+                        <div class="hidden lg:block">Withdrawn Account</div>
+                        <div class="hidden md:block">Income Account</div>
                         <div></div>
                     </div>
                     <!-- Rows -->
@@ -28,15 +28,15 @@
                             <div></div>
 
                             <div class="truncate">
-                                {{transaction.transactionDay}}
+                                {{transaction.transactionDay | date: 'dd/MM/yyyy'}}
                             </div>
 
                             <div class="hidden lg:block truncate">
-                                {{transaction.amount}} BYN
+                                {{transaction.amount | number: '1.0-2'}} BYN
                             </div>
 
                             <div class="hidden lg:block truncate">
-                                {{transaction.debitAccountNumber}}%
+                                {{transaction.debitAccountNumber}}
                             </div>
 
                             <div class="hidden lg:block truncate">

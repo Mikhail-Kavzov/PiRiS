@@ -1,15 +1,15 @@
-<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
-    <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+<div class="sm:absolute sm:inset-0 flex flex-col justify-center items-center flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+    <div class="relative flex items-center justify-center p-4">
         <h1 class="text-4xl text-center font-extrabold tracking-tight">Account Info</h1>
     </div>
-    <div class="flex flex-auto overflow-hidden">
+    <div class="p-4 m-4">
         <p>Account Number: {{account.accountNumber}}</p>
-        <p>Debit: {{account.debit}}</p>
-        <p>Credit: {{account.credit}}</p>
-        <p>Balance: {{account.balance}}</p>
+        <p>Debit: {{account.debit | number: '1.0-2'}} BYN</p>
+        <p>Credit: {{account.credit | number: '1.0-2'}} BYN</p>
+        <p>Balance: {{account.balance | number: '1.0-2'}} BYN</p>
         <p>Code: {{account.accountPlanCode}}</p>
         <p>Type: {{account.accountPlanType}}</p>
-        <p>Name: {{account.accountPlanName}}</p>
+        <p>Plan Name: {{account.accountPlanName}}</p>
     </div>
 
 </div>

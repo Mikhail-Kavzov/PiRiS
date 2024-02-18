@@ -45,9 +45,9 @@ public class AccountService : BaseService, IAccountService
     public async Task CreateAccountsAsync(Credit credit)
     {
         var random = new Random();
-        var depositPlan = credit.CreditPlan ?? await UnitOfWork.CreditPlanRepository.GetEntityAsync(credit.CreditPlanId);
-        var mainAccount = CreateAccount(depositPlan.MainAccountPlan, credit.ClientId, random.Next());
-        var percentAccount = CreateAccount(depositPlan.PercentAccountPlan, credit.ClientId, random.Next());
+        var creditPlan = credit.CreditPlan ?? await UnitOfWork.CreditPlanRepository.GetEntityAsync(credit.CreditPlanId);
+        var mainAccount = CreateAccount(creditPlan.MainAccountPlan, credit.ClientId, random.Next());
+        var percentAccount = CreateAccount(creditPlan.PercentAccountPlan, credit.ClientId, random.Next());
         credit.MainAccount = mainAccount;
         credit.PercentAccount = percentAccount;
     }

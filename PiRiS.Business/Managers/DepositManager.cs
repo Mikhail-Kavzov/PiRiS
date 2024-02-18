@@ -24,7 +24,7 @@ public class DepositManager : BaseManager, IDepositManager
     private readonly CurrencyOptions _currencyOptions;
 
     public DepositManager(IMapper mapper, IUnitOfWork unitOfWork, ILogger<DepositManager> logger,
-        IAccountService accountService, ITransactionService transactionService, IBankService bankService, IOptions<CurrencyOptions> currencyOptions) 
+        IAccountService accountService, ITransactionService transactionService, IBankService bankService, IOptions<CurrencyOptions> currencyOptions)
         : base(mapper, unitOfWork, logger)
     {
         _accountService = accountService;
@@ -59,17 +59,20 @@ public class DepositManager : BaseManager, IDepositManager
         var sumInByn = deposit.Sum * exchangeRate;
 
         var debitFund = await _accountService.GetFundAccountAsync();
-        await _transactionService.PerformTransactionAsync(debitFund, deposit.MainAccount, sumInByn);
+        var fundType = debitFund.AccountPlan.AccountType;
+        var depositMainType = deposit.MainAccount.AccountPlan.AccountType;
+        await _transactionService.PerformTransactionAsync(debitFund, deposit.MainAccount, sumInByn, fundType, depositMainType);
 
         var creditBank = await _accountService.GetBankAccountAsync();
+        var bankType = creditBank.AccountPlan.AccountType;
 
-        await _transactionService.PerformTransactionAsync(deposit.MainAccount, creditBank, sumInByn);
+        await _transactionService.PerformTransactionAsync(deposit.MainAccount, creditBank, sumInByn, depositMainType, bankType);
 
         var percentSum = deposit.PercentAccount.Balance;
 
         var creditBankCommitted = await _accountService.GetFundAccountAsync();
-
-        await _transactionService.PerformTransactionAsync(deposit.PercentAccount, creditBankCommitted, percentSum);
+        var percentType = deposit.PercentAccount.AccountPlan.AccountType;
+        await _transactionService.PerformTransactionAsync(deposit.PercentAccount, creditBankCommitted, percentSum, percentType, bankType);
 
         await _transactionService.WithdrawBankTransactionAsync(deposit.MainAccount.Credit + percentSum);
 
@@ -108,18 +111,19 @@ public class DepositManager : BaseManager, IDepositManager
         UnitOfWork.DepositRepository.Create(newDeposit);
         await UnitOfWork.DepositRepository.SaveChangesAsync();
 
-        var currencyName = await UnitOfWork.DepositRepository.GetCurrencyNameAsync(x=> x.DepositNumber == newDeposit.DepositNumber);
+        var currencyName = await UnitOfWork.DepositRepository.GetCurrencyNameAsync(x => x.DepositNumber == newDeposit.DepositNumber);
         var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
         var sumInByn = newDeposit.Sum * exchangeRate;
 
-        await _transactionService.PerformBankDebitTransactionAsync(sumInByn);
+        await _transactionService.PerformBankIncomeTransactionAsync(sumInByn);
         var bankAccount = await _accountService.GetBankAccountAsync();
         var fundAccount = await _accountService.GetFundAccountAsync();
 
         var mainAccount = await UnitOfWork.AccountRepository.GetEntityAsync(x => x.AccountNumber == newDeposit.MainAccount.AccountNumber);
+        var mainType = mainAccount.AccountPlan.AccountType;
 
-        await _transactionService.PerformTransactionAsync(bankAccount, mainAccount, sumInByn);
-        await _transactionService.PerformTransactionAsync(mainAccount, fundAccount, sumInByn);
+        await _transactionService.PerformTransactionAsync(bankAccount, mainAccount, sumInByn, bankAccount.AccountPlan.AccountType, mainType);
+        await _transactionService.PerformTransactionAsync(mainAccount, fundAccount, sumInByn, mainType, fundAccount.AccountPlan.AccountType);
 
     }
 
@@ -166,9 +170,9 @@ public class DepositManager : BaseManager, IDepositManager
         var currentDay = await _bankService.GetCurrentDayAsync();
         var stringRevocable = DepositType.Revocable.ToString();
 
-        foreach(var depositDto in depositDtos)
+        foreach (var depositDto in depositDtos)
         {
-            depositDto.CanClose = (depositDto.DepositType == stringRevocable 
+            depositDto.CanClose = (depositDto.DepositType == stringRevocable
                 || depositDto.EndDate <= currentDay) && depositDto.Sum > 0;
 
             depositDto.CanWithdraw = depositDto.DepositType == stringRevocable && depositDto.Sum > 0
@@ -218,7 +222,8 @@ public class DepositManager : BaseManager, IDepositManager
         var percentSum = deposit.PercentAccount.Balance;
         var bankAccount = await _accountService.GetBankAccountAsync();
 
-        await _transactionService.PerformTransactionAsync(deposit.PercentAccount, bankAccount, percentSum);
+        await _transactionService.PerformTransactionAsync(deposit.PercentAccount, bankAccount, percentSum,
+            deposit.PercentAccount.AccountPlan.AccountType, bankAccount.AccountPlan.AccountType);
 
         await _transactionService.WithdrawBankTransactionAsync(percentSum);
     }

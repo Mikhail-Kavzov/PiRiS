@@ -53,6 +53,24 @@ public class ClientManager : BaseManager, IClientManager
         {
             throw new ServiceException($"Client with such Surname, Firstname, Lastname already exists");
         }
+
+        if (!string.IsNullOrEmpty(clientDto.Email))
+        {
+            var hasEmail = await UnitOfWork.ClientRepository.ExistsAsync(x=> x.Email == clientDto.Email);
+            if (hasEmail)
+            {
+                throw new ServiceException($"Client with such email already exists");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(clientDto.MobilePhone))
+        {
+            var hasMobilePhone = await UnitOfWork.ClientRepository.ExistsAsync(x => x.MobilePhone == clientDto.MobilePhone);
+            if (hasMobilePhone)
+            {
+                throw new ServiceException($"Client with such mobile phone exists");
+            }
+        }
     }
 
     private async Task CheckClientConstrainsOnUpdate(ClientDto clientDto)
@@ -79,6 +97,24 @@ public class ClientManager : BaseManager, IClientManager
         if (hasClientNames)
         {
             throw new ServiceException($"Client with such Surname, Firstname, Lastname already exists");
+        }
+
+        if (!string.IsNullOrEmpty(clientDto.Email))
+        {
+            var hasEmail = await UnitOfWork.ClientRepository.ExistsAsync(x => x.Email == clientDto.Email && clientDto.ClientId != x.ClientId);
+            if (hasEmail)
+            {
+                throw new ServiceException($"Client with such email already exists");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(clientDto.MobilePhone))
+        {
+            var hasMobilePhone = await UnitOfWork.ClientRepository.ExistsAsync(x => x.MobilePhone == clientDto.MobilePhone && clientDto.ClientId != x.ClientId);
+            if (hasMobilePhone)
+            {
+                throw new ServiceException($"Client with such mobile phone exists");
+            }
         }
     }
 

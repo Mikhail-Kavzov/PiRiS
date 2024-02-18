@@ -36,6 +36,7 @@ public class AtmController : ApiController
             OperationDate = await _bankService.GetCurrentDayAsync(),
             OperationName = "Withdraw money",
             Sum = withdrawDto.Sum,
+            CurrencyName = "BYN",
         };
 
         return Ok(report);
@@ -53,13 +54,15 @@ public class AtmController : ApiController
     public async Task<ActionResult<AtmReportDto>> TransferMoneyAsync([FromBody] TransferMoneyDto transferMoneyDto)
     {
         var creditDto = await _atmManager.LoginAsync(transferMoneyDto.CreditCardNumber, transferMoneyDto.CreditCardCode);
-        //transfer money here
+        await _atmManager.TransferMoneyAsync(creditDto.CreditId, transferMoneyDto.Sum, transferMoneyDto.MobilePhone);
+
         var report = new AtmReportDto
         {
             CreditCardNumber = transferMoneyDto.CreditCardNumber,
             OperationDate = await _bankService.GetCurrentDayAsync(),
             OperationName = $"Transfer money to {transferMoneyDto.MobilePhone}",
             Sum = transferMoneyDto.Sum,
+            CurrencyName = "BYN",
         };
         return Ok(transferMoneyDto);
     }

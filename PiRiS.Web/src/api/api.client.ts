@@ -1832,6 +1832,7 @@ export class AtmReportDto implements IAtmReportDto {
     operationDate?: Date;
     sum?: number;
     operationName?: string | undefined;
+    currencyName?: string | undefined;
 
     constructor(data?: IAtmReportDto) {
         if (data) {
@@ -1848,6 +1849,7 @@ export class AtmReportDto implements IAtmReportDto {
             this.operationDate = _data["operationDate"] ? new Date(_data["operationDate"].toString()) : <any>undefined;
             this.sum = _data["sum"];
             this.operationName = _data["operationName"];
+            this.currencyName = _data["currencyName"];
         }
     }
 
@@ -1864,6 +1866,7 @@ export class AtmReportDto implements IAtmReportDto {
         data["operationDate"] = this.operationDate ? this.operationDate.toISOString() : <any>undefined;
         data["sum"] = this.sum;
         data["operationName"] = this.operationName;
+        data["currencyName"] = this.currencyName;
         return data;
     }
 }

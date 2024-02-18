@@ -51,7 +51,7 @@ export class TransactionListComponent implements OnInit, AfterViewInit, OnDestro
 
     ngAfterViewInit(): void {
         if (this._paginator) {
-
+         
             this._changeDetectorRef.markForCheck();
 
             this._paginator.page.pipe(
