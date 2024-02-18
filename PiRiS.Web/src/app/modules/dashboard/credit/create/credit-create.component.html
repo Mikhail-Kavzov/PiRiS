@@ -1,0 +1,125 @@
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
+    <div class="flex md:max-w-6xl sm:rounded-2xl sm:shadow overflow-hidden sm:bg-card">
+
+        <div class="w-full sm:w-auto py-4 px-4 sm:p-10 sm:rounded-2xl sm:shadow sm:bg-card">
+            <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+
+                <!-- Title -->
+                <div class="mt-4 text-center text-4xl font-extrabold tracking-tight leading-tight">Create Credit</div>
+
+                <!-- Form -->
+                <form class="mt-4"
+                      [formGroup]="creditForm">
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Credit Number</mat-label>
+                        <input id="creditNumber"
+                               matInput
+                               [formControlName]="'creditNumber'" maxlength="9">
+                        <mat-error *ngIf="creditForm.get('creditNumber').hasError('required')">
+                            Credit number is required
+                        </mat-error>
+                        <mat-error *ngIf="creditForm.get('creditNumber').hasError('pattern')">
+                            Enter valid credit number
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Credit Card Number</mat-label>
+                        <input id="creditCardNumber"
+                               matInput
+                               [formControlName]="'creditCardNumber'" maxlength="16">
+                        <mat-error *ngIf="creditForm.get('creditCardNumber').hasError('required')">
+                            Credit card number is required
+                        </mat-error>
+                        <mat-error *ngIf="creditForm.get('creditCardNumber').hasError('pattern')">
+                            Enter valid credit card number
+                        </mat-error>
+                    </mat-form-field>
+
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Credit Card Code</mat-label>
+                        <input id="creditCardCode"
+                               matInput
+                               [formControlName]="'creditCardCode'" maxlength="4">
+                        <mat-error *ngIf="creditForm.get('creditCardCode').hasError('required')">
+                            Credit card code is required
+                        </mat-error>
+                        <mat-error *ngIf="creditForm.get('creditCardCode').hasError('pattern')">
+                            Enter valid credit card code
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Credit Plan</mat-label>
+                        <mat-select formControlName="creditPlanId">
+                            <ng-container *ngFor="let plan of plans">
+                                <mat-option [value]="plan.creditPlanId" (click)="planHandler(plan)" selected>{{plan.name}}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="creditForm.get('creditPlanId').hasError('required')">
+                            Credit plan is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div *ngIf="selectedPlan" class="flex items-center flex-col mb-4">
+                        <p>Credit Type: {{selectedPlan.creditType}}</p>
+                        <p>Monthes: {{selectedPlan.monthPeriod}}</p>
+                        <p>Percent: {{selectedPlan.percent}}</p>
+                    </div>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Credit Sum ({{selectedCurrency}})</mat-label>
+                        <input id="sum" [formControlName]="'sum'" matInput type="number" />
+                        <mat-error *ngIf="creditForm.get('sum').hasError('required')">
+                            Sum is required
+                        </mat-error>
+                        <mat-error *ngIf="creditForm.get('sum').hasError('min')">
+                            Sum should be >=0
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="fuse-mat-dense fuse-mat-rounded min-w-64 mb-4 mt-4 w-full"
+                                    [subscriptSizing]="'dynamic'">
+                        <mat-icon class="icon-size-5"
+                                  matPrefix
+                                  [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                        <input matInput
+                               [formControl]="searchControl"
+                               [autocomplete]="'off'"
+                               [placeholder]="'Search Clients'"
+                               maxlength="30">
+                    </mat-form-field>
+
+                    <mat-form-field class="w-full">
+                        <mat-label>Client</mat-label>
+                        <mat-select #clientSelect formControlName="clientId">
+                            <ng-container *ngFor="let client of clients; trackBy: trackClients">
+                                <mat-option [value]="client.clientId" selected>{{client.surname}} {{client.firstName}} {{client.lastName}}</mat-option>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="creditForm.get('clientId').hasError('required')">
+                            Client is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- Submit button -->
+                    <button class="fuse-mat-button-large w-full mt-6"
+                            mat-flat-button
+                            [color]="'primary'"
+                            [disabled]="creditForm.invalid"
+                            (click)="create()">
+                        <span *ngIf="!creditForm.disabled">
+                            Create Credit
+                        </span>
+                        <mat-progress-spinner *ngIf="creditForm.disabled"
+                                              [diameter]="24"
+                                              [mode]="'indeterminate'"></mat-progress-spinner>
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

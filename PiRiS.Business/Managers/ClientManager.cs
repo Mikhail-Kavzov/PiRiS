@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using PiRiS.Business.Dto;
+using PiRiS.Business.Dto.Client;
 using PiRiS.Business.Enums;
 using PiRiS.Business.Exceptions;
 using PiRiS.Business.Managers.Interfaces;
@@ -52,6 +53,24 @@ public class ClientManager : BaseManager, IClientManager
         {
             throw new ServiceException($"Client with such Surname, Firstname, Lastname already exists");
         }
+
+        if (!string.IsNullOrEmpty(clientDto.Email))
+        {
+            var hasEmail = await UnitOfWork.ClientRepository.ExistsAsync(x=> x.Email == clientDto.Email);
+            if (hasEmail)
+            {
+                throw new ServiceException($"Client with such email already exists");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(clientDto.MobilePhone))
+        {
+            var hasMobilePhone = await UnitOfWork.ClientRepository.ExistsAsync(x => x.MobilePhone == clientDto.MobilePhone);
+            if (hasMobilePhone)
+            {
+                throw new ServiceException($"Client with such mobile phone exists");
+            }
+        }
     }
 
     private async Task CheckClientConstrainsOnUpdate(ClientDto clientDto)
@@ -79,6 +98,24 @@ public class ClientManager : BaseManager, IClientManager
         {
             throw new ServiceException($"Client with such Surname, Firstname, Lastname already exists");
         }
+
+        if (!string.IsNullOrEmpty(clientDto.Email))
+        {
+            var hasEmail = await UnitOfWork.ClientRepository.ExistsAsync(x => x.Email == clientDto.Email && clientDto.ClientId != x.ClientId);
+            if (hasEmail)
+            {
+                throw new ServiceException($"Client with such email already exists");
+            }
+        }
+
+        if (!string.IsNullOrEmpty(clientDto.MobilePhone))
+        {
+            var hasMobilePhone = await UnitOfWork.ClientRepository.ExistsAsync(x => x.MobilePhone == clientDto.MobilePhone && clientDto.ClientId != x.ClientId);
+            if (hasMobilePhone)
+            {
+                throw new ServiceException($"Client with such mobile phone exists");
+            }
+        }
     }
 
     public async Task DeleteClientAsync(int clientId)
@@ -88,6 +125,13 @@ public class ClientManager : BaseManager, IClientManager
         {
             throw new NotFoundException($"Client with id {clientId} not found");
         }
+
+        var hasCredits = await UnitOfWork.CreditRepository.ExistsAsync(x => x.ClientId == clientId && x.Sum != 0);
+        if (hasCredits)
+        {
+            throw new ServiceException("Client has unclosed credits");
+        }
+
         UnitOfWork.ClientRepository.Delete(client);
 
         await UnitOfWork.ClientRepository.SaveChangesAsync();

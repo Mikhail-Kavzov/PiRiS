@@ -108,10 +108,12 @@ export class ClientUpdateComponent implements OnInit, OnDestroy {
         client.company = this.clientForm.get('company').value;
         client.dateOfBirth = this.clientForm.get('dateOfBirth').value;
         client.dateOfIssue = this.clientForm.get('dateOfIssue').value;
-        client.email = this.clientForm.get('email').value;
+        let email = this.clientForm.get('email').value;
+        client.email = email ? email : null;
         client.isPensioner = this.clientForm.get('isPensioner').value;
         client.homePhone = this.clientForm.get('homePhone').value;
-        client.mobilePhone = this.clientForm.get('mobilePhone').value;
+        let mobilePhone = this.clientForm.get('mobilePhone').value;
+        client.mobilePhone = mobilePhone ? mobilePhone : null;
         client.locationAddress = this.clientForm.get('locationAddress').value;
         client.registrationAddress = this.clientForm.get('registrationAddress').value;
         client.monthIncome = this.clientForm.get('monthIncome').value;

@@ -1,0 +1,27 @@
+.account-grid {
+    grid-template-columns: 24px 112px auto 40px;
+
+    @screen sm {
+        grid-template-columns: 48px 112px auto 50px;
+    }
+
+    @screen md {
+        grid-template-columns: 48px 112px 112px auto 50px;
+    }
+
+    @screen lg {
+        grid-template-columns: 48px 140px 150px 150px 150px auto 360px 50px;
+    }
+}
+.account-select-element{
+    display: flex;
+    justify-content: flex-start;
+}
+.account-select-element span{
+    font-style: italic;
+}
+
+.account-select-element p{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

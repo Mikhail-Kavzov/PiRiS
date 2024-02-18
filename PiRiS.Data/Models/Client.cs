@@ -29,11 +29,11 @@ public class Client
     public int CityId { get; set; }
     public City City { get; set; } = null!;
 
-    public string? HomePhone { get; set; }
+    public string? HomePhone { get; set; } = null;
 
-    public string? MobilePhone { get; set; }
+    public string? MobilePhone { get; set; } = null;
 
-    public string? Email { get; set; }
+    public string? Email { get; set; } = null;
 
     public string? Company { get; set; }
 
@@ -53,4 +53,7 @@ public class Client
     public bool IsPensioner { get; set; }
 
     public decimal? MonthIncome { get; set; }
+
+    public int? CurrencyId { get; set; }
+    public Currency? Currency { get; set; }
 }

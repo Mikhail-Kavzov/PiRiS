@@ -22,6 +22,84 @@ namespace PiRiS.Data.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("PiRiS.Data.Models.Account", b =>
+                {
+                    b.Property<int>("AccountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AccountId"));
+
+                    b.Property<string>("AccountNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccountPlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Credit")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Debit")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("AccountId");
+
+                    b.HasIndex("AccountNumber")
+                        .IsUnique();
+
+                    b.HasIndex("AccountPlanId");
+
+                    b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.AccountPlan", b =>
+                {
+                    b.Property<int>("AccountPlanId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("AccountPlanId"));
+
+                    b.Property<int>("AccountType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("AccountPlanId");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("AccountPlans");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.BankInformation", b =>
+                {
+                    b.Property<int>("BankInformationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BankInformationId"));
+
+                    b.Property<DateTime>("CurrentDay")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("BankInformationId");
+
+                    b.ToTable("BankInformation");
+                });
+
             modelBuilder.Entity("PiRiS.Data.Models.Citizenship", b =>
                 {
                     b.Property<int>("CitizenshipId")
@@ -72,6 +150,9 @@ namespace PiRiS.Data.Migrations
 
                     b.Property<string>("Company")
                         .HasColumnType("text");
+
+                    b.Property<int?>("CurrencyId")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("timestamp with time zone");
@@ -149,6 +230,8 @@ namespace PiRiS.Data.Migrations
 
                     b.HasIndex("CityId");
 
+                    b.HasIndex("CurrencyId");
+
                     b.HasIndex("DisabilityId");
 
                     b.HasIndex("Email")
@@ -171,6 +254,218 @@ namespace PiRiS.Data.Migrations
                         .IsUnique();
 
                     b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.Credit", b =>
+                {
+                    b.Property<int>("CreditId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CreditId"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("CreditCardCode")
+                        .IsRequired()
+                        .HasMaxLength(4)
+                        .HasColumnType("character varying(4)");
+
+                    b.Property<string>("CreditCardNumber")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("CreditNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("CreditPlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MainAccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PercentAccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("CreditId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("CreditCardCode");
+
+                    b.HasIndex("CreditCardNumber")
+                        .IsUnique();
+
+                    b.HasIndex("CreditNumber")
+                        .IsUnique();
+
+                    b.HasIndex("CreditPlanId");
+
+                    b.HasIndex("MainAccountId");
+
+                    b.HasIndex("PercentAccountId");
+
+                    b.ToTable("Credits");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.CreditPlan", b =>
+                {
+                    b.Property<int>("CreditPlanId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CreditPlanId"));
+
+                    b.Property<int>("CreditType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CurrencyId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MainAccountPlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MonthPeriod")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Percent")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("PercentAccountPlanId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CreditPlanId");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("MainAccountPlanId");
+
+                    b.HasIndex("PercentAccountPlanId");
+
+                    b.ToTable("CreditPlans");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.Currency", b =>
+                {
+                    b.Property<int>("CurrencyId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CurrencyId"));
+
+                    b.Property<string>("CurrencyName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("CurrencyId");
+
+                    b.ToTable("Currencies");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.Deposit", b =>
+                {
+                    b.Property<int>("DepositId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DepositId"));
+
+                    b.Property<int>("ClientId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DepositNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("DepositPlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("MainAccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PercentAccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Sum")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("DepositId");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("DepositNumber")
+                        .IsUnique();
+
+                    b.HasIndex("DepositPlanId");
+
+                    b.HasIndex("MainAccountId");
+
+                    b.HasIndex("PercentAccountId");
+
+                    b.ToTable("Deposits");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.DepositPlan", b =>
+                {
+                    b.Property<int>("DepositPlanId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DepositPlanId"));
+
+                    b.Property<int>("CurrencyId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DayPeriod")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DepositType")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MainAccountPlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<double>("Percent")
+                        .HasColumnType("double precision");
+
+                    b.Property<int>("PercentAccountPlanId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DepositPlanId");
+
+                    b.HasIndex("CurrencyId");
+
+                    b.HasIndex("MainAccountPlanId");
+
+                    b.HasIndex("PercentAccountPlanId");
+
+                    b.ToTable("DepositPlans");
                 });
 
             modelBuilder.Entity("PiRiS.Data.Models.Disability", b =>
@@ -207,6 +502,46 @@ namespace PiRiS.Data.Migrations
                     b.ToTable("FamilyStatuses");
                 });
 
+            modelBuilder.Entity("PiRiS.Data.Models.Transaction", b =>
+                {
+                    b.Property<int>("TransactionId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TransactionId"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<int>("CreditAccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("DebitAccountId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("TransactionDay")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("TransactionId");
+
+                    b.HasIndex("CreditAccountId");
+
+                    b.HasIndex("DebitAccountId");
+
+                    b.ToTable("Transactions");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.Account", b =>
+                {
+                    b.HasOne("PiRiS.Data.Models.AccountPlan", "AccountPlan")
+                        .WithMany("Accounts")
+                        .HasForeignKey("AccountPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AccountPlan");
+                });
+
             modelBuilder.Entity("PiRiS.Data.Models.Client", b =>
                 {
                     b.HasOne("PiRiS.Data.Models.Citizenship", "Citizenship")
@@ -220,6 +555,10 @@ namespace PiRiS.Data.Migrations
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId");
 
                     b.HasOne("PiRiS.Data.Models.Disability", "Disability")
                         .WithMany()
@@ -237,9 +576,192 @@ namespace PiRiS.Data.Migrations
 
                     b.Navigation("City");
 
+                    b.Navigation("Currency");
+
                     b.Navigation("Disability");
 
                     b.Navigation("FamilyStatus");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.Credit", b =>
+                {
+                    b.HasOne("PiRiS.Data.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.CreditPlan", "CreditPlan")
+                        .WithMany("Credits")
+                        .HasForeignKey("CreditPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.Account", "MainAccount")
+                        .WithMany("MainCredits")
+                        .HasForeignKey("MainAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.Account", "PercentAccount")
+                        .WithMany("PercentCredits")
+                        .HasForeignKey("PercentAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("CreditPlan");
+
+                    b.Navigation("MainAccount");
+
+                    b.Navigation("PercentAccount");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.CreditPlan", b =>
+                {
+                    b.HasOne("PiRiS.Data.Models.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.AccountPlan", "MainAccountPlan")
+                        .WithMany("MainCreditPlans")
+                        .HasForeignKey("MainAccountPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.AccountPlan", "PercentAccountPlan")
+                        .WithMany("PercentCreditPlans")
+                        .HasForeignKey("PercentAccountPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("MainAccountPlan");
+
+                    b.Navigation("PercentAccountPlan");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.Deposit", b =>
+                {
+                    b.HasOne("PiRiS.Data.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.DepositPlan", "DepositPlan")
+                        .WithMany("Deposits")
+                        .HasForeignKey("DepositPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.Account", "MainAccount")
+                        .WithMany("MainDeposits")
+                        .HasForeignKey("MainAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.Account", "PercentAccount")
+                        .WithMany("PercentDeposits")
+                        .HasForeignKey("PercentAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("DepositPlan");
+
+                    b.Navigation("MainAccount");
+
+                    b.Navigation("PercentAccount");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.DepositPlan", b =>
+                {
+                    b.HasOne("PiRiS.Data.Models.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.AccountPlan", "MainAccountPlan")
+                        .WithMany("MainDepositPlans")
+                        .HasForeignKey("MainAccountPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.AccountPlan", "PercentAccountPlan")
+                        .WithMany("PercentDepositPlans")
+                        .HasForeignKey("PercentAccountPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
+
+                    b.Navigation("MainAccountPlan");
+
+                    b.Navigation("PercentAccountPlan");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.Transaction", b =>
+                {
+                    b.HasOne("PiRiS.Data.Models.Account", "CreditAccount")
+                        .WithMany("CreditTransactions")
+                        .HasForeignKey("CreditAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PiRiS.Data.Models.Account", "DebitAccount")
+                        .WithMany("DebitTransactions")
+                        .HasForeignKey("DebitAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreditAccount");
+
+                    b.Navigation("DebitAccount");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.Account", b =>
+                {
+                    b.Navigation("CreditTransactions");
+
+                    b.Navigation("DebitTransactions");
+
+                    b.Navigation("MainCredits");
+
+                    b.Navigation("MainDeposits");
+
+                    b.Navigation("PercentCredits");
+
+                    b.Navigation("PercentDeposits");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.AccountPlan", b =>
+                {
+                    b.Navigation("Accounts");
+
+                    b.Navigation("MainCreditPlans");
+
+                    b.Navigation("MainDepositPlans");
+
+                    b.Navigation("PercentCreditPlans");
+
+                    b.Navigation("PercentDepositPlans");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.CreditPlan", b =>
+                {
+                    b.Navigation("Credits");
+                });
+
+            modelBuilder.Entity("PiRiS.Data.Models.DepositPlan", b =>
+                {
+                    b.Navigation("Deposits");
                 });
 #pragma warning restore 612, 618
         }

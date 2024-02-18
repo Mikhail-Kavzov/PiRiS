@@ -1,0 +1,11 @@
+<div class="sm:absolute sm:inset-0 flex flex-col justify-center items-center flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+    <div class="relative flex items-center justify-center p-4">
+        <h1 class="text-4xl text-center font-extrabold tracking-tight">Report</h1>
+    </div>
+    <div class="p-4 m-4">
+        <p>Card Number: {{report.creditCardNumber}}</p>
+        <p>Operation Date: {{report.operationDate | date: 'dd/MM/yyyy'}}</p>
+        <p>Sum: {{report.sum | number: '1.0-2'}} {{report.currencyName}}</p>
+        <p>Operation Name: {{report.operationName}}</p>
+    </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="flex flex-col flex-auto items-center sm:justify-center min-w-0 md:p-8">
+    <div class="flex sm:shadow overflow-hidden sm:bg-card">
+
+        <div class="w-full sm:w-auto py-4 px-4 sm:p-10 sm:rounded-2xl sm:shadow sm:bg-card">
+            <!-- Title -->
+            <h1 class="mt-4 text-center font-extrabold tracking-tight leading-tight text-huge">Welcome To Our Bank</h1>
+            <div class="flex items-center flex-wrap justify-center">
+                <ng-container *ngFor="let mainButton of mainButtons">
+                    <button class="pressed-button" (click)="btnClick(mainButton)">{{mainButton.name}}</button>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

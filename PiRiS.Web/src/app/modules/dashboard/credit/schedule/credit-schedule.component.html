@@ -1,0 +1,25 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <!-- Header -->
+    <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-center py-8 px-6 md:px-8 border-b">
+        <!-- Title -->
+        <div class="text-4xl text-center font-extrabold tracking-tight">Schedule</div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-scroll">
+        <table class="table-auto w-full table">
+            <tr>
+                <th>Date</th>
+                <th>Payment</th>
+            </tr>
+            <ng-container *ngFor="let item of schedule.schedule | keyvalue">
+                <tr>
+                    <td>{{item.key  | date: 'dd.MM.yyyy'}}</td>
+                    <td>{{item.value | number:'1.0-2'}} <span class="ml-2">{{schedule.currencyName}}</span></td>
+                </tr>
+            </ng-container>
+        </table>
+    </div>
+
+</div>

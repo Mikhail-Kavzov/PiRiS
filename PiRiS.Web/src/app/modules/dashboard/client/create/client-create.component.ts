@@ -2,7 +2,6 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewEncapsulation } from '
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseValidators } from '@fuse/validators';
 import { Subject, takeUntil } from 'rxjs';
 import { CitizenshipDto, CityDto, ClientAdditionalsDto, ClientDto, DisabilityDto, FamilyStatusDto } from '../../../../../api/api.client';
 import { Patterns } from '../../../../core/enums/patterns.enum';
@@ -96,10 +95,12 @@ export class ClientCreateComponent implements OnInit, OnDestroy {
         client.company = this.clientForm.get('company').value;
         client.dateOfBirth = this.clientForm.get('dateOfBirth').value;
         client.dateOfIssue = this.clientForm.get('dateOfIssue').value;
-        client.email = this.clientForm.get('email').value;
+        let email = this.clientForm.get('email').value;
+        client.email = email ? email : null;
         client.isPensioner = this.clientForm.get('isPensioner').value;
         client.homePhone = this.clientForm.get('homePhone').value;
-        client.mobilePhone = this.clientForm.get('mobilePhone').value;
+        let mobilePhone = this.clientForm.get('mobilePhone').value;
+        client.mobilePhone = mobilePhone ? mobilePhone : null;
         client.locationAddress = this.clientForm.get('locationAddress').value;
         client.registrationAddress = this.clientForm.get('registrationAddress').value;
         client.monthIncome = this.clientForm.get('monthIncome').value;

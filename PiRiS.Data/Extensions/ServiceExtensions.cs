@@ -16,14 +16,25 @@ public static class ServiceExtensions
         services.AddDbContext<BankDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DbConnection"));
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+
         }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
-        services.AddScoped<IClientRepository, ClientRepository>();
-        services.AddScoped<IDisabilityRepository, DisabilityRepository>();
-        services.AddScoped<ICitizenshipRepository, CitizenshipRepository>();
-        services.AddScoped<ICityRepository, CityRepository>();
-        services.AddScoped<IFamilyStatusRepository, FamilyStatusRepository>();
+        services.AddTransient<IClientRepository, ClientRepository>();
+        services.AddTransient<IDisabilityRepository, DisabilityRepository>();
+        services.AddTransient<ICitizenshipRepository, CitizenshipRepository>();
+        services.AddTransient<ICityRepository, CityRepository>();
+        services.AddTransient<IFamilyStatusRepository, FamilyStatusRepository>();
+        services.AddTransient<IDepositPlanRepository, DepositPlanRepository>();
+        services.AddTransient<ICurrencyRepository, CurrencyRepository>();
+        services.AddTransient<IDepositRepository, DepositRepository>();
+        services.AddTransient<ICreditPlanRepository, CreditPlanRepository>();
+        services.AddTransient<ICreditRepository, CreditRepository>();
+        services.AddTransient<IAccountPlanRepository, AccountPlanRepository>();
+        services.AddTransient<ITransactionRepository, TransactionRepository>();
+        services.AddTransient<IAccountRepository, AccountRepository>();
+        services.AddTransient<IBankInformationRepository, BankInformationRepository>();
 
-        services.AddScoped<IUnitOfWork, UoW>();
+        services.AddTransient<IUnitOfWork, UoW>();
     }
 }

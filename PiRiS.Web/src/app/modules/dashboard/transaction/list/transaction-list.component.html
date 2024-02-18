@@ -1,0 +1,65 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+
+    <!-- Header -->
+    <div class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-8 px-6 md:px-8 border-b">
+        <!-- Title -->
+        <div class="text-4xl text-center font-extrabold tracking-tight">Transactions</div>
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+
+        <!-- Transactions -->
+        <div class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto">
+            <ng-container *ngIf="transactions.length > 0; else notransactions">
+                <div class="grid">
+                    <!-- Header -->
+                    <div class="transaction-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5">
+                        <div></div>
+                        <div>Day</div>
+                        <div class="hidden lg:block">Sum</div>
+                        <div class="hidden lg:block">Withdrawn Account</div>
+                        <div class="hidden md:block">Income Account</div>
+                        <div></div>
+                    </div>
+                    <!-- Rows -->
+                    <ng-container *ngFor="let transaction of transactions; trackBy: trackByFn">
+                        <div class="transaction-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b">
+                            <div></div>
+
+                            <div class="truncate">
+                                {{transaction.transactionDay | date: 'dd/MM/yyyy'}}
+                            </div>
+
+                            <div class="hidden lg:block truncate">
+                                {{transaction.amount | number: '1.0-2'}} BYN
+                            </div>
+
+                            <div class="hidden lg:block truncate">
+                                {{transaction.debitAccountNumber}}
+                            </div>
+
+                            <div class="hidden lg:block truncate">
+                                {{transaction.creditAccountNumber}}
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+
+            <mat-paginator class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                           [length]="pagination.length"
+                           [pageIndex]="pagination.page"
+                           [pageSize]="pagination.size"
+                           [pageSizeOptions]="[5, 10, 20]"
+                           [showFirstLastButtons]="true"></mat-paginator>
+
+            <ng-template #notransactions>
+                <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">No transactions</div>
+            </ng-template>
+
+        </div>
+
+    </div>
+
+</div>

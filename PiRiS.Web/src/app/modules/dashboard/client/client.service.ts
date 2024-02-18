@@ -35,7 +35,7 @@ export class ClientService {
     }
 
     getClient(id: number) {
-        return this._apiService.apiClient.client(id).pipe(
+        return this._apiService.apiClient.apiClientClient(id).pipe(
             tap((client: ClientDto) => {
                 this._client.next(client);
             }),
@@ -48,7 +48,7 @@ export class ClientService {
 
     getClients(page: number = 0, take: number = 0, surname: string = '',
         sortDirection: SortDirection = SortDirection.ascending, sortField: ClientSortField.surname) {
-        return this._apiService.apiClient.list(page* take, take, surname, sortField, sortDirection).pipe(
+        return this._apiService.apiClient.apiClientList(page * take, take, surname, sortField, sortDirection).pipe(
             tap((result) => {
                 this._clients.next(result.items);
                 this._pagination.next(new Pagination(page, take, result.totalCount));
@@ -63,7 +63,7 @@ export class ClientService {
 
 
     getAdditionals(): Observable<ClientAdditionalsDto> {
-        return this._apiService.apiClient.additionals().pipe(
+        return this._apiService.apiClient.apiClientAdditionals().pipe(
             tap((result) => {
                 this._clientAdditionals.next(result);
             }),
@@ -75,15 +75,15 @@ export class ClientService {
     }
 
     updateClient(clientDto: ClientDto) {
-        return this._apiService.apiClient.update(clientDto);
+        return this._apiService.apiClient.apiClientUpdate(clientDto);
     }
 
     createClient(clientDto: ClientDto) {
-        return this._apiService.apiClient.create(clientDto);
+        return this._apiService.apiClient.apiClientCreate(clientDto);
     }
 
     deleteClient(id: number) {
-        return this._apiService.apiClient.delete(id);
+        return this._apiService.apiClient.apiClientDelete(id);
     }
 
 }
