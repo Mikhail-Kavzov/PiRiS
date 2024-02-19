@@ -9,6 +9,9 @@ namespace PiRiS.Business.Services;
 
 public class AccountService : BaseService, IAccountService
 {
+    private const int MinRandValue = 10_000_000;
+    private const int MaxRandValue = 99_999_999;
+
     public AccountService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
     {
     }
@@ -17,8 +20,8 @@ public class AccountService : BaseService, IAccountService
     {
         var random = new Random();
         var depositPlan = deposit.DepositPlan ?? await UnitOfWork.DepositPlanRepository.GetEntityAsync(deposit.DepositPlanId);
-        var mainAccount = CreateAccount(depositPlan.MainAccountPlan, deposit.ClientId, random.Next(0, int.MaxValue));
-        var percentAccount = CreateAccount(depositPlan.PercentAccountPlan, deposit.ClientId, random.Next(0, int.MaxValue));
+        var mainAccount = CreateAccount(depositPlan.MainAccountPlan, deposit.ClientId, random.Next(MinRandValue, MaxRandValue));
+        var percentAccount = CreateAccount(depositPlan.PercentAccountPlan, deposit.ClientId, random.Next(MinRandValue, MaxRandValue));
         deposit.MainAccount = mainAccount;
         deposit.PercentAccount = percentAccount;
     }
@@ -39,7 +42,7 @@ public class AccountService : BaseService, IAccountService
     {
         if (clientId == 0)
             return accountCode + "000000000";
-        return $"{accountCode}{clientId:0000}{order:0000}1";
+        return $"{accountCode}{order}1";
     }
 
     public async Task CreateAccountsAsync(Credit credit)
