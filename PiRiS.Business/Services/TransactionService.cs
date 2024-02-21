@@ -35,7 +35,7 @@ public class TransactionService : BaseService, ITransactionService
 
         foreach (var credit in credits)
         {
-            decimal percentSum = 0;
+            double percentSum = 0;
             var monthes = credit.CreditPlan.MonthPeriod;
 
             double monthPercent = credit.CreditPlan.Percent / BankParams.MonthInYear / BankParams.PercentDelimiter;
@@ -46,7 +46,7 @@ public class TransactionService : BaseService, ITransactionService
                 var coef = monthPercent * temp / (temp - 1);
 
                 var monthPayment = coef * (double)credit.Sum;
-                percentSum = (decimal)monthPayment / BankParams.DaysInMonth;
+                percentSum = monthPayment / BankParams.DaysInMonth;
             }
             else
             {
@@ -60,13 +60,13 @@ public class TransactionService : BaseService, ITransactionService
                     rest -= dayCreditDebt;
                 }
 
-                percentSum = (decimal)(dayCreditDebt + rest * percentPerDay);
+                percentSum = (dayCreditDebt + rest * percentPerDay);
             }
 
             var currencyName = credit.CreditPlan.Currency.CurrencyName;
             var exchangeRate = _currencyOptions.ExchangeCourse[currencyName];
 
-            await PerformTransactionAsync(credit.PercentAccount, fundAccount, percentSum * exchangeRate,
+            await PerformTransactionAsync(credit.PercentAccount, fundAccount, (decimal)percentSum * exchangeRate,
                 credit.PercentAccount.AccountPlan.AccountType, fundType);
         }
     }
@@ -159,7 +159,11 @@ public class TransactionService : BaseService, ITransactionService
         debitAccount.AccountPlan = null;
         UnitOfWork.AccountRepository.Update(debitAccount);
         creditAccount.AccountPlan = null;
-        UnitOfWork.AccountRepository.Update(creditAccount);
+        if (creditAccount.AccountPlanId != debitAccount.AccountPlanId)
+        {
+            UnitOfWork.AccountRepository.Update(creditAccount);
+        }
+
 
         await UnitOfWork.AccountRepository.SaveChangesAsync();
         await UnitOfWork.TransactionRepository.SaveChangesAsync();

@@ -50,6 +50,7 @@ export class AtmTransferComponent implements OnInit {
         this._atmService.transferMoney(cardNumber, cardPin, sum, mobilePhone, mobilePhone)
             .subscribe((report) => {
                 this.atmReport = report;
+                console.log(JSON.stringify(report));
             })
     }
 }

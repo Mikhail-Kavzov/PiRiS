@@ -16,7 +16,7 @@ public class DepositCreateDto
     public string DepositNumber { get; set; }
 
     [Required]
-    [Range(1, double.MaxValue)]
+    [Range(1, BankParams.MaxCurrencyValue)]
     public decimal Sum { get; set; }
 
 }

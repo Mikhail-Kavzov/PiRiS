@@ -15,6 +15,6 @@ public class WithdrawMoneyDto
 
 
     [Required]
-    [Range(0, double.MaxValue)]
+    [Range(0, BankParams.MaxCurrencyValue)]
     public decimal Sum { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using PiRiS.Data.Models.Enums;
+﻿using PiRiS.Common.Constants;
+using PiRiS.Data.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace PiRiS.Business.Dto.DepositPlan;
@@ -13,11 +14,11 @@ public class DepositPlanCreateDto
     public int CurrencyId { get; set; }
 
     [Required]
-    [Range(1, int.MaxValue)]
+    [Range(1, BankParams.MaxPeriodValue)]
     public int DayPeriod { get; set; }
 
     [Required]
-    [Range(0, double.MaxValue)]
+    [Range(0, BankParams.MaxPercentValue)]
     public double Percent { get; set; }
 
     [Required]

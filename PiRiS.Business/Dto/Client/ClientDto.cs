@@ -85,6 +85,6 @@ public class ClientDto
 
     public bool IsPensioner { get; set; }
 
-    [Range(0, double.MaxValue, ErrorMessage = "Month income should be >=0")]
+    [Range(0, BankParams.MaxCurrencyValue, ErrorMessage = "Month income should be >=0")]
     public decimal? MonthIncome { get; set; }
 }

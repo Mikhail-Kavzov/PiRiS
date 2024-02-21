@@ -69,6 +69,7 @@ public class AtmManager : BaseManager, IAtmManager
 
     public async Task TransferMoneyAsync(int creditId, decimal sum, string mobilePhone)
     {
+     
         var clientToSend = await UnitOfWork.ClientRepository.GetEntityAsync(x => x.MobilePhone == mobilePhone);
         if (clientToSend == null)
         {
@@ -86,9 +87,18 @@ public class AtmManager : BaseManager, IAtmManager
         {
             throw new NotFoundException("Requested client doesn't have accounts");
         }
+
         var account = creditToSend.MainAccount;
         var sendPlan = creditToSend.MainAccount.AccountPlan.AccountType;
 
-        await _transactionService.PerformTransactionAsync(credit.MainAccount, account, sum, credit.MainAccount.AccountPlan.AccountType, sendPlan);
+        if (account.AccountId == credit.MainAccount.AccountId)
+        {
+            throw new ServiceException("ю каннот сент мані то юрселф");
+        }
+
+        var crditPlan = credit.MainAccount.AccountPlan.AccountType;
+        credit.MainAccount.AccountPlan = null;
+        account.AccountPlan = null;
+        await _transactionService.PerformTransactionAsync(credit.MainAccount, account, sum, crditPlan, sendPlan);
     }
 }

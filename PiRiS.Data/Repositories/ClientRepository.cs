@@ -52,9 +52,9 @@ public class ClientRepository : BaseRepository, IClientRepository
         return await query.FirstOrDefaultAsync(x => x.ClientId == id);
     }
 
-    public Task<Client?> GetEntityAsync(Expression<Func<Client, bool>> predicate)
+    public async Task<Client?> GetEntityAsync(Expression<Func<Client, bool>> predicate)
     {
-        throw new NotImplementedException();
+        return await _context.Clients.FirstOrDefaultAsync(predicate);
     }
 
     public async Task<IEnumerable<Client>> GetListAsync(int skip, int take)

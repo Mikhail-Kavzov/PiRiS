@@ -64,6 +64,6 @@ public class AtmController : ApiController
             Sum = transferMoneyDto.Sum,
             CurrencyName = "BYN",
         };
-        return Ok(transferMoneyDto);
+        return Ok(report);
     }
 }
